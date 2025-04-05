@@ -4,14 +4,7 @@ import User from "@/models/UserModel"
 import bcryptjs from "bcryptjs";
 import jwt from 'jsonwebtoken'
 
-
 connectDB()
-
-interface UserProp {
-    _id: string;
-    email: string;
-    password: string;
-}
 
 export async function POST(req: NextRequest) {
     try {
@@ -25,7 +18,7 @@ export async function POST(req: NextRequest) {
             return new NextResponse("Password is required", { status: 400 })
         }
 
-        const user: UserProp = await User.findOne({ email })
+        const user = await User.findOne({ email })
 
         if (!user) {
             return new NextResponse("User not found", { status: 400 })
@@ -44,8 +37,21 @@ export async function POST(req: NextRequest) {
 
         const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: "1d" })
 
-        return NextResponse.json({ message: "User Logged In Successfully"}).cookies.set('token', token, { httpOnly: true })
+        const userObj = user.toObject();
+        delete userObj.password;
+        
+        const response = NextResponse.json({
+            message: "Login successful",
+            token,
+            user: userObj
+        })
 
+        response.cookies.set("token", token, {
+            httpOnly: true,
+        })
+
+        return response;
+        
     } catch (error) {
         return new NextResponse("Internal Server", { status: 500 })
     }

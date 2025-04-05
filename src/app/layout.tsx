@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,11 +14,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`antialiased vsc-initialized`}
+        className={cn(
+          `antialiased vsc-initialized`,
+          'bg-slate-50 dark:bg-[#313338] h-full'
+        )
+        }
       >
-        {children}
+        <ThemeProvider
+          attribute='class'
+          defaultTheme="dark"
+          enableSystem={true}
+          storageKey="='discord-theme"
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
