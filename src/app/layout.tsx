@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
+import { ModalProvider } from "@/components/providers/modal-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +19,7 @@ export default function RootLayout({
       <body
         className={cn(
           `antialiased vsc-initialized`,
-          'bg-slate-50 dark:bg-[#313338] h-full'
+          'bg-slate-50 dark:bg-black h-full'
         )
         }
       >
@@ -28,6 +29,7 @@ export default function RootLayout({
           enableSystem={true}
           storageKey="='discord-theme"
         >
+          <ModalProvider />
           {children}
         </ThemeProvider>
       </body>
