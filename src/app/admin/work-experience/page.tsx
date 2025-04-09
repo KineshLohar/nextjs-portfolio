@@ -1,11 +1,20 @@
 import { OpenModalButton } from "@/components/open-modal-button";
 import WorkExpTable from "@/components/work-exp/work-experience-table";
+import connectDB from "@/db/connectDB";
 import { WorkExperience as WorkExpModel } from "@/models/WorkExpModel";
 import { WorkExperienceTypes } from "@/types/types";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
+connectDB()
 
 export default async function WorkExperience() {
 
+    const cookiesStore = await cookies();
+    const token = cookiesStore.get('token');
+
+    if(!token) return redirect('/login')
+        
     const workExperiencs: WorkExperienceTypes[] = await WorkExpModel.find();
 
     return (
@@ -21,7 +30,7 @@ export default async function WorkExperience() {
                         </div>
                     ) 
                     :
-                    <WorkExpTable experienceList={JSON.stringify(workExperiencs)} />
+                    <WorkExpTable experienceList={workExperiencs} />
                 }
                 
             </div>

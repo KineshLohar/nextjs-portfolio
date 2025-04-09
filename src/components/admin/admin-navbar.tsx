@@ -9,7 +9,8 @@ export const AdminNavbar = () => {
         try {
 
         } catch (error) {
-
+            console.log("ERROR SIGN OUT", error);
+            
         }
     }
 

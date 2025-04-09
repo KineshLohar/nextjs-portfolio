@@ -1,9 +1,14 @@
 import getDataFromToken from "@/lib/get-data-from-token";
 import User from "@/models/UserModel";
-import Skill from '@/models/SkillModel'
+import { WorkExperience } from "@/models/WorkExpModel";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+
+export async function DELETE(req: NextRequest, { params }: {
+    params: {
+        id: string;
+    }
+}) {
     try {
         const decodedToken = await getDataFromToken(req);
         if (!decodedToken || typeof decodedToken === 'string') {
@@ -15,21 +20,14 @@ export async function POST(req: NextRequest) {
             return new NextResponse("Unauthorized User", { status: 401 })
         }
 
-        const data = await req.json();
+        const { id } = await params;
 
-        data.userId = decodedToken?.id
+        await WorkExperience.findByIdAndDelete(id);
 
-        const skill = await Skill.create(data)
-
-        if (!skill) {
-            return new NextResponse("Unable to create Work Experience", { status: 400 })
-        }
-
-        return NextResponse.json({ message: "Work Experience Added!", skillData: skill }, { status: 201 })
+        return NextResponse.json({ message: "Work Experience Deleted!" }, { status: 200 })
 
     } catch (error) {
-        console.log("[POST SKILL]", error);
-        
-        return new NextResponse("Internal Error", { status: 500 })
+        console.log("[ERRIR WOrkEXP DELETE API]", error);
+        return NextResponse.json({ message: "Error Deleting work experience!" }, { status: 500 })
     }
 }

@@ -1,6 +1,4 @@
-const { default: mongoose } = require("mongoose");
-
-
+import mongoose from 'mongoose'
 
 const workExperienceSchema = new mongoose.Schema({
     userId: {
@@ -25,7 +23,9 @@ const workExperienceSchema = new mongoose.Schema({
     },
     descriptions: [
         {
-            type: String
+            text: {
+                type: String
+            },
         }
     ],
     currentlyWorking: {

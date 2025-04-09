@@ -7,8 +7,15 @@ export interface WorkExperienceTypes {
     company: string;
     location: string;
     techs: string;
-    description: string[];
+    descriptions: { text: string }[];
     currentlyWorking: boolean;
     startDate: Date;
     endDate: Date;
+}
+
+export interface Skill {
+    _id: string;
+    skill: string;
+    level: string;
+    type: string;
 }

@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
         const userObj = user.toObject();
         delete userObj.password;
-        
+
         const response = NextResponse.json({
             message: "Login successful",
             token,
@@ -51,8 +51,8 @@ export async function POST(req: NextRequest) {
         })
 
         return response;
-        
+
     } catch (error) {
-        return new NextResponse("Internal Server", { status: 500 })
+        return NextResponse.json({ message: "Internal Server", error }, { status: 500 })
     }
 }

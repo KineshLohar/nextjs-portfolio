@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const formSchema = z.object({
     skill: z.string().min(1, { message: "Skill is required!" }),
@@ -17,13 +18,12 @@ const formSchema = z.object({
     type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)])
 })
 
+export const EditSkillModal = () => {
 
-
-export const AddSkillModal = () => {
-
-    const { isOpen, onClose, type } = useModal();
+    const { isOpen, onClose, type, data } = useModal();
+    const { skillData } = data;
     const router = useRouter()
-    const isModalOpen = isOpen && type === 'addSkill';
+    const isModalOpen = isOpen && type === 'editSkill';
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -36,21 +36,33 @@ export const AddSkillModal = () => {
 
     const isSubmitting = form.formState.isSubmitting;
 
+    useEffect(() => {
+        if(skillData){
+            form.setValue('level', skillData?.level as "Beginner" | "Intermediate" | "Advanced")
+            form.setValue('skill', skillData?.skill);
+            form.setValue('type', skillData?.type)
+        }
+    },[form, skillData])
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const response = await axios.post('/api/admin/skills', values)
-            if (response.status === 201) {
-                form.reset();
-                onClose();
+            const response = await axios.patch(`/api/admin/skills/${skillData?._id}`, values)
+            if (response.status === 200) {
+                form.reset()
                 router.refresh();
+                onClose();
             }
         } catch (error) {
             console.log("ERROR SUBMITING SKILL ", error);
         }
     }
 
+    const handleClose = () => {
+        onClose();
+    }
+
     return (
-        <Dialog open={isModalOpen} onOpenChange={onClose}>
+        <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="mb-4">
                     <DialogTitle>

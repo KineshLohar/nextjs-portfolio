@@ -5,7 +5,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -42,11 +42,12 @@ const formSchema = z.object({
     }
 });
 
-export const AddWorkExpModal = () => {
+export const EditWorkExpModal = () => {
 
-    const { isOpen, type, onClose } = useModal();
+    const { isOpen, type, onClose, data } = useModal();
     const router = useRouter();
-    const isModalOpen = isOpen && type === 'addWorkExp';
+    const isModalOpen = isOpen && type === 'editWorkExp';
+    const { workExperienceData } = data;
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -61,16 +62,29 @@ export const AddWorkExpModal = () => {
             endDate: new Date(),
         }
     })
-    
+
     const { fields, append, remove } = useFieldArray({
         control: form.control,
         name: "descriptions"
     });
 
+    useEffect(() => {
+        if(workExperienceData){
+            form.setValue('company', workExperienceData?.company)
+            form.setValue('currentlyWorking', workExperienceData?.currentlyWorking)
+            form.setValue('descriptions', workExperienceData?.descriptions)
+            form.setValue('endDate', workExperienceData?.endDate)
+            form.setValue('location', workExperienceData?.location)
+            form.setValue('role', workExperienceData?.role)
+            form.setValue('startDate', workExperienceData?.startDate)
+            form.setValue('techs', workExperienceData?.techs)
+        }
+     }, [form, workExperienceData])
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log("VALUES", values);
         try {
-            const response = await axios.post('/api/admin/work-exp', values)
+            const response = await axios.patch(`/api/admin/work-exp/${workExperienceData?._id}`, values)
             if (response.status === 201) {
                 onClose();
                 form.reset()
