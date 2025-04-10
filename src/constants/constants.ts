@@ -16,3 +16,11 @@ export const taskBasedCategories = [
     "Blockchain Development & Web3"
   ];
   
+  export const educationOrCertification = [
+    "Education",
+    "Achievements",
+    "Professional Certificates",
+    "Institutional Certificates",
+    "Online Certificates",
+    "Other Certificates"
+  ]

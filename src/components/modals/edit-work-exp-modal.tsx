@@ -73,19 +73,19 @@ export const EditWorkExpModal = () => {
             form.setValue('company', workExperienceData?.company)
             form.setValue('currentlyWorking', workExperienceData?.currentlyWorking)
             form.setValue('descriptions', workExperienceData?.descriptions)
-            form.setValue('endDate', workExperienceData?.endDate)
+            form.setValue('endDate', new Date(workExperienceData?.endDate))
             form.setValue('location', workExperienceData?.location)
             form.setValue('role', workExperienceData?.role)
-            form.setValue('startDate', workExperienceData?.startDate)
+            form.setValue('startDate',new Date(workExperienceData?.startDate))
             form.setValue('techs', workExperienceData?.techs)
         }
      }, [form, workExperienceData])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log("VALUES", values);
+        // console.log("VALUES", values);
         try {
             const response = await axios.patch(`/api/admin/work-exp/${workExperienceData?._id}`, values)
-            if (response.status === 201) {
+            if (response.status === 200) {
                 onClose();
                 form.reset()
                 router.refresh();
@@ -107,7 +107,7 @@ export const EditWorkExpModal = () => {
             <DialogContent onInteractOutside={(e) => e.preventDefault()} className="max-h-[80vh] overflow-y-auto">
                 <DialogHeader className="mb-4">
                     <DialogTitle>
-                        Add Work Experience
+                        Edit Work Experience
                     </DialogTitle>
                 </DialogHeader>
                 <div>

@@ -7,6 +7,7 @@ import { DeleteSkillModal } from "../modals/delete-skill-modal";
 import { EditSkillModal } from "../modals/edit-skill-modal";
 import { DeleteWorkExperienceModal } from "../modals/delete-work-exp-modal";
 import { EditWorkExpModal } from "../modals/edit-work-exp-modal";
+import { AddEducationOrCertificationModal } from "../modals/add-edu-or-cert-modal";
 
 
 export const ModalProvider = () => {
@@ -25,6 +26,7 @@ export const ModalProvider = () => {
             <EditSkillModal />
             <DeleteWorkExperienceModal />
             <EditWorkExpModal />
+            <AddEducationOrCertificationModal />
         </>
     )
 }

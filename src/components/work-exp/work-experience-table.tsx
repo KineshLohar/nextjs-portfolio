@@ -29,7 +29,6 @@ export default function WorkExpTable({ experienceList }: { experienceList: WorkE
                                 <ActionDropdownList
                                     dataKey="workExperienceData"
                                     data={JSON.stringify(exp)}
-                                    viewModal="viewWorkExp"
                                     editModal="editWorkExp"
                                     deleteModal="deleteWorkExp"
                                 />

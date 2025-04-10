@@ -15,7 +15,16 @@ export interface WorkExperienceTypes {
 
 export interface Skill {
     _id: string;
+    userId: string;
     skill: string;
     level: string;
+    type: string;
+}
+
+export interface EduCertType {
+    _id: string;
+    userId: string;
+    title: string;
+    description: string;
     type: string;
 }
