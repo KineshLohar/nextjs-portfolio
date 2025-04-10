@@ -2,7 +2,7 @@ import { useModal } from "@/hooks/use-modal-store"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import * as z from 'zod'
-import { taskBasedCategories } from "@/constants/constants";
+import { educationOrCertification } from "@/constants/constants";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
@@ -10,36 +10,46 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const formSchema = z.object({
-    skill: z.string().min(1, { message: "Skill is required!" }),
-    level: z.enum(["Beginner", "Intermediate", "Advanced"]),
-    type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)])
+    title: z.string().min(1, { message: "Title is required!" }),
+    description: z.string(),
+    type: z.enum([educationOrCertification[0], ...educationOrCertification.slice(1)])
 })
 
 
 
-export const AddSkillModal = () => {
+export const EditEducationOrCertificationModal = () => {
 
-    const { isOpen, onClose, type } = useModal();
+    const { isOpen, onClose, type, data } = useModal();
     const router = useRouter()
-    const isModalOpen = isOpen && type === 'addSkill';
+    const { eduAndCertData } = data
+    const isModalOpen = isOpen && type === 'editEduOrCert';
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            skill: '',
-            level: 'Beginner',
-            type: taskBasedCategories[0]
+            title: '',
+            description: '',
+            type: educationOrCertification[0]
         }
     })
 
     const isSubmitting = form.formState.isSubmitting;
 
+    useEffect(() => {
+        if(eduAndCertData){
+            form.setValue('title', eduAndCertData?.title);
+            form.setValue('description', eduAndCertData?.description);
+            form.setValue('type', eduAndCertData?.type)
+        }
+    }, [form,eduAndCertData])
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const response = await axios.post('/api/admin/skills', values)
-            if (response.status === 201) {
+            const response = await axios.patch(`/api/admin/edu-cert/${eduAndCertData?._id}`, values)
+            if (response.status === 200) {
                 form.reset();
                 onClose();
                 setTimeout(() => {
@@ -47,7 +57,7 @@ export const AddSkillModal = () => {
                 }, 0);
             }
         } catch (error) {
-            console.log("ERROR SUBMITING SKILL ", error);
+            console.log("ERROR Editing EDU CERT ", error);
         }
     }
 
@@ -56,23 +66,23 @@ export const AddSkillModal = () => {
             <DialogContent onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="mb-4">
                     <DialogTitle>
-                        Add Skill
+                        Edit Education or Certifications
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className=" space-y-4">
                             <FormField
-                                name="skill"
+                                name="title"
                                 control={form.control}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Skill
+                                            Title
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="React"
+                                                placeholder="Title ....."
                                                 {...field}
                                             />
                                         </FormControl>
@@ -81,25 +91,19 @@ export const AddSkillModal = () => {
                                 )}
                             />
                             <FormField
-                                name="level"
+                                name="description"
                                 control={form.control}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Skill
+                                            Description
                                         </FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl className="w-full">
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select Level" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="Beginner">Beginner</SelectItem>
-                                                <SelectItem value="Intermediate">Intermediate</SelectItem>
-                                                <SelectItem value="Advanced">Advanced</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="description ....."
+                                                {...field}
+                                            />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -119,7 +123,7 @@ export const AddSkillModal = () => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {taskBasedCategories.map((cat, i) => (
+                                                {educationOrCertification.map((cat, i) => (
                                                     <SelectItem key={i} value={cat}>{cat}</SelectItem>
                                                 ))}
 
@@ -131,7 +135,7 @@ export const AddSkillModal = () => {
                             />
                         </div>
                         <DialogFooter className="mt-4">
-                            <Button disabled={isSubmitting} type="submit" className=" cursor-pointer">Submit</Button>
+                            <Button disabled={isSubmitting} type="submit" className=" cursor-pointer">Update</Button>
                         </DialogFooter>
                     </form>
                 </Form>

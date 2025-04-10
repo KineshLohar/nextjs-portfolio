@@ -42,7 +42,9 @@ export const AddEducationOrCertificationModal = () => {
             if (response.status === 201) {
                 form.reset();
                 onClose();
-                router.refresh();
+                setTimeout(() => {
+                    router.refresh();
+                }, 0);
             }
         } catch (error) {
             console.log("ERROR adding EDU CERT ", error);

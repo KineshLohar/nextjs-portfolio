@@ -88,7 +88,9 @@ export const EditWorkExpModal = () => {
             if (response.status === 200) {
                 onClose();
                 form.reset()
-                router.refresh();
+                setTimeout(() => {
+                    router.refresh();
+                }, 0);
             }
         } catch (error) {
             console.log("ERROR SUBMITING WORK EXPERIENCE ", error);

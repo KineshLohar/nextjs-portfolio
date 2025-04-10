@@ -8,6 +8,8 @@ import { EditSkillModal } from "../modals/edit-skill-modal";
 import { DeleteWorkExperienceModal } from "../modals/delete-work-exp-modal";
 import { EditWorkExpModal } from "../modals/edit-work-exp-modal";
 import { AddEducationOrCertificationModal } from "../modals/add-edu-or-cert-modal";
+import { DeleteEduOrCertModal } from "../modals/delete-edu-cert-modal";
+import { EditEducationOrCertificationModal } from "../modals/edit-edu-or-cert-modal";
 
 
 export const ModalProvider = () => {
@@ -27,6 +29,8 @@ export const ModalProvider = () => {
             <DeleteWorkExperienceModal />
             <EditWorkExpModal />
             <AddEducationOrCertificationModal />
+            <DeleteEduOrCertModal />
+            <EditEducationOrCertificationModal />
         </>
     )
 }

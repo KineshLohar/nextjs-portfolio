@@ -6,7 +6,7 @@ export type ModalType = 'addWorkExp' | 'editWorkExp' | 'deleteWorkExp' | 'addSki
 interface ModalData {
     workExperienceData?: WorkExperienceTypes;
     skillData?: Skill;
-    eduOrCertData?: EduCertType;
+    eduAndCertData?: EduCertType;
 }
 
 interface UseModalProps {

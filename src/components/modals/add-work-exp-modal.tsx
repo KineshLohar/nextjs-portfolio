@@ -74,7 +74,9 @@ export const AddWorkExpModal = () => {
             if (response.status === 201) {
                 onClose();
                 form.reset()
-                router.refresh();
+                setTimeout(() => {
+                    router.refresh();
+                }, 0);
             }
         } catch (error) {
             console.log("ERROR SUBMITING WORK EXPERIENCE ", error);

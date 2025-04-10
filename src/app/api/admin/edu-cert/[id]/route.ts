@@ -1,5 +1,5 @@
 import getDataFromToken from "@/lib/get-data-from-token";
-import Skill from "@/models/SkillModel";
+import EduCert from "@/models/EduCertModel";
 import User from "@/models/UserModel";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function DELETE(req: NextRequest,
     { params }: {
         params: Promise<{
-            skillId: string;
+            id: string;
         }>
     }
 ) {
@@ -22,14 +22,14 @@ export async function DELETE(req: NextRequest,
             return new NextResponse("Unauthorized User", { status: 401 })
         }
 
-        const { skillId } = await params;
+        const { id } = await params;
 
-        await Skill.findByIdAndDelete(skillId);
+        await EduCert.findByIdAndDelete(id);
 
-        return NextResponse.json({ message: "SKill Deleted!" }, { status: 200 })
+        return NextResponse.json({ message: "Education or Certification Deleted!" }, { status: 200 })
 
     } catch (error) {
-        console.log("[ERRIR SKILL DELETE API]", error);
+        console.log("[ERRIR EDU CERT DELETE API]", error);
 
         return new NextResponse("Internal Server Error", { status: 500 })
     }
@@ -37,7 +37,7 @@ export async function DELETE(req: NextRequest,
 
 export async function PATCH(req: NextRequest, { params }: {
     params: Promise<{
-        skillId: string;
+        id: string;
     }>
 }) {
     try {
@@ -51,19 +51,19 @@ export async function PATCH(req: NextRequest, { params }: {
             return new NextResponse("Unauthorized User", { status: 401 })
         }
 
-        const { skillId } = await params;
+        const { id } = await params;
         const data = await req.json();
 
-        const skill = await Skill.findByIdAndUpdate(skillId, data);
+        const updatedData = await EduCert.findByIdAndUpdate(id, data);
 
-        if (!skill) {
-            return NextResponse.json({ message: "Failed to update Skill" }, { status: 400 })
+        if (!updatedData) {
+            return NextResponse.json({ message: "Failed to update Edu or Cert Data" }, { status: 400 })
         }
 
-        return NextResponse.json({ message: "Updated Skill", skill })
+        return NextResponse.json({ message: "Successfully updated Edu or Cert Data", updatedData })
 
     } catch (error) {
-        console.log("[ERRIR SKILL DELETE API]", error);
+        console.log("[ERRIR EDU CERT EDIT API]", error);
 
         return new NextResponse("Internal Server Error", { status: 500 })
     }

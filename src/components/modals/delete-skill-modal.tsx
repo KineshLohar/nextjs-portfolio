@@ -19,7 +19,9 @@ export const DeleteSkillModal = () => {
         try {
             setLoading(true)
             await axios.delete(`/api/admin/skills/${skillData?._id}`)
-            router.refresh();
+            setTimeout(() => {
+                router.refresh();
+            }, 0);
             onClose()
         } catch (error) {
             console.log("ERROR DELETING SKILL", error);
@@ -35,7 +37,7 @@ export const DeleteSkillModal = () => {
                     <DialogTitle>Delete Skill</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>
-                    Are you sure? You want to delete the {skillData?.skill}. This action cannot be undone!
+                    Are you sure? You want to delete the <span className=" font-bold">{skillData?.skill}</span>. This action cannot be undone!
                 </DialogDescription>
                 <DialogFooter>
                     <Button type="button" disabled={loading} variant='destructive' onClick={onDelete} className="cursor-pointer">
