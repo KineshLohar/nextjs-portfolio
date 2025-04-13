@@ -4,10 +4,9 @@ import User from "@/models/UserModel";
 import { NextRequest, NextResponse } from "next/server";
 import EduCert from '@/models/EduCertModel'
 
-connectDB();
-
 export async function POST(req: NextRequest) {
     try {
+        await connectDB()
         const decodedToken = await getDataFromToken(req);
         if (!decodedToken || typeof decodedToken === 'string') {
             return new NextResponse("Unauthorized", { status: 401 })

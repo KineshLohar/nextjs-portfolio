@@ -21,7 +21,7 @@ const eduCertSchema = new mongoose.Schema({
         enum: educationOrCertification,
         required: true
     }
-})
+}, { timestamps: true })
 
 const EduCert = mongoose.models.EduCert || mongoose.model("EduCert", eduCertSchema)
 

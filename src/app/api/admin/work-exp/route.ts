@@ -2,11 +2,11 @@ import getDataFromToken from "@/lib/get-data-from-token";
 import User from "@/models/UserModel";
 import { NextRequest, NextResponse } from "next/server";
 import { WorkExperience } from '@/models/WorkExpModel';
-
-
+import connectDB from "@/db/connectDB";
 
 export async function POST(req: NextRequest) {
     try {
+        await connectDB()
         const decodedToken = await getDataFromToken(req);
         if (!decodedToken || typeof decodedToken === 'string') {
             return new NextResponse("Unauthorized", { status: 401 })

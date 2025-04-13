@@ -19,7 +19,7 @@ const skillSchema = new mongoose.Schema({
         enum: taskBasedCategories,
         required: true
     }
-})
+}, { timestamps: true })
 
 const Skill = mongoose.models.Skill || mongoose.model("Skill", skillSchema)
 

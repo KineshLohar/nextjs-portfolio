@@ -1,3 +1,4 @@
+import connectDB from "@/db/connectDB";
 import getDataFromToken from "@/lib/get-data-from-token";
 import Skill from "@/models/SkillModel";
 import User from "@/models/UserModel";
@@ -12,6 +13,7 @@ export async function DELETE(req: NextRequest,
     }
 ) {
     try {
+        await connectDB()
         const decodedToken = await getDataFromToken(req);
         if (!decodedToken || typeof decodedToken === 'string') {
             return new NextResponse("Unauthorized", { status: 401 })
@@ -41,6 +43,7 @@ export async function PATCH(req: NextRequest, { params }: {
     }>
 }) {
     try {
+        await connectDB()
         const decodedToken = await getDataFromToken(req);
         if (!decodedToken || typeof decodedToken === 'string') {
             return new NextResponse("Unauthorized", { status: 401 })

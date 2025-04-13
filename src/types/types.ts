@@ -28,3 +28,29 @@ export interface EduCertType {
     description: string;
     type: string;
 }
+
+export interface ContactRequestType {
+    _id: string;
+    fullName: string;
+    email: string;
+    description: string;
+}
+
+export interface ProjectType {
+    _id: string;
+    title: string;
+    description: string;
+    demoLink: string;
+    repoLink: string;
+    techs: string;
+    thumbnail: {
+        id: string;
+        url: string;
+    },
+    images: {
+        _id: string;
+        public_id: string;
+        url: string;
+        caption: string;
+    }[]
+}
