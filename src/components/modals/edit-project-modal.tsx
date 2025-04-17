@@ -27,6 +27,29 @@ interface FileProps {
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+const fileSchema = z.custom<File>().superRefine((val, ctx) => {
+    // Skip validation on server side
+    if (typeof window === 'undefined') return true;
+
+    if (!(val instanceof File)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Please upload a file"
+        });
+        return false;
+    }
+
+    if (val.size > MAX_FILE_SIZE) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "File size must be less than 5MB"
+        });
+        return false;
+    }
+
+    return true;
+});
+
 const formSchema = z.object({
     title: z.string().min(1),
     description: z.string().min(1),
@@ -34,27 +57,52 @@ const formSchema = z.object({
     repoLink: z.string().optional(),
     techs: z.string().min(1),
     thumbnail: z.union([
-        z.instanceof(File),
+        fileSchema,
         z.object({
             id: z.string(),
             url: z.string()
         })
     ]).refine(
-        (value) => value instanceof File ? value.size <= MAX_FILE_SIZE : true,
-        "File size must be less than 5MB"
+        (value) => {
+            if (typeof window === 'undefined') return true;
+            return value instanceof File ? value.size <= MAX_FILE_SIZE : true;
+        },
+        { message: "File size must be less than 5MB" }
     ),
     images: z.array(z.union([
         z.object({
-            file: z.instanceof(File),
-            caption: z.string().min(1)
+            file: fileSchema,
+            caption: z.string().min(1, { message: "Caption is required" })
         }),
         z.object({
             _id: z.string(),
             public_id: z.string(),
             url: z.string(),
-            caption: z.string().min(1)
+            caption: z.string().min(1, { message: "Caption is required" })
         })
-    ])).min(1)
+    ])).min(1, { message: "At least one image is required" })
+    // thumbnail: z.union([
+    //     z.instanceof(File),
+    //     z.object({
+    //         id: z.string(),
+    //         url: z.string()
+    //     })
+    // ]).refine(
+    //     (value) => value instanceof File ? value.size <= MAX_FILE_SIZE : true,
+    //     "File size must be less than 5MB"
+    // ),
+    // images: z.array(z.union([
+    //     z.object({
+    //         file: z.instanceof(File),
+    //         caption: z.string().min(1)
+    //     }),
+    //     z.object({
+    //         _id: z.string(),
+    //         public_id: z.string(),
+    //         url: z.string(),
+    //         caption: z.string().min(1)
+    //     })
+    // ])).min(1)
 });
 
 export const EditProjectModal = () => {
@@ -132,7 +180,7 @@ export const EditProjectModal = () => {
                 if ('url' in image) {
                     existingImages.push({
                         _id: image?._id,
-                        public_id: image.public_id,
+                        public_id: image?.public_id,
                         url: image.url,
                         caption: image.caption
                     });
@@ -201,7 +249,7 @@ export const EditProjectModal = () => {
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent className="max-h-[90vh] overflow-y-auto">
                 <DialogHeader className="mb-4">
-                    <DialogTitle>Edit Project</DialogTitle>
+                    <DialogTitle className="text-sm">Edit Project</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

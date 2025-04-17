@@ -1,7 +1,7 @@
 import { EduCertType, ProjectType, Skill, WorkExperienceTypes } from "@/types/types";
 import { create } from "zustand";
 
-export type ModalType = 'addWorkExp' | 'editWorkExp' | 'deleteWorkExp' | 'addSkill' | 'editSkill' | 'deleteSkill' | "addEduOrCert" | 'editEduOrCert' | 'deleteEduOrCert' | 'addProject' | 'editProject' | 'deleteProject'
+export type ModalType = 'addWorkExp' | 'editWorkExp' | 'deleteWorkExp' | 'addSkill' | 'editSkill' | 'deleteSkill' | "addEduOrCert" | 'editEduOrCert' | 'deleteEduOrCert' | 'addProject' | 'editProject' | 'deleteProject' | 'changeResume'
 
 
 interface ModalData {

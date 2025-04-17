@@ -18,6 +18,15 @@ const skillSchema = new mongoose.Schema({
         type: String,
         enum: taskBasedCategories,
         required: true
+    },
+    experience: {
+        type: String
+    },
+    projects: {
+        type: String
+    },
+    description: {
+        type: String
     }
 }, { timestamps: true })
 

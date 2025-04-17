@@ -1,37 +1,36 @@
+import connectDB from "@/db/connectDB";
 import getDataFromToken from "@/lib/get-data-from-token";
 import User from "@/models/UserModel";
-import Skill from '@/models/SkillModel'
+import ResumeModel from "@/models/ResumeModel";
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/db/connectDB";
 
-export async function POST(req: NextRequest) {
+
+
+export async function PATCH(req: NextRequest) {
     try {
         await connectDB()
         const decodedToken = await getDataFromToken(req);
         if (!decodedToken || typeof decodedToken === 'string') {
             return new NextResponse("Unauthorized", { status: 401 })
         }
+
         const user = await User.findOne({ _id: decodedToken.id }).select("-password")
 
         if (!user) {
             return new NextResponse("Unauthorized User", { status: 401 })
         }
-
         const data = await req.json();
 
-        data.userId = decodedToken?.id
-
-        const skill = await Skill.create(data)
-
-        if (!skill) {
-            return new NextResponse("Unable to create Work Experience", { status: 400 })
+        let resume = await ResumeModel.findOneAndUpdate({ resumeId: 1}, data);
+        
+        if(!resume){
+            resume = await ResumeModel.create({ resumeId: 1, link: data?.link})
         }
 
-        return NextResponse.json({ message: "Work Experience Added!", skillData: skill }, { status: 201 })
-
+        return NextResponse.json(resume);
     } catch (error) {
-        console.log("[POST SKILL]", error);
-        
-        return new NextResponse("Internal Error", { status: 500 })
+        console.log("[ERROR ADDING WORK EXPE]", error);
+
+        return new NextResponse("Internal Server Error", { status: 500 })
     }
 }

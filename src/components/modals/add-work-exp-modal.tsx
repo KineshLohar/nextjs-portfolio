@@ -238,7 +238,7 @@ export const AddWorkExpModal = () => {
 
                                     <FormMessage />
                                 </div>
-                                <div className="grid grid-cols-2 gap-6 items-start w-full">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start w-full">
                                     <FormField
                                         name='startDate'
                                         control={form.control}

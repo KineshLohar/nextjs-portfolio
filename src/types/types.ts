@@ -19,6 +19,9 @@ export interface Skill {
     skill: string;
     level: string;
     type: string;
+    experience: string;
+    projects: string;
+    description: string;
 }
 
 export interface EduCertType {
@@ -53,4 +56,9 @@ export interface ProjectType {
         url: string;
         caption: string;
     }[]
+}
+
+export interface ResumeType {
+    resumeId: number;
+    link: string;
 }

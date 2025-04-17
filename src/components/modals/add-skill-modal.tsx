@@ -14,7 +14,10 @@ import { useRouter } from "next/navigation";
 const formSchema = z.object({
     skill: z.string().min(1, { message: "Skill is required!" }),
     level: z.enum(["Beginner", "Intermediate", "Advanced"]),
-    type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)])
+    type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)]),
+    experience: z.string(),
+    projects: z.string(),
+    description: z.string()
 })
 
 
@@ -30,7 +33,10 @@ export const AddSkillModal = () => {
         defaultValues: {
             skill: '',
             level: 'Beginner',
-            type: taskBasedCategories[0]
+            type: taskBasedCategories[0],
+            experience: '',
+            projects: '',
+            description: ''
         }
     })
 
@@ -73,6 +79,60 @@ export const AddSkillModal = () => {
                                         <FormControl>
                                             <Input
                                                 placeholder="React"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="projects"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Projects Completed
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="10 or 20"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="experience"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Experience
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="2 or 3"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="description"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Description
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Decription here...."
                                                 {...field}
                                             />
                                         </FormControl>

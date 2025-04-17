@@ -15,7 +15,10 @@ import { useEffect } from "react";
 const formSchema = z.object({
     skill: z.string().min(1, { message: "Skill is required!" }),
     level: z.enum(["Beginner", "Intermediate", "Advanced"]),
-    type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)])
+    type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)]),
+    experience: z.string(),
+    projects: z.string(),
+    description: z.string()
 })
 
 export const EditSkillModal = () => {
@@ -30,19 +33,25 @@ export const EditSkillModal = () => {
         defaultValues: {
             skill: '',
             level: 'Beginner',
-            type: taskBasedCategories[0]
+            type: taskBasedCategories[0],
+            experience: '',
+            projects: '',
+            description: ''
         }
     })
 
     const isSubmitting = form.formState.isSubmitting;
 
     useEffect(() => {
-        if(skillData){
+        if (skillData) {
             form.setValue('level', skillData?.level as "Beginner" | "Intermediate" | "Advanced")
             form.setValue('skill', skillData?.skill);
             form.setValue('type', skillData?.type)
+            form.setValue('description', skillData?.description)
+            form.setValue('projects', skillData?.projects)
+            form.setValue('experience', skillData?.experience)
         }
-    },[form, skillData])
+    }, [form, skillData])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
@@ -83,6 +92,60 @@ export const EditSkillModal = () => {
                                         <FormControl>
                                             <Input
                                                 placeholder="React"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="projects"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Projects Completed
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="10 or 20"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="experience"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Experience
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="2 or 3"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="description"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Description
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Decription here...."
                                                 {...field}
                                             />
                                         </FormControl>

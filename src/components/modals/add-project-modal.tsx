@@ -13,19 +13,51 @@ import { Textarea } from "../ui/textarea";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+const fileSchema = z.custom<File>().superRefine((val, ctx) => {
+    // Skip validation on server side
+    if (typeof window === 'undefined') return true;
+
+    if (!(val instanceof File)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Please upload a file"
+        });
+        return false;
+    }
+
+    if (val.size > MAX_FILE_SIZE) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "File size must be less than 5MB"
+        });
+        return false;
+    }
+
+    return true;
+});
+
 const formSchema = z.object({
     title: z.string().min(1, { message: "Title is required" }),
     description: z.string().min(1, { message: "Description is required" }),
     demoLink: z.string().optional(),
     repoLink: z.string().optional(),
     techs: z.string().min(1, { message: "Techs are required" }),
-    thumbnail: z.instanceof(File, { message: "Thumbnail is required" })
-        .refine(file => file.size <= MAX_FILE_SIZE, "File size must be less than 5MB"),
+    thumbnail: fileSchema.refine(val => val instanceof File, {
+        message: "Thumbnail is required"
+    }),
     images: z.array(z.object({
-        file: z.instanceof(File, { message: "Image is required" })
-            .refine(file => file.size <= MAX_FILE_SIZE, "File size must be less than 5MB"),
+        file: fileSchema.refine(val => val instanceof File, {
+            message: "Image is required"
+        }),
         caption: z.string().min(1, { message: "Caption is required" })
     })).min(1, { message: "At least one image is required" })
+    // z.instanceof(File, { message: "Thumbnail is required" })
+    //     .refine(file => file.size <= MAX_FILE_SIZE, "File size must be less than 5MB"),
+    // images: z.array(z.object({
+    //     file: z.instanceof(File, { message: "Image is required" })
+    //         .refine(file => file.size <= MAX_FILE_SIZE, "File size must be less than 5MB"),
+    //     caption: z.string().min(1, { message: "Caption is required" })
+    // })).min(1, { message: "At least one image is required" })
 });
 
 export const AddProjectModal = () => {
@@ -54,14 +86,14 @@ export const AddProjectModal = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const formData = new FormData();
-            
+
             // Append all text fields
             formData.append('title', values.title);
             formData.append('description', values.description);
             formData.append('demoLink', values.demoLink || '');
             formData.append('repoLink', values.repoLink || '');
             formData.append('techs', values.techs);
-            
+
             // Append thumbnail file
             formData.append('thumbnail', values.thumbnail);
 

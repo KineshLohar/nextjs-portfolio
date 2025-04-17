@@ -13,6 +13,7 @@ import { EditEducationOrCertificationModal } from "../modals/edit-edu-or-cert-mo
 import { AddProjectModal } from "../modals/add-project-modal";
 import { DeleteProjectModal } from "../modals/delete-project-modal";
 import { EditProjectModal } from "../modals/edit-project-modal";
+import { ChangeResumeModal } from "../modals/change-resume-modal";
 
 
 export const ModalProvider = () => {
@@ -37,6 +38,7 @@ export const ModalProvider = () => {
             <AddProjectModal />
             <DeleteProjectModal />
             <EditProjectModal />
+            <ChangeResumeModal />
         </>
     )
 }
