@@ -27,6 +27,16 @@ const skillSchema = new mongoose.Schema({
     },
     description: {
         type: String
+    },
+    logo:{
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
     }
 }, { timestamps: true })
 

@@ -22,6 +22,10 @@ export interface Skill {
     experience: string;
     projects: string;
     description: string;
+    logo: {
+        public_id: string;
+        url: string;
+    }
 }
 
 export interface EduCertType {

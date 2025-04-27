@@ -3,15 +3,15 @@
 import { Github, Instagram, Linkedin, X } from "@/lib/icons";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-type SocialMediaLabel = 'Instagram' | 'Github' | 'X' | 'Linkedin';
+export type SocialMediaLabel = 'Instagram' | 'Github' | 'X' | 'Linkedin';
 
 const iconMap: Record<SocialMediaLabel, React.ReactElement> = {
-    'Instagram': <Instagram className="w-9 h-9 text-white" />,
-    'Github': <Github className="w-9 h-9 text-white" />,
-    'X': <X className="w-9 h-9 text-white" />,
-    'Linkedin': <Linkedin className="w-9 h-9 text-white" />
+    'Instagram': <Instagram className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />,
+    'Github': <Github className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />,
+    'X': <X className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />,
+    'Linkedin': <Linkedin className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />
 }
 
 const descriptionMap: Record<SocialMediaLabel, string> = {
@@ -57,21 +57,29 @@ const overlayMap: Record<SocialMediaLabel, string> = {
     'Linkedin': 'from-blue-200 via-indigo-300 to-blue-200'
 }
 
-// Accent colors for card details
-const accentMap: Record<SocialMediaLabel, string> = {
-    'Instagram': 'from-amber-300 to-amber-500',
-    'Github': 'from-slate-300 to-slate-400',
-    'X': 'from-blue-300 to-blue-400',
-    'Linkedin': 'from-indigo-300 to-indigo-400'
-}
-
 export const SocialsCard = ({ label }: { label: SocialMediaLabel }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [isMobile, setIsMobile] = useState(false);
 
+    // Check if device is mobile or has touch screen
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+        };
+    }, []);
 
     // For the 3D tilting effect
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (isMobile) return; // Disable tilt effect on mobile
+        
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -84,27 +92,29 @@ export const SocialsCard = ({ label }: { label: SocialMediaLabel }) => {
 
     return (
         <Link
-            id="#socialCard"
             href={linkMap[label]}
             target="_blank"
             rel="noopener noreferrer"
-            className="block perspective-1000"
+            className="perspective-1000 h-full flex items-center"
         >
             <div
                 className={`
-                    w-80 h-40 rounded-xl 
+                    w-full h-auto min-h-28 sm:min-h-32 md:min-h-36 lg:min-h-40
+                    max-w-full sm:max-w-64 md:max-w-72 lg:max-w-80
+                    aspect-[2/1] rounded-lg sm:rounded-xl 
                     ${backgroundMap[label]}
-                    shadow-2xl hover:shadow-2xl transition-all duration-500
+                    hover:shadow-2xl transition-all duration-500
                     cursor-pointer overflow-hidden relative
                     group
-                    opacity-90
-                    hover:opacity-100
+                    shadow-lg shadow-white/10 backdrop-blur-md
+                    opacity-100
+                    hover:opacity-95
                 `}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => !isMobile && setIsHovered(true)}
+                onMouseLeave={() => !isMobile && setIsHovered(false)}
                 onMouseMove={handleMouseMove}
                 style={{
-                    transform: isHovered ?
+                    transform: isHovered && !isMobile ?
                         `rotateY(${mousePosition.x}deg) rotateX(${mousePosition.y}deg)` :
                         'rotateY(0deg) rotateX(0deg)',
                     transformStyle: 'preserve-3d',
@@ -115,78 +125,49 @@ export const SocialsCard = ({ label }: { label: SocialMediaLabel }) => {
                 <div className={`absolute inset-0 bg-gradient-to-br ${overlayMap[label]} opacity-20 z-10 
                                 group-hover:opacity-30 transition-opacity duration-300`}></div>
 
-                {/* Embossed chip design - similar to credit card chip */}
-                {/* <div className="absolute top-4 left-4 w-10 h-8 rounded-md bg-gradient-to-br from-amber-300 to-amber-500 
-                              flex items-center justify-center z-20 shadow-md overflow-hidden">
-                    <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-px">
-                        <div className="bg-amber-600"></div>
-                        <div className="bg-amber-500"></div>
-                        <div className="bg-amber-500"></div>
-                        <div className="bg-amber-600"></div>
-                    </div>
-                </div> */}
-
-                {/* Platform icon - positioned like card logo */}
-                <div className="absolute top-4 right-4 p-2 z-20">
+                {/* Platform icon */}
+                <div className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 p-1 sm:p-2 z-20">
                     {iconMap[label]}
                 </div>
 
-                {/* Embossed name - like the raised text on a credit card */}
-                <div className="absolute top-6 left-4 z-20 flex items-center">
-                    <div className="text-white text-lg font-bold tracking-wider">
+                {/* Profile and username */}
+                <div className="absolute top-2 sm:top-4 md:top-6 left-2 sm:left-3 md:left-4 z-20 flex items-center">
+                    <div className="flex-shrink-0">
                         {profilePicMap[label] ? (
                             <Image
                                 src={profilePicMap[label]}
                                 alt={usernameMap[label]}
                                 width={36}
                                 height={36}
-                                className="rounded-full border-2 border-white shadow-lg"
+                                className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full border border-white sm:border-2 shadow-lg"
                             />
                         ) : (
-                            <div className="w-10 h-10 rounded-full bg-white bg-opacity-20 
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full bg-white bg-opacity-20 
                                      flex items-center justify-center border border-white border-opacity-40">
                                 <span className="text-white text-xs font-bold">KL</span>
                             </div>
                         )}
                     </div>
-                    <div className="text-white text-xl tracking-widest opacity-80 ml-2">
-                        {usernameMap[label]}
+                    <div className="text-white text-sm sm:text-base md:text-lg lg:text-xl tracking-wide sm:tracking-wider opacity-80 ml-1">
+                        <span className="inline">{usernameMap[label]}</span>
+                        {/* <span className="xs:hidden">{label}</span> */}
                     </div>
                 </div>
 
-                {/* Profile image */}
-                {/* <div className="absolute bottom-4 right-4 z-20">
-                    {profilePicMap[label] ? (
-                        <Image
-                            src={profilePicMap[label]}
-                            alt={usernameMap[label]}
-                            width={36}
-                            height={36}
-                            className="rounded-full border-2 border-white shadow-lg"
-                        />
-                    ) : (
-                        <div className="w-9 h-9 rounded-full bg-white bg-opacity-20 
-                                     flex items-center justify-center border border-white border-opacity-40">
-                            <span className="text-white text-xs font-bold">KL</span>
-                        </div>
-                    )}
-                </div> */}
-
-                {/* Description - like a security message on credit card */}
-                <div className="absolute bottom-4 left-4 max-w-60 z-20">
-                    <div className={`text-base text-white opacity-80 tracking-wide font-light italic`}>
+                {/* Description */}
+                <div className="absolute bottom-2 sm:bottom-3 md:bottom-4 left-2 sm:left-3 md:left-4 max-w-full pr-4 z-20">
+                    <div className="text-xs sm:text-sm md:text-base text-white opacity-80 tracking-wide font-light italic line-clamp-2">
                         {descriptionMap[label]}
                     </div>
                 </div>
 
-                {/* Decorative security elements */}
-                {/* <div className="absolute top-8 left-1/2 w-28 h-6 -translate-x-1/2 
-                              bg-black bg-opacity-5 blur-md rounded-full"></div> */}
-                <div className="absolute bottom-20 right-2 w-20 h-1 bg-gradient-to-r 
+                {/* Decorative elements */}
+                <div className="absolute bottom-16 sm:bottom-20 right-2 w-12 sm:w-16 md:w-20 h-px sm:h-1 bg-gradient-to-r 
                               from-white to-transparent opacity-30"></div>
 
-                {/* Holographic circle - like a security hologram */}
-                <div className="absolute bottom-14 right-4 w-6 h-6 rounded-full 
+                {/* Holographic circle */}
+                <div className="absolute bottom-10 sm:bottom-12 md:bottom-14 right-2 sm:right-3 md:right-4 
+                              w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full 
                               bg-gradient-to-br from-transparent via-white to-transparent 
                               opacity-20 group-hover:opacity-40 transition-opacity"></div>
             </div>

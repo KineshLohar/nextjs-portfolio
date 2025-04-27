@@ -11,13 +11,41 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const fileSchema = z.custom<File>().superRefine((val, ctx) => {
+    // Skip validation on server side
+    if (typeof window === 'undefined') return true;
+
+    if (!(val instanceof File)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Please upload a file"
+        });
+        return false;
+    }
+
+    if (val.size > MAX_FILE_SIZE) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "File size must be less than 5MB"
+        });
+        return false;
+    }
+
+    return true;
+});
+
 const formSchema = z.object({
     skill: z.string().min(1, { message: "Skill is required!" }),
     level: z.enum(["Beginner", "Intermediate", "Advanced"]),
     type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)]),
     experience: z.string(),
     projects: z.string(),
-    description: z.string()
+    description: z.string(),
+    logo: fileSchema.refine(val => val instanceof File, {
+        message: "Logo is required"
+    }),
 })
 
 
@@ -36,15 +64,31 @@ export const AddSkillModal = () => {
             type: taskBasedCategories[0],
             experience: '',
             projects: '',
-            description: ''
+            description: '',
+            logo: undefined,
         }
     })
 
     const isSubmitting = form.formState.isSubmitting;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
+        const formData = new FormData();
+
+        formData.append("skill", values.skill);
+        formData.append("level", values.level);
+        formData.append("type", values.type);
+        formData.append("experience", values.experience);
+        formData.append("projects", values.projects);
+        formData.append("description", values.description);
+        formData.append("logo", values.logo);
+
         try {
-            const response = await axios.post('/api/admin/skills', values)
+            const response = await axios.post('/api/admin/skills', formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
             if (response.status === 201) {
                 form.reset();
                 onClose();
@@ -66,7 +110,7 @@ export const AddSkillModal = () => {
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="max-h-96 overflow-y-auto">
                         <div className=" space-y-4">
                             <FormField
                                 name="skill"
@@ -186,6 +230,30 @@ export const AddSkillModal = () => {
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="logo"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Skill Logo</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    field.onChange(file);
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                        {field.value && (
+                                            <div className="mt-2 text-sm text-muted-foreground">
+                                                Selected: {field.value.name}
+                                            </div>
+                                        )}
                                     </FormItem>
                                 )}
                             />

@@ -1,16 +1,20 @@
 'use client'
 
+import axios from "axios"
 import { Button } from "../ui/button"
 import { ModeToggle } from "../ui/mode-toggle"
+import { useRouter } from "next/navigation"
 
 export const AdminNavbar = () => {
 
+    const router = useRouter();
+
     const handleSignOut = async () => {
         try {
-
+            const response = await axios.get("/api/logout");
+            router.push("/login");
         } catch (error) {
             console.log("ERROR SIGN OUT", error);
-            
         }
     }
 

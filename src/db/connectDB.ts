@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
     try {
+
+        // if (mongoose.connection.readyState >= 1) {
+        //     // Already connected or connecting
+        //     return;
+        // }
         mongoose.connect(process.env.MONGO_URI!, {
             dbName: "nextjs-portfolio",
         })

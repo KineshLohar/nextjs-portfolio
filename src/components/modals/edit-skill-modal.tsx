@@ -10,7 +10,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const fileSchema = z.custom<File>().superRefine((val, ctx) => {
+    if (typeof window === 'undefined') return true;
+    if (!(val instanceof File)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please upload a file" });
+        return false;
+    }
+    if (val.size > MAX_FILE_SIZE) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "File size must be under 5MB" });
+        return false;
+    }
+    return true;
+});
 
 const formSchema = z.object({
     skill: z.string().min(1, { message: "Skill is required!" }),
@@ -18,7 +33,14 @@ const formSchema = z.object({
     type: z.enum([taskBasedCategories[0], ...taskBasedCategories.slice(1)]),
     experience: z.string(),
     projects: z.string(),
-    description: z.string()
+    description: z.string(),
+    logo: z.union([
+        fileSchema,
+        z.object({
+            public_id: z.string(),
+            url: z.string()
+        })
+    ])
 })
 
 export const EditSkillModal = () => {
@@ -28,6 +50,9 @@ export const EditSkillModal = () => {
     const router = useRouter()
     const isModalOpen = isOpen && type === 'editSkill';
 
+    const logoInputRef = useRef<HTMLInputElement>(null);
+    const [previousLogo, setPreviousLogo] = useState<{ public_id: string; url: string } | null>(null);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -36,7 +61,8 @@ export const EditSkillModal = () => {
             type: taskBasedCategories[0],
             experience: '',
             projects: '',
-            description: ''
+            description: '',
+            logo: undefined
         }
     })
 
@@ -49,16 +75,39 @@ export const EditSkillModal = () => {
             form.setValue('type', skillData?.type)
             form.setValue('description', skillData?.description)
             form.setValue('projects', skillData?.projects)
-            form.setValue('experience', skillData?.experience)
+            form.setValue('experience', skillData?.experience);
+            form.setValue('logo', skillData?.logo);
+
         }
     }, [form, skillData])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const response = await axios.patch(`/api/admin/skills/${skillData?._id}`, values)
+            const formData = new FormData();
+            formData.append("skill", values.skill);
+            formData.append("level", values.level);
+            formData.append("type", values.type);
+            formData.append("experience", values.experience);
+            formData.append("projects", values.projects);
+            formData.append("description", values.description);
+
+            if (values.logo instanceof File) {
+                formData.append("logo", values.logo);
+            }
+
+            if (previousLogo) {
+                formData.append("removeLogo", previousLogo.public_id);
+            }
+            const response = await axios.patch(`/api/admin/skills/${skillData?._id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+            )
             if (response.status === 200) {
                 form.reset()
                 router.refresh();
+                setPreviousLogo(null)
                 onClose();
             }
         } catch (error) {
@@ -70,6 +119,9 @@ export const EditSkillModal = () => {
         onClose();
     }
 
+    console.log("SKILL EDIT", skillData);
+    
+
     return (
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent onInteractOutside={(e) => e.preventDefault()}>
@@ -80,7 +132,7 @@ export const EditSkillModal = () => {
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className=" space-y-4">
+                        <div className=" space-y-4 max-h-96 overflow-y-auto">
                             <FormField
                                 name="skill"
                                 control={form.control}
@@ -202,6 +254,83 @@ export const EditSkillModal = () => {
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                name="logo"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Logo</FormLabel>
+                                        <div className="space-y-2 flex gap-4 items-start">
+                                            {field.value?.url && (
+                                                <div>
+                                                    <img src={field.value.url} alt="Logo preview" className="h-24 w-24 rounded object-cover" />
+                                                    <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="mt-2"
+                                                        onClick={() => {
+                                                            setPreviousLogo(field.value);
+                                                            setTimeout(() => logoInputRef.current?.click(), 100);
+                                                        }}
+                                                    >
+                                                        Change Logo
+                                                    </Button>
+                                                </div>
+                                            )}
+
+                                            {field.value instanceof File && (
+                                                <div>
+                                                    <img src={URL.createObjectURL(field.value)} alt="New logo" className="h-24 w-24 rounded object-cover" />
+                                                    <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="mt-2"
+                                                        onClick={() => setTimeout(() => logoInputRef.current?.click(), 100)}
+                                                    >
+                                                        Change Logo
+                                                    </Button>
+                                                </div>
+                                            )}
+
+                                            {previousLogo && (
+                                                <div>
+                                                    <img src={previousLogo.url} alt="Previous logo" className="h-24 w-24 rounded object-cover" />
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className="border-green-600 text-green-600 mt-2"
+                                                        onClick={() => {
+                                                            form.setValue("logo", previousLogo);
+                                                            setPreviousLogo(null);
+                                                        }}
+                                                    >
+                                                        Restore Logo
+                                                    </Button>
+                                                </div>
+                                            )}
+
+                                            <FormControl>
+                                                <Input
+                                                    ref={logoInputRef}
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) {
+                                                            form.setValue("logo", file);
+                                                        }
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
                         </div>
                         <DialogFooter className="mt-4">
                             <Button disabled={isSubmitting} type="submit" className=" cursor-pointer">Submit</Button>

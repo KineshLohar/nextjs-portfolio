@@ -22,11 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning
+    className={`${inter.className}`}
+    >
       <body
         className={cn(
-          `antialiased vsc-initialized ${inter.variable}`,
-          'bg-slate-50 dark:bg-black h-full'
+          `antialiased vsc-initialized `,
+          'bg-slate-50 dark:bg-black min-h-screen scroll-smooth'
         )
         }
       >
