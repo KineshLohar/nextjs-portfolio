@@ -5,14 +5,14 @@ import { SocialMediaLabel } from "./socials/socials-card";
 import { ActionTooltip } from "../action-tooltip";
 import { Separator } from "../ui/separator";
 
-interface SocialType {
+export interface SocialType {
     id: number;
     label: SocialMediaLabel;
     link: string;
     icon: React.ElementType
 }
 
-const socials: SocialType[] = [
+export const socials: SocialType[] = [
     {
         id: 1,
         label: 'Instagram',
@@ -27,7 +27,7 @@ const socials: SocialType[] = [
     },
     {
         id: 3,
-        label: 'X',
+        label: 'X (formely twitter)',
         link: 'https://x.com/kinesh_lohar',
         icon: X
     },
@@ -39,10 +39,10 @@ const socials: SocialType[] = [
     },
 ]
 
-const colorMap: Record<SocialMediaLabel, string> = {
+export const colorMap: Record<SocialMediaLabel, string> = {
     'Instagram': 'text-rose-700',
     'Github': 'text-black',
-    'X': 'text-black',
+    'X (formely twitter)': 'text-black',
     'Linkedin': 'text-indigo-600'
 }
 

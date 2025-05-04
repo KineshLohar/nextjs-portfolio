@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/providers/modal-provider";
-import { Inter } from 'next/font/google'
+import { Bree_Serif, Eagle_Lake, Inter, Lato, Sriracha } from 'next/font/google'
 
 export const metadata: Metadata = {
   title: "Kinesh Lohar",
@@ -16,6 +16,26 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
+const breeserif = Bree_Serif({
+  subsets: ['latin'],
+  weight: "400",
+  variable: '--font-breeserif',
+})
+
+const eaglelake = Eagle_Lake({
+  weight: "400",
+  subsets: ['latin'],
+  fallback: ['var(--font-breeserif)', 'serif'],
+  variable: '--font-eaglelake'
+})
+
+const lato = Lato({
+  weight: "400",
+  subsets: ['latin'],
+  fallback: ['var(--font-lato)', 'serif'],
+  variable: '--font-lato'
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -23,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning
-    className={`${inter.className}`}
+    className={`${inter.className} ${breeserif.variable} ${eaglelake.variable} ${lato.variable}`}
     >
       <body
         className={cn(

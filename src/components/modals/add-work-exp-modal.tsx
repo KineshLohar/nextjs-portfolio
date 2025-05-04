@@ -68,7 +68,7 @@ export const AddWorkExpModal = () => {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log("VALUES", values);
+        // console.log("VALUES", values);
         try {
             const response = await axios.post('/api/admin/work-exp', values)
             if (response.status === 201) {

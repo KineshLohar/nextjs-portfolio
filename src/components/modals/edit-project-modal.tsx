@@ -12,6 +12,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useEffect, useRef, useState } from "react";
 import { Separator } from "../ui/separator";
+import { MultiSelect } from "../ui/multi-select";
 
 interface ImagesType {
     _id: string;
@@ -55,7 +56,8 @@ const formSchema = z.object({
     description: z.string().min(1),
     demoLink: z.string().optional(),
     repoLink: z.string().optional(),
-    techs: z.string().min(1),
+    // techs: z.string().min(1),
+    techs: z.array(z.string()),
     thumbnail: z.union([
         fileSchema,
         z.object({
@@ -109,6 +111,7 @@ export const EditProjectModal = () => {
     const { isOpen, type, onClose, data } = useModal();
     const [deletedImages, setDeletedImages] = useState<ImagesType[]>([]);
     const [previousThumbnail, setPreviousThumbnail] = useState<{ id: string; url: string } | null>(null);
+    const [skills, setSkills] = useState([]);
     const thumbnailInputRef = useRef<HTMLInputElement | null>(null);
     const router = useRouter();
     const { projectData } = data;
@@ -121,7 +124,7 @@ export const EditProjectModal = () => {
             description: '',
             demoLink: '',
             repoLink: '',
-            techs: '',
+            techs: [],
             thumbnail: undefined,
             images: []
         }
@@ -132,6 +135,23 @@ export const EditProjectModal = () => {
         name: "images"
     });
 
+    const fetchSkills = async () => {
+        try {
+            const res = await axios.get('/api/admin/skills');
+            // console.log("RES OF FETCH SKILLS", res);
+            setSkills(res.data)
+
+        } catch (error) {
+            console.log("ERROR FETCHING SKILLS", error);
+        }
+    }
+
+    useEffect(() => {
+        if (isModalOpen) {
+            fetchSkills();
+        }
+    }, [isModalOpen])
+
     useEffect(() => {
         if (projectData) {
             form.reset({
@@ -139,7 +159,7 @@ export const EditProjectModal = () => {
                 description: projectData.description,
                 demoLink: projectData.demoLink,
                 repoLink: projectData.repoLink,
-                techs: projectData.techs,
+                techs: projectData.techs?.map(item => item?._id),
                 thumbnail: projectData.thumbnail,
                 images: projectData.images.map(img => ({
                     _id: img?._id,
@@ -162,14 +182,14 @@ export const EditProjectModal = () => {
             formData.append('description', values.description);
             formData.append('demoLink', values.demoLink || '');
             formData.append('repoLink', values.repoLink || '');
-            formData.append('techs', values.techs);
+            formData.append('techs', JSON.stringify(values.techs));
 
             // Append thumbnail file
             if (values.thumbnail instanceof File) {
                 formData.append('thumbnail', values.thumbnail);
             }
 
-            if(previousThumbnail){
+            if (previousThumbnail) {
                 formData.append('removeThumbnail', previousThumbnail?.id)
             }
 
@@ -202,8 +222,8 @@ export const EditProjectModal = () => {
                 formData.append('deletedImages', del?.public_id);
             });
 
-            console.log("DELETE IMAGES", deletedImages);
-            
+            // console.log("DELETE IMAGES", deletedImages);
+
 
             const response = await axios.patch(`/api/admin/projects/${projectData?._id}`, formData, {
                 headers: {
@@ -222,9 +242,12 @@ export const EditProjectModal = () => {
     };
 
     const handleImageRemove = (index: number, field: ImagesType | FileProps) => {
-        console.log("DELETE", field);
+        // console.log("DELETE", field);
         const image = fields[index];
-        if ('id' in image) {
+
+        console.log("FIELD AND IMAGE", field, image);
+        
+        if ('_id' in image) {
             setDeletedImages(prev => [...prev, field as ImagesType]);
         }
         remove(index);
@@ -241,7 +264,7 @@ export const EditProjectModal = () => {
         onClose();
     };
 
-   
+
 
     const isSubmitting = form.formState.isSubmitting;
 
@@ -318,7 +341,7 @@ export const EditProjectModal = () => {
                             />
 
                             {/* Techs Field */}
-                            <FormField
+                            {/* <FormField
                                 name="techs"
                                 control={form.control}
                                 render={({ field }) => (
@@ -326,6 +349,25 @@ export const EditProjectModal = () => {
                                         <FormLabel>Technologies Used</FormLabel>
                                         <FormControl>
                                             <Input placeholder="React, Node.js, MongoDB" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            /> */}
+
+                            <FormField
+                                name="techs"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Technologies Used</FormLabel>
+                                        <FormControl>
+                                            <MultiSelect
+                                                defaultValue={field.value}
+                                                options={skills}
+                                                onValueChange={field.onChange}
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -339,7 +381,7 @@ export const EditProjectModal = () => {
                                         <FormLabel>Project Thumbnail</FormLabel>
                                         <div className="space-y-2 flex justify-between">
                                             {/* DB Thumbnail (URL) */}
-                                            {field.value?.url && typeof field.value !== 'string' && (
+                                            {field.value?.url && (
                                                 <div>
                                                     <img
                                                         src={field.value.url}
@@ -442,7 +484,7 @@ export const EditProjectModal = () => {
 
 
                             <div className="space-y-4">
-                                {fields.map((field, index) => (
+                                {fields?.length > 0 && fields.map((field, index) => (
                                     <div key={field.id} className="space-y-2 border p-4 rounded-lg">
                                         {'url' in field ? (
                                             <div className="space-y-2">
@@ -510,13 +552,13 @@ export const EditProjectModal = () => {
                                         </Button>
                                     </div>
                                 ))}
-                                <Separator className="bg-green-900" />
+                                {fields?.length > 0 && <Separator className="bg-green-900" />}
                                 {
                                     deletedImages?.length > 0 && (
                                         <div className="w-full">
                                             <FormLabel className="">Deleted Images</FormLabel>
                                             {deletedImages?.length > 0 && deletedImages?.map((delImg, index) => (
-                                                <div key={delImg.public_id} className="space-y-2 border p-4 rounded-lg mt-2">
+                                                <div key={delImg?.public_id || index} className="space-y-2 border p-4 rounded-lg mt-2">
                                                     <div className="flex items-center justify-between">
                                                         <img
                                                             src={delImg.url}

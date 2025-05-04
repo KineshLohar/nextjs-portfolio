@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       description: formData.get('description'),
       demoLink: formData.get('demoLink'),
       repoLink: formData.get('repoLink'),
-      techs: formData.get('techs'),
+      techs: JSON.parse(formData.get('techs') as string),
       thumbnail: {
         id: thumbnailResult.public_id,
         url: thumbnailResult.secure_url

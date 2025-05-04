@@ -7,7 +7,7 @@ export interface WorkExperienceTypes {
     company: string;
     location: string;
     techs: string;
-    descriptions: { text: string }[];
+    descriptions: { text: string, _id: string }[];
     currentlyWorking: boolean;
     startDate: Date;
     endDate: Date;
@@ -49,7 +49,7 @@ export interface ProjectType {
     description: string;
     demoLink: string;
     repoLink: string;
-    techs: string;
+    techs: {_id: string; skill: string; logo : { public_id: string; url: string}}[];
     thumbnail: {
         id: string;
         url: string;

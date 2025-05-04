@@ -1,19 +1,22 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { AddWorkExpModal } from "../modals/add-work-exp-modal"
-import { AddSkillModal } from "../modals/add-skill-modal";
-import { DeleteSkillModal } from "../modals/delete-skill-modal";
-import { EditSkillModal } from "../modals/edit-skill-modal";
-import { DeleteWorkExperienceModal } from "../modals/delete-work-exp-modal";
-import { EditWorkExpModal } from "../modals/edit-work-exp-modal";
-import { AddEducationOrCertificationModal } from "../modals/add-edu-or-cert-modal";
-import { DeleteEduOrCertModal } from "../modals/delete-edu-cert-modal";
-import { EditEducationOrCertificationModal } from "../modals/edit-edu-or-cert-modal";
-import { AddProjectModal } from "../modals/add-project-modal";
-import { DeleteProjectModal } from "../modals/delete-project-modal";
-import { EditProjectModal } from "../modals/edit-project-modal";
-import { ChangeResumeModal } from "../modals/change-resume-modal";
+import dynamic from 'next/dynamic'
+
+// Dynamically import each modal using named exports + ssr: false
+const AddWorkExpModal = dynamic(() => import('../modals/add-work-exp-modal').then(mod => mod.AddWorkExpModal), { ssr: false });
+const AddSkillModal = dynamic(() => import('../modals/add-skill-modal').then(mod => mod.AddSkillModal), { ssr: false });
+const DeleteSkillModal = dynamic(() => import('../modals/delete-skill-modal').then(mod => mod.DeleteSkillModal), { ssr: false });
+const EditSkillModal = dynamic(() => import('../modals/edit-skill-modal').then(mod => mod.EditSkillModal), { ssr: false });
+const DeleteWorkExperienceModal = dynamic(() => import('../modals/delete-work-exp-modal').then(mod => mod.DeleteWorkExperienceModal), { ssr: false });
+const EditWorkExpModal = dynamic(() => import('../modals/edit-work-exp-modal').then(mod => mod.EditWorkExpModal), { ssr: false });
+const AddEducationOrCertificationModal = dynamic(() => import('../modals/add-edu-or-cert-modal').then(mod => mod.AddEducationOrCertificationModal), { ssr: false });
+const DeleteEduOrCertModal = dynamic(() => import('../modals/delete-edu-cert-modal').then(mod => mod.DeleteEduOrCertModal), { ssr: false });
+const EditEducationOrCertificationModal = dynamic(() => import('../modals/edit-edu-or-cert-modal').then(mod => mod.EditEducationOrCertificationModal), { ssr: false });
+const AddProjectModal = dynamic(() => import('../modals/add-project-modal').then(mod => mod.AddProjectModal), { ssr: false });
+const DeleteProjectModal = dynamic(() => import('../modals/delete-project-modal').then(mod => mod.DeleteProjectModal), { ssr: false });
+const EditProjectModal = dynamic(() => import('../modals/edit-project-modal').then(mod => mod.EditProjectModal), { ssr: false });
+const ChangeResumeModal = dynamic(() => import('../modals/change-resume-modal').then(mod => mod.ChangeResumeModal), { ssr: false });
 
 
 export const ModalProvider = () => {

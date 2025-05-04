@@ -5,6 +5,34 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/db/connectDB";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 
+export async function GET(req: NextRequest) {
+    try {
+        await connectDB();
+        const decodedToken = await getDataFromToken(req);
+
+        if (!decodedToken || typeof decodedToken === 'string') {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        const user = await User.findOne({ _id: decodedToken.id }).select("-password");
+
+        if (!user) {
+            return new NextResponse("Unauthorized User", { status: 401 });
+        }
+
+        const data = await Skill.find().select("_id skill");
+
+        if (!data) {
+            return new NextResponse('Skills not found!', { status: 400 })
+        }
+
+        return NextResponse.json(data);
+    } catch (error) {
+        console.log("ERROR GETTING SKILLS", error);
+        return NextResponse.json(error, { status: 500 })
+    }
+}
+
 export async function POST(req: NextRequest) {
     try {
         await connectDB();

@@ -5,47 +5,47 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-export type SocialMediaLabel = 'Instagram' | 'Github' | 'X' | 'Linkedin';
+export type SocialMediaLabel = 'Instagram' | 'Github' | 'X (formely twitter)' | 'Linkedin';
 
 const iconMap: Record<SocialMediaLabel, React.ReactElement> = {
     'Instagram': <Instagram className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />,
     'Github': <Github className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />,
-    'X': <X className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />,
+    'X (formely twitter)': <X className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />,
     'Linkedin': <Linkedin className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-white" />
 }
 
 const descriptionMap: Record<SocialMediaLabel, string> = {
     'Instagram': "Behind the scenes & creative sparks!",
     'Github': "Code playground — explore my builds!",
-    'X': "Sharing thoughts, updates & side quests!",
+    'X (formely twitter)': "Sharing thoughts, updates & side quests!",
     'Linkedin': "Let's grow, connect, and collaborate!"
 }
 
 const profilePicMap: Record<SocialMediaLabel, string> = {
     'Instagram': '',
     'Github': '',
-    'X': '',
+    'X (formely twitter)': '',
     'Linkedin': ''
 }
 
 const linkMap: Record<SocialMediaLabel, string> = {
     'Instagram': 'https://www.instagram.com/kinesh_malviya/',
     'Github': 'https://github.com/KineshLohar',
-    'X': 'https://x.com/kinesh_lohar',
+    'X (formely twitter)': 'https://x.com/kinesh_lohar',
     'Linkedin': 'https://www.linkedin.com/in/kineshlohar/'
 }
 
 const usernameMap: Record<SocialMediaLabel, string> = {
     'Instagram': '@kinesh_malviya',
     'Github': '@KineshLohar',
-    'X': '@kinesh_lohar',
+    'X (formely twitter)': '@kinesh_lohar',
     'Linkedin': '@kineshlohar'
 }
 
 const backgroundMap: Record<SocialMediaLabel, string> = {
     'Instagram': 'bg-gradient-to-br from-rose-500 via-purple-600 to-indigo-500',
     'Github': 'bg-gradient-to-br from-zinc-800 via-neutral-900 to-zinc-700',
-    'X': 'bg-gradient-to-br from-blue-600 via-sky-800 to-blue-900',
+    'X (formely twitter)': 'bg-gradient-to-br from-blue-600 via-sky-800 to-blue-900',
     'Linkedin': 'bg-gradient-to-br from-blue-600 via-indigo-700 to-blue-800'
 }
 
@@ -53,7 +53,7 @@ const backgroundMap: Record<SocialMediaLabel, string> = {
 const overlayMap: Record<SocialMediaLabel, string> = {
     'Instagram': 'from-rose-200 via-purple-300 to-indigo-200',
     'Github': 'from-neutral-300 via-zinc-400 to-neutral-300',
-    'X': 'from-sky-300 via-blue-200 to-sky-300',
+    'X (formely twitter)': 'from-sky-300 via-blue-200 to-sky-300',
     'Linkedin': 'from-blue-200 via-indigo-300 to-blue-200'
 }
 

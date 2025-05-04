@@ -15,7 +15,11 @@ export default async function Projects() {
 
     if (!token) return redirect('/login');
 
-    const projectsList: ProjectType[] = await ProjectModel.find();
+    const projectsList: ProjectType[] = await ProjectModel.find().populate('techs', '_id skill logo');
+
+
+    console.log("PROJECTS ", projectsList);
+    
 
     return (
         <div className="w-full h-full flex flex-col gap-4 bg-gray p-4 bg-white border-b dark:bg-zinc-900/70 text-black dark:text-white">
@@ -43,7 +47,7 @@ export default async function Projects() {
                                         <TableCell className="py-4">{proj?.title}</TableCell>
                                         <TableCell className="py-4">{proj?.demoLink}</TableCell>
                                         <TableCell className="py-4">{proj?.repoLink}</TableCell>
-                                        <TableCell className="py-4">{proj?.techs}</TableCell>
+                                        <TableCell className="py-4">{proj?.techs?.map(item => item?.skill).join(', ')}</TableCell>
                                         <TableCell className="py-4">
                                             <ActionDropdownList
                                                 dataKey='projectData'

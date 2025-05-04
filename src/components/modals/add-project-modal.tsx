@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { useCallback, useEffect, useState } from "react";
+import { MultiSelect } from "../ui/multi-select";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -41,7 +43,8 @@ const formSchema = z.object({
     description: z.string().min(1, { message: "Description is required" }),
     demoLink: z.string().optional(),
     repoLink: z.string().optional(),
-    techs: z.string().min(1, { message: "Techs are required" }),
+    // techs: z.string().min(1, { message: "Techs are required" }),
+    techs: z.array(z.string()),
     thumbnail: fileSchema.refine(val => val instanceof File, {
         message: "Thumbnail is required"
     }),
@@ -50,7 +53,8 @@ const formSchema = z.object({
             message: "Image is required"
         }),
         caption: z.string().min(1, { message: "Caption is required" })
-    })).min(1, { message: "At least one image is required" })
+    }))
+    // .min(1, { message: "At least one image is required" })
     // z.instanceof(File, { message: "Thumbnail is required" })
     //     .refine(file => file.size <= MAX_FILE_SIZE, "File size must be less than 5MB"),
     // images: z.array(z.object({
@@ -64,6 +68,7 @@ export const AddProjectModal = () => {
     const { isOpen, type, onClose } = useModal();
     const router = useRouter();
     const isModalOpen = isOpen && type === 'addProject';
+    const [skills, setSkills] = useState([]);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -72,7 +77,7 @@ export const AddProjectModal = () => {
             description: '',
             demoLink: '',
             repoLink: '',
-            techs: '',
+            techs: [],
             thumbnail: undefined,
             images: []
         }
@@ -83,6 +88,23 @@ export const AddProjectModal = () => {
         name: "images"
     });
 
+    const fetchSkills = async () => {
+        try {
+            const res = await axios.get('/api/admin/skills');
+            // console.log("RES OF FETCH SKILLS", res);
+            setSkills(res.data)
+
+        } catch (error) {
+            console.log("ERROR FETCHING SKILLS", error);
+        }
+    }
+
+    useEffect(() => {
+        if (isModalOpen) {
+            fetchSkills();
+        }
+    }, [isModalOpen])
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const formData = new FormData();
@@ -92,7 +114,7 @@ export const AddProjectModal = () => {
             formData.append('description', values.description);
             formData.append('demoLink', values.demoLink || '');
             formData.append('repoLink', values.repoLink || '');
-            formData.append('techs', values.techs);
+            formData.append('techs', JSON.stringify(values.techs));
 
             // Append thumbnail file
             formData.append('thumbnail', values.thumbnail);
@@ -123,6 +145,9 @@ export const AddProjectModal = () => {
         form.reset();
         onClose();
     };
+
+    console.log("TECHS",form.getValues("techs"));
+    
 
     const isSubmitting = form.formState.isSubmitting;
 
@@ -200,7 +225,7 @@ export const AddProjectModal = () => {
                             />
 
                             {/* Techs Field */}
-                            <FormField
+                            {/* <FormField
                                 name="techs"
                                 control={form.control}
                                 render={({ field }) => (
@@ -212,7 +237,27 @@ export const AddProjectModal = () => {
                                         <FormMessage />
                                     </FormItem>
                                 )}
+                            /> */}
+
+                            <FormField
+                                name="techs"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Technologies Used</FormLabel>
+                                        <FormControl>
+                                            <MultiSelect
+                                                options={skills}
+                                                onValueChange={field.onChange}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
+
+
 
                             {/* Thumbnail Upload */}
                             <FormField

@@ -119,7 +119,7 @@ export const EditSkillModal = () => {
         onClose();
     }
 
-    console.log("SKILL EDIT", skillData);
+    // console.log("SKILL EDIT", skillData);
     
 
     return (

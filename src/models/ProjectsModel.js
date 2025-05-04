@@ -11,17 +11,15 @@ const projectsSchema = new mongoose.Schema({
         required: true
     },
     demoLink: {
-        type: String,
-        required: true
+        type: String
     },
     repoLink: {
         type: String,
-        required: true
     },
-    techs: {
-        type: String,
-        required: true
-    },
+    techs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Skill'
+    }],
     thumbnail: {
         id: {
             type: String,

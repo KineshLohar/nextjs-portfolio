@@ -8,8 +8,10 @@ interface SkillSectionType {
     skills: SkillType[] | []
 }
 
+connectDB();
+
 export const SkillsSection = async () => {
-    await connectDB();
+
     const data: SkillSectionType[] = await Skill.aggregate([
         {
             $group: {
@@ -40,23 +42,28 @@ export const SkillsSection = async () => {
     ])
 
     return (
-        <div className="w-full px-4 py-16 md:py-24 bg-black">
-            <h3 className="relative mx-auto mb-12 md:mb-20 text-center">
-                <span className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-zinc-100 via-zinc-400 to-zinc-600 bg-clip-text text-transparent">
-                    Tech Stack Arsenal
-                </span>
-                <span className="absolute bottom-[-12px] left-1/2 -translate-x-1/2 w-32 md:w-48 h-[2px] bg-gradient-to-r from-transparent via-zinc-600 to-transparent animate-line-expand" />
-            </h3>
+        <div className="w-full min-h-screen py-16 md:py-24 bg-black">
+            <div className="relative max-w-7xl mx-auto px-4 sm:pl-8 md:px-8 lg:px-8 mb-12 transition-all duration-300">
+                <h2 className=" text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white  max-w-4xl transition-all duration-300">
+                    <span className="text-3xl md:text-4xl tracking-wide italic font-breeserif ">
+                        Tech Stack Arsenal
+                    </span>
+                </h2>
+                <span className="absolute bottom-[-12px] w-32 md:w-72 h-[2px] bg-gradient-to-r from-transparent via-zinc-600 to-transparent animate-line-expand" />
 
-            <div className="w-full max-w-7xl mx-auto grid gap-8 z-0">
+            </div>
+            <div className="w-full px-4 md:px-8 max-w-7xl mx-auto grid gap-8 z-0">
                 {data?.map((item, index) => (
                     <div
                         key={index}
-                        className="rounded-xl md:rounded-2xl border border-zinc-800/50 bg-zinc-900/10 backdrop-blur-sm -z-0"
+                        className={`rounded-xl md:rounded-2xl -border 
+                        -border-zinc-800/50 -bg-zinc-900/10 -backdrop-blur-sm 
+                        -z-0
+                        `}
                     >
-                        <div className="p-4 md:p-6 space-y-4">
+                        <div className=" space-y-4">
                             <div className="flex items-center gap-3">
-                                <div className="h-[2px] w-6 md:w-8 bg-gradient-to-r from-rose-700 to-transparent" />
+                                <div className="h-[2px] w-6 font-lato md:w-8 bg-gradient-to-r from-rose-700 to-transparent" />
                                 <h4 className="font-medium md:font-semibold text-base md:text-xl text-zinc-300">
                                     {item?.type}
                                 </h4>

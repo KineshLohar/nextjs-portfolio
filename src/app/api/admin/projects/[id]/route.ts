@@ -166,7 +166,7 @@ export async function PATCH(
         project.description = formData.get('description');
         project.demoLink = formData.get('demoLink');
         project.repoLink = formData.get('repoLink');
-        project.techs = formData.get('techs');
+        project.techs = JSON.parse(formData.get('techs') as string);
 
         await project.save();
 

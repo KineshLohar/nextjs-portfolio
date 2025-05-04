@@ -7,37 +7,39 @@ export async function GET(req: NextRequest) {
     try {
         await connectDB();
 
-        const data = await Skill.aggregate([
-            {
-                $group: {
-                    _id: '$type',
-                    skills: {
-                        $push: {
-                            _id: '$_id',
-                            userId: '$userId',
-                            skill: '$skill',
-                            level: '$level',
-                            experience: '$experience',
-                            projects: '$projects',
-                            description: '$description',
-                            logo: {
-                                public_id: "$logo.public_id",
-                                url: "$logo.url"
-                              },
-                            createdAt: '$createdAt',
-                            updatedAt: '$updatedAt'
-                        }
-                    }
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    type: '$_id',
-                    skills: 1
-                }
-            }
-        ])
+        const data = await Skill.find();
+
+        // const data = await Skill.aggregate([
+        //     {
+        //         $group: {
+        //             _id: '$type',
+        //             skills: {
+        //                 $push: {
+        //                     _id: '$_id',
+        //                     userId: '$userId',
+        //                     skill: '$skill',
+        //                     level: '$level',
+        //                     experience: '$experience',
+        //                     projects: '$projects',
+        //                     description: '$description',
+        //                     logo: {
+        //                         public_id: "$logo.public_id",
+        //                         url: "$logo.url"
+        //                       },
+        //                     createdAt: '$createdAt',
+        //                     updatedAt: '$updatedAt'
+        //                 }
+        //             }
+        //         }
+        //     },
+        //     {
+        //         $project: {
+        //             _id: 0,
+        //             type: '$_id',
+        //             skills: 1
+        //         }
+        //     }
+        // ])
 
         if (!data) {
             return new NextResponse('Skills not found!', { status: 400 })
