@@ -14,7 +14,7 @@ const colorMap: Record<SocialMediaLabel, string> = {
 export const Socials = () => {
     return (
         <div className="w-full flex flex-col items-center justify-center px-4 pt-24 gap-6">
-            <h3 className="text-center text-lg sm:text-xl font-medium opacity-90 bg-gradient-to-b font-breeserif from-white to-zinc-300 bg-clip-text text-transparent">Stay updated with my latest projects and insights</h3>
+            <h3 className="text-center text-lg sm:text-2xl font-medium opacity-90 bg-gradient-to-b font-breeserif from-white to-zinc-300 bg-clip-text text-transparent">Stay updated with my latest projects and insights</h3>
             <div className="flex items-center justify-center flex-wrap gap-4 font-lato">
                 {
                     socials?.map((social: SocialType) => {

@@ -1,7 +1,9 @@
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, Paperclip } from "lucide-react"
 import Link from "next/link"
 import { TypewriterEffect } from "./typewrite-effect";
+import { Button } from "@/components/ui/button";
+import { ContactNavButton } from "./contact-nab";
 
 
 export const HeroSection2 = () => {
@@ -23,6 +25,8 @@ export const HeroSection2 = () => {
 }
 
 export const HeroSection = () => {
+
+
     return (
         <div className="relative overflow-hidden w-full min-h-screen flex flex-col text-center items-center justify-center">
 
@@ -48,17 +52,13 @@ export const HeroSection = () => {
                 <div className="z-10 mt-4 gap-4 text-xs flex items-center">
                     <Link
                         href="/resume"
+                        scroll
                         className="uppercase relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
                     >
                         <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
-                        <span className="z-10 group-hover:text-neutral-950">Resume</span>
+                        <span className="z-10 group-hover:text-neutral-950 flex items-center gap-2"><Paperclip className="w-4 h-4" />Resume</span>
                     </Link>
-                    <Link
-                        href="/contact"
-                        className="uppercase flex items-center tracking-wider border-none bg-transparent text-zinc-300 hover:text-white hover:bg-transparent cursor-pointer"
-                    >
-                        Contact <ExternalLink className="ml-1 w-4 h-4" />
-                    </Link>
+                    <ContactNavButton />
                 </div>
             </div>
             <div className="absolute bottom-0 w-full h-28 bg-gradient-to-t from-black to-transparent pointer-events-none z-20" />

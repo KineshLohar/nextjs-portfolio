@@ -1,7 +1,7 @@
-import { EduCertType, ProjectType, Skill, WorkExperienceTypes } from "@/types/types";
+import { ContactRequestType, EduCertType, ProjectType, Skill, WorkExperienceTypes } from "@/types/types";
 import { create } from "zustand";
 
-export type ModalType = 'addWorkExp' | 'editWorkExp' | 'deleteWorkExp' | 'addSkill' | 'editSkill' | 'deleteSkill' | "addEduOrCert" | 'editEduOrCert' | 'deleteEduOrCert' | 'addProject' | 'editProject' | 'deleteProject' | 'changeResume'
+export type ModalType = 'addWorkExp' | 'editWorkExp' | 'deleteWorkExp' | 'addSkill' | 'editSkill' | 'deleteSkill' | "addEduOrCert" | 'editEduOrCert' | 'deleteEduOrCert' | 'addProject' | 'editProject' | 'deleteProject' | 'changeResume' | 'deleteContact'
 
 
 interface ModalData {
@@ -9,6 +9,7 @@ interface ModalData {
     skillData?: Skill;
     eduAndCertData?: EduCertType;
     projectData?: ProjectType;
+    contactData?: ContactRequestType;
 }
 
 interface UseModalProps {

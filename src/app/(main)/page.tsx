@@ -1,4 +1,5 @@
 import { AboutSection } from "@/components/viewer/about/about-section";
+import { ContactSection } from "@/components/viewer/contact/contact-section";
 import { CTA } from "@/components/viewer/cta/cta";
 import { HeroSection } from "@/components/viewer/hero/hero-section";
 import { ProjectsSection } from "@/components/viewer/projects/projects-section";
@@ -19,7 +20,8 @@ export default function Home() {
       <WorkExpSection />
       <ProjectsSection />
       <SkillsSection />
-      <CTA />
+      {/* <CTA /> */}
+      <ContactSection />
     </div>
   );
 }

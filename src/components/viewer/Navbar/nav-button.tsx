@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 export const Navbutton = ({ route }: { route: { id: number; path: string; label: string } }) => {
 
     const pathname = usePathname();
-    const isActive = pathname === route.path || pathname.includes(route.path);
+    const isActive = pathname === route.path ;
     return (
         <Link key={route.id} href={route.path}
             className={cn("group relative opacity-60 hover:opacity-100 transition-opacity duration-200",

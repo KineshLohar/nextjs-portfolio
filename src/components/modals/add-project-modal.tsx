@@ -2,16 +2,15 @@ import { useModal } from "@/hooks/use-modal-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { useFieldArray } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { useCallback, useEffect, useState } from "react";
 import { MultiSelect } from "../ui/multi-select";
+import { Textarea } from "../ui/textarea";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -144,10 +143,7 @@ export const AddProjectModal = () => {
     const handleClose = () => {
         form.reset();
         onClose();
-    };
-
-    console.log("TECHS",form.getValues("techs"));
-    
+    };    
 
     const isSubmitting = form.formState.isSubmitting;
 

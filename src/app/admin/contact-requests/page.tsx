@@ -1,9 +1,10 @@
+import { ActionDropdownList } from "@/components/action-dropdown-list";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+import connectDB from "@/db/connectDB";
+import ContactRequest from '@/models/ContactRequestModel';
+import { ContactRequestType } from "@/types/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import ContactRequest from '@/models/ContactRequestModel'
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
-import { ContactRequestType } from "@/types/types";
-import connectDB from "@/db/connectDB";
 
 connectDB()
 
@@ -14,7 +15,7 @@ export default async function ContactRequests() {
 
     if (!token) return redirect('/login');
 
-    const contactRequests: ContactRequestType[] = await ContactRequest.find().sort({ createdAt: -1 })
+    const contactRequests: ContactRequestType[] = await ContactRequest.find().sort({ createdAt: -1 });
 
     return (
         <div className="w-full min-h-screen flex flex-col gap-4 bg-gray p-4 bg-white border-b dark:bg-zinc-900/70 text-black dark:text-white">
@@ -26,7 +27,7 @@ export default async function ContactRequests() {
                     <Table className=" overflow-auto">
                         <TableHeader>
                             <TableRow>
-                                {['Full Name', 'Email', 'Description'].map((item, i) => (
+                                {['Full Name', 'Email', 'Description', "Action"].map((item, i) => (
                                     <TableCell key={i}>{item}</TableCell>
                                 ))}
                             </TableRow>
@@ -36,7 +37,14 @@ export default async function ContactRequests() {
                                 <TableRow key={req._id}>
                                     <TableCell className="py-4">{req.fullName}</TableCell>
                                     <TableCell className="py-4">{req.email}</TableCell>
-                                    <TableCell className="py-4">{req.description}</TableCell>
+                                    <TableCell className="py-4">{req.message}</TableCell>
+                                    <TableCell className="py-4">
+                                        <ActionDropdownList
+                                            dataKey='contactData'
+                                            data={JSON.stringify(req)}
+                                            deleteModal="deleteContact"
+                                        />
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

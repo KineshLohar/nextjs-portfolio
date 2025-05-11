@@ -30,11 +30,11 @@ const routes = [
         path: '/resume',
         label: 'Resume'
     },
-    {
-        id: 6,
-        path: '/contact',
-        label: 'Contact'
-    },
+    // {
+    //     id: 6,
+    //     path: '/contact',
+    //     label: 'Contact'
+    // },
 
 ]
 

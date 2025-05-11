@@ -244,8 +244,6 @@ export const EditProjectModal = () => {
     const handleImageRemove = (index: number, field: ImagesType | FileProps) => {
         // console.log("DELETE", field);
         const image = fields[index];
-
-        console.log("FIELD AND IMAGE", field, image);
         
         if ('_id' in image) {
             setDeletedImages(prev => [...prev, field as ImagesType]);

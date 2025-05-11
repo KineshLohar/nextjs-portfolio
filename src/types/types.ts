@@ -40,7 +40,7 @@ export interface ContactRequestType {
     _id: string;
     fullName: string;
     email: string;
-    description: string;
+    message: string;
 }
 
 export interface ProjectType {

@@ -68,7 +68,7 @@ export const Footer = () => {
                                 <ActionTooltip key={social?.id} side='top' label={social?.label}>
                                     <Link key={social?.id} href={social?.link} className="group">
                                         <Icon
-                                            className={`bg-zinc-900 rounded-full 
+                                            className={`bg-zinc-900- rounded-full 
                                             p-1 w-8 h-8 sm:w-9 sm:h-9 
                                             group-hover:scale-110 group-hover:mb-2 
                                             transition-all duration-100

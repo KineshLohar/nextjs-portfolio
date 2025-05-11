@@ -73,7 +73,7 @@ export const SkillsSection = async () => {
                                 {item?.skills?.map(skill => (
                                     <div
                                         key={skill?._id}
-                                        className="group relative min-h-[100px] md:min-h-[120px] md:p-4 rounded-lg md:rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 transition-colors duration-200 overflow-visible"
+                                        className="group relative min-h-[100px] md:min-h-[120px] md:p-4 rounded-lg- border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 transition-colors duration-200 overflow-visible"
                                     >
                                         {/* Skill Content */}
                                         <div className="flex flex-col items-center justify-center gap-2 md:gap-3 h-full">
@@ -97,7 +97,7 @@ export const SkillsSection = async () => {
                                         {
                                             (!!skill?.projects || !!skill?.experience || !!skill?.description) &&
                                             <div className="absolute z-50 hidden group-hover:block bottom-full mb-2 left-0 right-0">
-                                                <div className="p-4 md:p-5 bg-zinc-900 border border-zinc-800 rounded-lg md:rounded-xl shadow-xl backdrop-blur-sm">
+                                                <div className="p-4 md:p-5 bg-zinc-900 border border-zinc-800 rounded-lgmd:rounded-xl shadow-xl backdrop-blur-sm">
                                                     <div className="space-y-2 md:space-y-3">
                                                         {skill?.experience
                                                             &&

@@ -239,3 +239,7 @@
         mask-repeat: no-repeat;
     }
 }
+
+html {
+    @apply scroll-smooth;
+}

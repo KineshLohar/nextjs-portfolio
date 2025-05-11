@@ -17,10 +17,6 @@ export default async function Projects() {
 
     const projectsList: ProjectType[] = await ProjectModel.find().populate('techs', '_id skill logo');
 
-
-    console.log("PROJECTS ", projectsList);
-    
-
     return (
         <div className="w-full h-full flex flex-col gap-4 bg-gray p-4 bg-white border-b dark:bg-zinc-900/70 text-black dark:text-white">
             <div className="flex w-full items-center justify-between">

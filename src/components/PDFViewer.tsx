@@ -8,7 +8,7 @@ export default function PDFViewer({ url }: { url: string }) {
     };
 
     return (
-        <div className=" h-[1000px] w-full rounded-lg shadow-lg overflow-hidden">
+        <div className=" h-[800px] w-full rounded-lg shadow-lg overflow-hidden">
             <iframe
                 src={convertUrl(url)}
                 className="w-full h-full border-none"

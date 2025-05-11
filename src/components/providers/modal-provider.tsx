@@ -17,7 +17,7 @@ const AddProjectModal = dynamic(() => import('../modals/add-project-modal').then
 const DeleteProjectModal = dynamic(() => import('../modals/delete-project-modal').then(mod => mod.DeleteProjectModal), { ssr: false });
 const EditProjectModal = dynamic(() => import('../modals/edit-project-modal').then(mod => mod.EditProjectModal), { ssr: false });
 const ChangeResumeModal = dynamic(() => import('../modals/change-resume-modal').then(mod => mod.ChangeResumeModal), { ssr: false });
-
+const DeleteContactModal = dynamic(() => import('../modals/delete-contact-modal').then(mod => mod.DeleteContactModal), { ssr: false });
 
 export const ModalProvider = () => {
 
@@ -42,6 +42,7 @@ export const ModalProvider = () => {
             <DeleteProjectModal />
             <EditProjectModal />
             <ChangeResumeModal />
+            <DeleteContactModal />
         </>
     )
 }
