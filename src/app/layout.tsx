@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/providers/modal-provider";
-import { Bree_Serif, Eagle_Lake, Inter, Lato, Sriracha } from 'next/font/google'
+import { Bree_Serif, Eagle_Lake, Inter, Lato } from 'next/font/google'
 
 export const metadata: Metadata = {
   title: "Kinesh Lohar",

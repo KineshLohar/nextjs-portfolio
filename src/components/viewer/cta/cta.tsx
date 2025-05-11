@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { WavyBackground } from "@/components/ui/wavy-background"
 
 
 export const CTA = () => {
@@ -35,7 +34,7 @@ export const CTA = () => {
                 ></div>
                 <div className="text-xs sm:text-sm md:text-lg lg:text-xl font-lato font-medium text-center sm:text-left z-30 transition-all duration-300">
                     Your ideas deserve attention, <br className="hidden sm:block" />
-                    let's connect!
+                    let&apos;s connect!
                 </div>
 
                 <Button type="button" className="relative rounded-none group text-xs md:text-base font-bold border border-white bg-transparent  px-5 py-2 sm:px-6 sm:py-3 md:py-5 cursor-pointer z-50 hover:bg-transparent overflow-hidden">

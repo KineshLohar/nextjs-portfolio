@@ -6,9 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function DELETE(req: NextRequest, { params }: {
-    params: {
+    params: Promise<{
         id: string;
-    }
+    }>
 }) {
     try {
         await connectDB()
@@ -35,9 +35,9 @@ export async function DELETE(req: NextRequest, { params }: {
 }
 
 export async function PATCH(req: NextRequest, { params }: {
-    params: {
+    params: Promise<{
         id: string;
-    }
+    }>
 }) {
     try {
         await connectDB()

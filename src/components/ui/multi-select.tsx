@@ -134,7 +134,7 @@ export const MultiSelect = React.forwardRef<
       animation = 0,
       maxCount = 100,
       modalPopover = false,
-      asChild = false,
+      // asChild = false,
       className,
       ...props
     },

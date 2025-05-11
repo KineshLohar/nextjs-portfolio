@@ -2,7 +2,7 @@ import { ActionTooltip } from "@/components/action-tooltip"
 import { Button } from "@/components/ui/button"
 import { Github } from "@/lib/icons"
 import { ProjectType } from "@/types/types"
-import { Edit, ExternalLink, Eye } from "lucide-react"
+import { Eye } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 

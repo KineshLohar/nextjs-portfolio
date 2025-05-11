@@ -39,7 +39,7 @@ export const ContactForm = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const res = await axios.post('/api/contact', values);
+            await axios.post('/api/contact', values);
             // console.log("RES OF CONTACT", res);
             form.reset();
             setSuccessMessage(true);

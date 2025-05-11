@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -262,7 +263,7 @@ export const EditSkillModal = () => {
                                         <div className="space-y-2 flex gap-4 items-start">
                                             {field.value?.url && (
                                                 <div>
-                                                    <img src={field.value.url} alt="Logo preview" className="h-24 w-24 rounded object-cover" />
+                                                    <Image src={field.value.url} alt="Logo preview" className="h-24 w-24 rounded object-cover" />
                                                     <Button
                                                         type="button"
                                                         size="sm"
@@ -280,7 +281,7 @@ export const EditSkillModal = () => {
 
                                             {field.value instanceof File && (
                                                 <div>
-                                                    <img src={URL.createObjectURL(field.value)} alt="New logo" className="h-24 w-24 rounded object-cover" />
+                                                    <Image src={URL.createObjectURL(field.value)} alt="New logo" className="h-24 w-24 rounded object-cover" />
                                                     <Button
                                                         type="button"
                                                         size="sm"
@@ -295,7 +296,7 @@ export const EditSkillModal = () => {
 
                                             {previousLogo && (
                                                 <div>
-                                                    <img src={previousLogo.url} alt="Previous logo" className="h-24 w-24 rounded object-cover" />
+                                                    <Image src={previousLogo.url} alt="Previous logo" className="h-24 w-24 rounded object-cover" />
                                                     <Button
                                                         type="button"
                                                         variant="outline"

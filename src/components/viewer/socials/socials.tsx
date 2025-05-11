@@ -1,8 +1,7 @@
 import { ActionTooltip } from "@/components/action-tooltip";
-import { socials, SocialType } from "../footer"
 import Link from "next/link";
+import { socials, SocialType } from "../footer";
 import { SocialMediaLabel } from "./socials-card";
-import { FloatingDock } from "@/components/ui/floating-dock";
 
 const colorMap: Record<SocialMediaLabel, string> = {
     'Instagram': 'text-pink-500 opacity-80',

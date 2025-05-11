@@ -1,9 +1,9 @@
 import connectDB from "@/db/connectDB";
 import Skill from "@/models/SkillModel";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         await connectDB();
 

@@ -11,7 +11,7 @@ export const AdminNavbar = () => {
 
     const handleSignOut = async () => {
         try {
-            const response = await axios.get("/api/logout");
+            await axios.get("/api/logout");
             router.push("/login");
         } catch (error) {
             console.log("ERROR SIGN OUT", error);

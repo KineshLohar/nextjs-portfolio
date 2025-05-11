@@ -51,7 +51,7 @@ export const Navbar = () => {
             </Link>
             <div className="hidden ml-auto md:flex items-center justify-between gap-5 lg:gap-6 xl:gap-8 text-xs lg:text-sm 2xl:text-base uppercase transition-all duration-300">
                 {
-                    routes?.map((route, index) => (
+                    routes?.map((route) => (
                         <React.Fragment key={route.id}>
                            <Navbutton route={route} />
                             {/* {index !== routes?.length -1 && <span className=" text-xs text-zinc-600/70">•</span>} */}

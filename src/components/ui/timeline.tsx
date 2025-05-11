@@ -1,7 +1,6 @@
 "use client";
 import { WorkExperienceTypes } from "@/types/types";
 import {
-  useMotionValueEvent,
   useScroll,
   useTransform,
   motion,

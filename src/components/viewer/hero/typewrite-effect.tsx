@@ -21,7 +21,7 @@ export const TypewriterEffect = () => {
     // Typing effect
     if (isTyping) {
       typingInterval = setInterval(() => {
-        setCurrentWord((prev) => currentWordText.substring(0, charIndex + 1));
+        setCurrentWord(() => currentWordText.substring(0, charIndex + 1));
         setCharIndex((prev) => prev + 1);
 
         // When the word is fully typed, start deleting
@@ -38,7 +38,7 @@ export const TypewriterEffect = () => {
     // Deleting effect
     if (isDeleting) {
       deletingInterval = setInterval(() => {
-        setCurrentWord((prev) => currentWordText.substring(0, charIndex - 1));
+        setCurrentWord(() => currentWordText.substring(0, charIndex - 1));
         setCharIndex((prev) => prev - 1);
 
         // When the word is fully deleted, move to the next word

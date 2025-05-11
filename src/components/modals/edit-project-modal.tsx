@@ -13,6 +13,7 @@ import { Textarea } from "../ui/textarea";
 import { useEffect, useRef, useState } from "react";
 import { Separator } from "../ui/separator";
 import { MultiSelect } from "../ui/multi-select";
+import Image from "next/image";
 
 interface ImagesType {
     _id: string;
@@ -381,7 +382,7 @@ export const EditProjectModal = () => {
                                             {/* DB Thumbnail (URL) */}
                                             {field.value?.url && (
                                                 <div>
-                                                    <img
+                                                    <Image
                                                         src={field.value.url}
                                                         alt="Current thumbnail"
                                                         className="h-32 object-cover rounded-lg"
@@ -408,7 +409,7 @@ export const EditProjectModal = () => {
                                             {field.value instanceof File && (
                                                 <div className="space-y-2">
                                                     <div className="text-sm text-muted-foreground">{field.value.name}</div>
-                                                    <img
+                                                    <Image
                                                         src={URL.createObjectURL(field.value)}
                                                         alt="Current thumbnail"
                                                         className="h-32 object-cover rounded-lg"
@@ -432,7 +433,7 @@ export const EditProjectModal = () => {
 
                                             {
                                                 previousThumbnail && <div>
-                                                    <img
+                                                    <Image
                                                         src={previousThumbnail.url}
                                                         alt="Current thumbnail"
                                                         className="h-32 object-cover rounded-lg"
@@ -486,7 +487,7 @@ export const EditProjectModal = () => {
                                     <div key={field.id} className="space-y-2 border p-4 rounded-lg">
                                         {'url' in field ? (
                                             <div className="space-y-2">
-                                                <img
+                                                <Image
                                                     src={field.url}
                                                     alt={`Image ${index + 1}`}
                                                     className="h-32 object-cover rounded-lg"
@@ -558,7 +559,7 @@ export const EditProjectModal = () => {
                                             {deletedImages?.length > 0 && deletedImages?.map((delImg, index) => (
                                                 <div key={delImg?.public_id || index} className="space-y-2 border p-4 rounded-lg mt-2">
                                                     <div className="flex items-center justify-between">
-                                                        <img
+                                                        <Image
                                                             src={delImg.url}
                                                             alt={`Image ${index + 1}`}
                                                             className="h-32 max-w-6/12 object-cover rounded-lg"

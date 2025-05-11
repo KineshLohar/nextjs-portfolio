@@ -1,11 +1,9 @@
 import { AboutSection } from "@/components/viewer/about/about-section";
 import { ContactSection } from "@/components/viewer/contact/contact-section";
-import { CTA } from "@/components/viewer/cta/cta";
 import { HeroSection } from "@/components/viewer/hero/hero-section";
 import { ProjectsSection } from "@/components/viewer/projects/projects-section";
 import { SkillsSection } from "@/components/viewer/skills/skill-section";
 import { Socials } from "@/components/viewer/socials/socials";
-import SocialsMaarquee from "@/components/viewer/socials/socials-marquee";
 import { WorkExpSection } from "@/components/viewer/work-exp/work-exp-section";
 
 

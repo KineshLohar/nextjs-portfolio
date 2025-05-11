@@ -5,7 +5,6 @@
  **/
 'use client'
 import { cn } from "@/lib/utils";
-import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
 import {
     AnimatePresence,
     MotionValue,
@@ -15,10 +14,10 @@ import {
     useTransform,
 } from "motion/react";
 
+import { Github, Instagram, Linkedin, X } from "@/lib/icons";
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { SocialType } from "../viewer/footer";
-import Link from "next/link";
-import { Github, Instagram, Linkedin, X } from "@/lib/icons";
 import { SocialMediaLabel } from "../viewer/socials/socials-card";
 
 const socials: SocialType[] = [
@@ -57,10 +56,8 @@ const colorMap: Record<SocialMediaLabel, string> = {
 
 export const FloatingDock = ({
     desktopClassName,
-    mobileClassName,
 }: {
     desktopClassName?: string;
-    mobileClassName?: string;
 }) => {
     return (
         <>
@@ -76,7 +73,7 @@ const FloatingDockDesktop = ({
     items: SocialType[];
     className?: string;
 }) => {
-    let mouseX = useMotionValue(Infinity);
+    const mouseX = useMotionValue(Infinity);
     return (
         <motion.div
             onMouseMove={(e) => mouseX.set(e.pageX)}
@@ -97,8 +94,7 @@ function IconContainer({
     mouseX,
     label,
     link,
-    icon,
-    id
+    icon
 }: {
     mouseX: MotionValue;
     label: SocialMediaLabel;
@@ -106,41 +102,41 @@ function IconContainer({
     icon: React.ElementType;
     id: number;
 }) {
-    let ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
 
-    let distance = useTransform(mouseX, (val) => {
-        let bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
+    const distance = useTransform(mouseX, (val) => {
+        const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
 
         return val - bounds.x - bounds.width / 2;
     });
 
-    let widthTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
-    let heightTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
+    const widthTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
+    const heightTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
 
-    let widthTransformIcon = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
-    let heightTransformIcon = useTransform(
+    const widthTransformIcon = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+    const heightTransformIcon = useTransform(
         distance,
         [-150, 0, 150],
         [40, 80, 40],
     );
 
-    let width = useSpring(widthTransform, {
+    const width = useSpring(widthTransform, {
         mass: 0.1,
         stiffness: 150,
         damping: 12,
     });
-    let height = useSpring(heightTransform, {
+    const height = useSpring(heightTransform, {
         mass: 0.1,
         stiffness: 150,
         damping: 12,
     });
 
-    let widthIcon = useSpring(widthTransformIcon, {
+    const widthIcon = useSpring(widthTransformIcon, {
         mass: 0.1,
         stiffness: 150,
         damping: 12,
     });
-    let heightIcon = useSpring(heightTransformIcon, {
+    const heightIcon = useSpring(heightTransformIcon, {
         mass: 0.1,
         stiffness: 150,
         damping: 12,

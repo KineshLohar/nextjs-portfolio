@@ -11,15 +11,15 @@ export default function SocialsMaarquee() {
         <Marquee pauseOnHover className="h-[300px] flex items-center">
             <SocialsCard label="Instagram" />
             <SocialsCard label="Github" />
-            <SocialsCard label="X" />
+            <SocialsCard label="X (formely twitter)" />
             <SocialsCard label="Linkedin" />
             <SocialsCard label="Instagram" />
             <SocialsCard label="Github" />
-            <SocialsCard label="X" />
+            <SocialsCard label="X (formely twitter)" />
             <SocialsCard label="Linkedin" />
             <SocialsCard label="Instagram" />
             <SocialsCard label="Github" />
-            <SocialsCard label="X" />
+            <SocialsCard label="X (formely twitter)" />
             <SocialsCard label="Linkedin" />
         </Marquee>
     )
