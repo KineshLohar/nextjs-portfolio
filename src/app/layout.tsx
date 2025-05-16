@@ -13,6 +13,28 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://kineshlohar.vercel.app/" },
   icons: {
     icon: '/logo.png',
+    other: [
+      {
+        rel: 'canonical',
+        url: 'https://kineshlohar.vercel.app/',
+      },
+      {
+        rel: 'next',
+        url: 'https://kineshlohar.vercel.app/page?page=2',
+      },
+      {
+        rel: 'prev',
+        url: 'https://kineshlohar.vercel.app/page?page=1',
+      },
+      // Social Media Links
+      { rel: 'me', url: 'https://x.com/kinesh_lohar' },
+      { rel: 'me', url: 'https://www.linkedin.com/in/kineshlohar' },
+      { rel: 'me', url: 'https://github.com/kineshlohar' },
+      { rel: 'me', url: 'https://www.freecodecamp.org/fcc59cce604-c645-497c-a473-73b95c9182d1' },
+      { rel: 'me', url: 'https://www.hackerrank.com/kineshlohar' },
+      { rel: 'me', url: 'https://www.instagram.com/kinesh_malviya' },
+      { rel: 'me', url: 'https://www.snapchat.com/add/kinesh123' },
+    ],
   },
   openGraph: {
     title: "Kinesh Lohar | Software Developer",
@@ -91,40 +113,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Kinesh Lohar",
-    "url": "https://your-domain.com",
-    "sameAs": [
-      "https://www.linkedin.com/in/kineshlohar",
-      "https://github.com/kineshlohar",
-      "https://twitter.com/kineshlohar",
-      "https://www.instagram.com/kineshlohar",
-      "https://www.snapchat.com/add/kineshlohar",
-      "https://www.freecodecamp.org/fcc59cce604-c645-497c-a473-73b95c9182d1",
-      "https://www.hackerrank.com/kineshlohar"
-    ],
-    "jobTitle": "Full‑Stack Software Developer",
-    "worksFor": { "@type": "Organization", "name": "I‑Pangram Digital Service LLP" },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Mumbai",
-      "addressCountry": "IN"
-    }
-  }
-
-
   return (
     <html lang="en" suppressHydrationWarning
       className={`${inter.className} ${breeserif.variable} ${eaglelake.variable} ${lato.variable}`}
     >
       <Head>
-        <link rel="icon" type="image/png" href="/favicon.png" />
-        <Script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         <link rel="me" href="https://x.com/kinesh_lohar" />
         <link rel="me" href="https://www.linkedin.com/in/kineshlohar" />
         <link rel="me" href="https://github.com/kineshlohar" />
@@ -133,7 +126,6 @@ export default function RootLayout({
         <link rel="me" href="https://www.instagram.com/kinesh_malviya" />
         <link rel="me" href="https://www.snapchat.com/add/kinesh123" />
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <body
         className={cn(
@@ -151,6 +143,28 @@ export default function RootLayout({
           <ModalProvider />
           {children}
         </ThemeProvider>
+
+
+        <Script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Kinesh Lohar",
+              "url": "https://kineshlohar.vercel.app",
+              "sameAs": [
+                "https://www.linkedin.com/in/kineshlohar",
+                "https://github.com/kineshlohar",
+                "https://twitter.com/kineshlohar",
+                "https://www.instagram.com/kinesh_malviya",
+              ],
+              "jobTitle": "Full Stack Developer",
+              "worksFor": { "@type": "Organization", "name": "I-Pangram Digital Service LLP" },
+              "address": { "@type": "PostalAddress", "addressLocality": "Mumbai", "addressCountry": "IN" }
+            })
+          }}
+        />
       </body>
     </html>
   );
