@@ -1,4 +1,5 @@
 import connectDB from "@/db/connectDB";
+import { deleteFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import getDataFromToken from "@/lib/get-data-from-token";
 import EduCert from "@/models/EduCertModel";
 import User from "@/models/UserModel";
@@ -25,6 +26,21 @@ export async function DELETE(req: NextRequest,
         }
 
         const { id } = await params;
+
+        const eduCert = await EduCert.findById(id);
+
+        if (!eduCert) {
+            return new NextResponse("Edu/Cert not found", { status: 404 });
+        }
+
+        if (eduCert.thumbnail?.public_id) {
+            try {
+                await deleteFromCloudinary(eduCert.thumbnail.public_id);
+            } catch (err) {
+                console.error("Failed to delete thumbnail from Cloudinary:", err);
+                // Continue with deletion anyway
+            }
+        }
 
         await EduCert.findByIdAndDelete(id);
 
@@ -55,15 +71,46 @@ export async function PATCH(req: NextRequest, { params }: {
         }
 
         const { id } = await params;
-        const data = await req.json();
+        const formData = await req.formData();
 
-        const updatedData = await EduCert.findByIdAndUpdate(id, data);
-
-        if (!updatedData) {
-            return NextResponse.json({ message: "Failed to update Edu or Cert Data" }, { status: 400 })
+        const eduCert = await EduCert.findById(id);
+        if (!eduCert) {
+            return new NextResponse("EduCert not found", { status: 404 });
         }
 
-        return NextResponse.json({ message: "Successfully updated Edu or Cert Data", updatedData })
+        eduCert.title = formData.get("title") as string || eduCert.title;
+        eduCert.description = formData.get("description") as string || eduCert.description;
+        eduCert.type = formData.get("type") as string || eduCert.type;
+        eduCert.startDate = formData.get("startDate") ? new Date(formData.get("startDate") as string) : eduCert.startDate;
+        eduCert.endDate = formData.get("endDate") ? new Date(formData.get("endDate") as string) : eduCert.endDate;
+        eduCert.link = formData.get('link') || eduCert?.link
+
+        // Handle thumbnail update
+        const newThumbnailFile = formData.get("thumbnail") as File;
+
+        if (newThumbnailFile && newThumbnailFile.size > 0) {
+            if (eduCert.thumbnail?.public_id) {
+                await deleteFromCloudinary(eduCert.thumbnail.public_id);
+            }
+
+            const buffer = Buffer.from(await newThumbnailFile.arrayBuffer());
+            const uploadResult = await uploadToCloudinary(buffer, newThumbnailFile.type, {
+                folder: "projects/edu-cert",
+            });
+
+            eduCert.thumbnail = {
+                public_id: uploadResult.public_id,
+                url: uploadResult.secure_url,
+            };
+        }
+
+        await eduCert.save();
+
+        return NextResponse.json({
+            message: "Education or Certification updated successfully",
+            data: eduCert
+        }, { status: 200 });
+
 
     } catch (error) {
         console.log("[ERRIR EDU CERT EDIT API]", error);

@@ -263,7 +263,7 @@ export const EditSkillModal = () => {
                                         <div className="space-y-2 flex gap-4 items-start">
                                             {field.value?.url && (
                                                 <div>
-                                                    <Image src={field.value.url} alt="Logo preview" className="h-24 w-24 rounded object-cover" />
+                                                    <Image src={field.value.url} alt="Logo preview" width={100} height={100} className="h-24 w-24 rounded object-cover" />
                                                     <Button
                                                         type="button"
                                                         size="sm"
@@ -281,7 +281,7 @@ export const EditSkillModal = () => {
 
                                             {field.value instanceof File && (
                                                 <div>
-                                                    <Image src={URL.createObjectURL(field.value)} alt="New logo" className="h-24 w-24 rounded object-cover" />
+                                                    <Image src={URL.createObjectURL(field.value)} width={100} height={100} alt="New logo" className="h-24 w-24 rounded object-cover" />
                                                     <Button
                                                         type="button"
                                                         size="sm"
@@ -296,7 +296,7 @@ export const EditSkillModal = () => {
 
                                             {previousLogo && (
                                                 <div>
-                                                    <Image src={previousLogo.url} alt="Previous logo" className="h-24 w-24 rounded object-cover" />
+                                                    <Image src={previousLogo.url} alt="Previous logo" width={100} height={100} className="h-24 w-24 rounded object-cover" />
                                                     <Button
                                                         type="button"
                                                         variant="outline"

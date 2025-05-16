@@ -21,7 +21,7 @@ export const Socials = () => {
 
                         return (
                             <ActionTooltip key={social?.id} side='top' label={social?.label}>
-                                <Link key={social?.id} href={social?.link} className="group flex items-center hover:scale-105 transition-all duration-100">
+                                <Link key={social?.id} href={social?.link} target="_blank" className="group flex items-center hover:scale-105 transition-all duration-100">
                                     <Icon
                                         className={`bg-transparent rounded-full 
                                         p-1 w-8 h-8 sm:w-9 sm:h-9

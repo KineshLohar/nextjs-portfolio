@@ -10,14 +10,44 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import DatePicker from "react-datepicker";
+import Image from "next/image";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+const fileSchema = z.custom<File>().superRefine((val, ctx) => {
+    if (typeof window === 'undefined') return true;
+    if (!(val instanceof File)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please upload a valid image." });
+        return false;
+    }
+    if (val.size > MAX_FILE_SIZE) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Image must be under 5MB." });
+        return false;
+    }
+    return true;
+});
 
 const formSchema = z.object({
     title: z.string().min(1, { message: "Title is required!" }),
     description: z.string(),
-    type: z.enum([educationOrCertification[0], ...educationOrCertification.slice(1)])
+    type: z.enum([educationOrCertification[0], ...educationOrCertification.slice(1)]),
+    startDate: z.date().optional().nullable(),
+    endDate: z.date().optional().nullable(),
+    thumbnail: z.union([
+        fileSchema,
+        z.object({
+            public_id: z.string(),
+            url: z.string()
+        })
+    ]),
+    link: z.string()
 })
-
 
 
 export const EditEducationOrCertificationModal = () => {
@@ -27,34 +57,68 @@ export const EditEducationOrCertificationModal = () => {
     const { eduAndCertData } = data
     const isModalOpen = isOpen && type === 'editEduOrCert';
 
+    const thumbnailInputRef = useRef<HTMLInputElement>(null);
+    const [previousThumbnail, setPreviousThumbnail] = useState<{ public_id: string, url: string } | null>(null);
+
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: '',
             description: '',
-            type: educationOrCertification[0]
+            type: educationOrCertification[0],
+            startDate: new Date(),
+            endDate: new Date(),
+            thumbnail: undefined,
+            link: ""
+
         }
     })
 
     const isSubmitting = form.formState.isSubmitting;
 
     useEffect(() => {
-        if(eduAndCertData){
+        if (eduAndCertData) {
             form.setValue('title', eduAndCertData?.title);
             form.setValue('description', eduAndCertData?.description);
-            form.setValue('type', eduAndCertData?.type)
+            form.setValue('type', eduAndCertData?.type);
+            form.setValue('link', eduAndCertData?.link);
+            form.setValue("startDate", new Date(eduAndCertData?.startDate));
+            form.setValue("endDate", new Date(eduAndCertData?.endDate));
+            form.setValue("thumbnail", eduAndCertData?.thumbnail);
         }
-    }, [form,eduAndCertData])
+    }, [form, eduAndCertData])
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const response = await axios.patch(`/api/admin/edu-cert/${eduAndCertData?._id}`, values)
+            const formData = new FormData();
+            formData.append("title", values.title);
+            formData.append("description", values.description || "");
+            formData.append("type", values.type);
+            formData.append("link", values.link);
+            formData.append("startDate", values.startDate ? values.startDate.toISOString() : "");
+            formData.append("endDate", values.endDate ? values.endDate.toISOString() : "");
+
+            if (values.thumbnail instanceof File) {
+                formData.append("thumbnail", values.thumbnail);
+            }
+
+            if (previousThumbnail) {
+                formData.append("removeThumbnail", previousThumbnail.public_id);
+            }
+
+            const response = await axios.patch(`/api/admin/edu-cert/${eduAndCertData?._id}`, values, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
             if (response.status === 200) {
                 form.reset();
                 onClose();
                 setTimeout(() => {
                     router.refresh();
                 }, 0);
+                setPreviousThumbnail(null);
             }
         } catch (error) {
             console.log("ERROR Editing EDU CERT ", error);
@@ -63,7 +127,7 @@ export const EditEducationOrCertificationModal = () => {
 
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
-            <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+            <DialogContent onInteractOutside={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto">
                 <DialogHeader className="mb-4">
                     <DialogTitle>
                         Edit Education or Certifications
@@ -133,6 +197,186 @@ export const EditEducationOrCertificationModal = () => {
                                     </FormItem>
                                 )}
                             />
+
+                            <FormField
+                                name="link"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Link
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="www.example.com"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start w-full">
+                                <FormField
+                                    name='startDate'
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Start Date
+                                            </FormLabel>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <FormControl>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                " pl-3 text-left font-normal",
+                                                                !field.value && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, "PPP")
+                                                            ) : (
+                                                                <span>Pick Start date</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
+                                                    </FormControl>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+                                                    <DatePicker
+                                                        selected={field.value}
+                                                        onChange={field.onChange}
+                                                        dateFormat="yyyy/MM/dd"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                        dropdownMode="select"
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    name='endDate'
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Location <span className=" opacity-70 text-xs">(optional)</span>
+                                            </FormLabel>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <FormControl>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                " pl-3 text-left font-normal",
+                                                                !field.value && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, "PPP")
+                                                            ) : (
+                                                                <span>Pick End date</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
+                                                    </FormControl>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+
+                                                    <DatePicker
+                                                        selected={field.value}
+                                                        onChange={field.onChange}
+                                                        dateFormat="yyyy/MM/dd"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                        dropdownMode="select"
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    name="thumbnail"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Thumbnail</FormLabel>
+                                            <div className="space-y-2 flex gap-4 items-start">
+                                                {field.value?.url && (
+                                                    <div>
+                                                        <Image src={field.value.url} alt="Thumbnail preview" width={96} height={96} className="rounded" />
+                                                        <Button
+                                                            type="button"
+                                                            size="sm"
+                                                            variant="outline"
+                                                            className="mt-2"
+                                                            onClick={() => {
+                                                                setPreviousThumbnail(field.value);
+                                                                setTimeout(() => thumbnailInputRef.current?.click(), 100);
+                                                            }}
+                                                        >
+                                                            Change Thumbnail
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                                {field.value instanceof File && (
+                                                    <div>
+                                                        <Image src={URL.createObjectURL(field.value)} alt="New thumbnail" width={96} height={96} className="rounded" />
+                                                        <Button
+                                                            type="button"
+                                                            size="sm"
+                                                            variant="outline"
+                                                            className="mt-2"
+                                                            onClick={() => setTimeout(() => thumbnailInputRef.current?.click(), 100)}
+                                                        >
+                                                            Change Thumbnail
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                                {previousThumbnail && (
+                                                    <div>
+                                                        <Image src={previousThumbnail.url} alt="Previous thumbnail" width={96} height={96} className="rounded" />
+                                                        <Button
+                                                            type="button"
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="border-green-600 text-green-600 mt-2"
+                                                            onClick={() => {
+                                                                form.setValue("thumbnail", previousThumbnail);
+                                                                setPreviousThumbnail(null);
+                                                            }}
+                                                        >
+                                                            Restore Thumbnail
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                                <FormControl>
+                                                    <Input
+                                                        ref={thumbnailInputRef}
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                form.setValue("thumbnail", file);
+                                                            }
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </div>
                         <DialogFooter className="mt-4">
                             <Button disabled={isSubmitting} type="submit" className=" cursor-pointer">Update</Button>

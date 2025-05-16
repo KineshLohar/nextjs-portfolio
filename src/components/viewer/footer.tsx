@@ -66,7 +66,7 @@ export const Footer = () => {
 
                             return (
                                 <ActionTooltip key={social?.id} side='top' label={social?.label}>
-                                    <Link key={social?.id} href={social?.link} className="group">
+                                    <Link key={social?.id} href={social?.link} target="_blank" className="group">
                                         <Icon
                                             className={`bg-zinc-900- rounded-full 
                                             p-1 w-8 h-8 sm:w-9 sm:h-9 

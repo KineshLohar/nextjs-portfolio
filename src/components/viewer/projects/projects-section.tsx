@@ -14,8 +14,6 @@ connectDB();
 export async function ProjectsSection() {
     const projects: ProjectType[] = await ProjectModel.find().limit(3).populate('techs', '_id skill logo').sort({ createdAt: -1 });
 
-    console.log("PROJECTS ", projects);
-
     return (
         <div className="w-full min-h-screen mb-16">
             <div className="max-w-7xl mx-auto md:pt-28 px-4 sm:pl-8 md:px-8 lg:px-10 transition-all duration-300">
@@ -55,6 +53,7 @@ export async function ProjectsSection() {
                                 </div>
                                 <div className={cn(`w-full mt-4 font-lato sm:mt-8 md:mt-0 sm:w-6/12- md:w-6/12 lg:w-7/12 flex flex-col justify-center items-start`,
                                     index % 2 === 0 && 'sm:pl-8- md:pl-8 lg:p-16',
+                                    index % 2 !== 0 && "md:pr-8"
                                 )}>
                                     <h3 className="font-medium text-xl md:text-2xl lg:text-3xl tracking-wide font-breeserif capitalize">{proj?.title}</h3>
                                     <p className="text-sm text-zinc-200 mt-2">{proj?.description}</p>

@@ -20,6 +20,25 @@ const eduCertSchema = new mongoose.Schema({
         type: String,
         enum: educationOrCertification,
         required: true
+    },
+    link: {
+        type: String
+    },
+    thumbnail: {
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    },
+    startDate: {
+        type: Date
+    },
+    endDate: {
+        type: Date
     }
 }, { timestamps: true })
 

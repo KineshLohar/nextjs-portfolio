@@ -7,7 +7,8 @@ import { ProjectType } from "@/types/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-connectDB()
+connectDB();
+
 
 export default async function Projects() {
     const cookiesStore = await cookies();
@@ -15,6 +16,8 @@ export default async function Projects() {
 
     if (!token) return redirect('/login');
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const Skill = (await import("@/models/SkillModel")).default;
     const projectsList: ProjectType[] = await ProjectModel.find().populate('techs', '_id skill logo');
 
     return (

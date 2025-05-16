@@ -34,6 +34,13 @@ export interface EduCertType {
     title: string;
     description: string;
     type: string;
+    startDate: string;
+    endDate: string;
+    thumbnail: {
+        public_id: string;
+        url: string;
+    },
+    link: string;
 }
 
 export interface ContactRequestType {

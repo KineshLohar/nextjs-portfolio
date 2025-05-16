@@ -10,11 +10,46 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import DatePicker from "react-datepicker";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const fileSchema = z.custom<File>().superRefine((val, ctx) => {
+    if (typeof window === 'undefined') return true;
+
+    if (!(val instanceof File)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Please upload an image",
+        });
+        return false;
+    }
+
+    if (val.size > MAX_FILE_SIZE) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Image size must be less than 5MB",
+        });
+        return false;
+    }
+
+    return true;
+});
 
 const formSchema = z.object({
     title: z.string().min(1, { message: "Title is required!" }),
     description: z.string(),
-    type: z.enum([educationOrCertification[0], ...educationOrCertification.slice(1)])
+    type: z.enum([educationOrCertification[0], ...educationOrCertification.slice(1)]),
+    thumbnail: fileSchema.refine(val => val instanceof File, {
+        message: "Image is required",
+    }),
+    startDate: z.date().optional().nullable(),
+    endDate: z.date().optional().nullable(),
+    link: z.string(),
 })
 
 
@@ -30,15 +65,34 @@ export const AddEducationOrCertificationModal = () => {
         defaultValues: {
             title: '',
             description: '',
-            type: educationOrCertification[0]
+            type: educationOrCertification[0],
+            thumbnail: undefined,
+            startDate: new Date(),
+            endDate: new Date(),
+            link: ''
         }
     })
 
     const isSubmitting = form.formState.isSubmitting;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
+        const formData = new FormData();
+
+        formData.append("title", values.title);
+        formData.append("description", values.description);
+        formData.append("type", values.type);
+        formData.append("link", values.link);
+        formData.append("thumbnail", values.thumbnail);
+        formData.append("startDate", values.startDate ? values.startDate.toISOString() : "");
+        formData.append("endDate", values.endDate ? values.endDate.toISOString() : "");
+
         try {
-            const response = await axios.post('/api/admin/edu-cert', values)
+            const response = await axios.post('/api/admin/edu-cert', formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            });
             if (response.status === 201) {
                 form.reset();
                 onClose();
@@ -53,7 +107,7 @@ export const AddEducationOrCertificationModal = () => {
 
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
-            <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+            <DialogContent className="max-h-[90vh] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="mb-4">
                     <DialogTitle>
                         Add Education or Certifications
@@ -120,6 +174,135 @@ export const AddEducationOrCertificationModal = () => {
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="link"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Link
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="www.example.com"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start w-full">
+                                <FormField
+                                    name='startDate'
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Start Date
+                                            </FormLabel>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <FormControl>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                " pl-3 text-left font-normal",
+                                                                !field.value && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, "PPP")
+                                                            ) : (
+                                                                <span>Pick Start date</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
+                                                    </FormControl>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+                                                    <DatePicker
+                                                        selected={field.value}
+                                                        onChange={field.onChange}
+                                                        dateFormat="yyyy/MM/dd"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                        dropdownMode="select"
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    name='endDate'
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Location <span className=" opacity-70 text-xs">(optional)</span>
+                                            </FormLabel>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <FormControl>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                " pl-3 text-left font-normal",
+                                                                !field.value && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, "PPP")
+                                                            ) : (
+                                                                <span>Pick End date</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
+                                                    </FormControl>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+
+                                                    <DatePicker
+                                                        selected={field.value}
+                                                        onChange={field.onChange}
+                                                        dateFormat="yyyy/MM/dd"
+                                                        showMonthDropdown
+                                                        showYearDropdown
+                                                        dropdownMode="select"
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <FormField
+                                name="thumbnail"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Image</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    field.onChange(file);
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                        {field.value && (
+                                            <div className="mt-2 text-sm text-muted-foreground">
+                                                Selected: {field.value.name}
+                                            </div>
+                                        )}
                                     </FormItem>
                                 )}
                             />
