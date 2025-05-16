@@ -7,7 +7,7 @@ export const AboutSection = () => {
             </h2>
             <div className=' text-right text-sm md:text-base sm:w-8/12 lg:w-7/12 place-self-end sm:pr-16 font-lato'>
                 <p>
-                    I'm Kinesh Lohar, a Full-Stack Web Developer with a focus on building scalable, high-performance SaaS and complex software applications. I thrive on delivering clean, efficient code, prioritizing customer satisfaction, and am capable of working both independently and as part of a collaborative team.
+                    I&apos;m Kinesh Lohar, a Full-Stack Web Developer with a focus on building scalable, high-performance SaaS and complex software applications. I thrive on delivering clean, efficient code, prioritizing customer satisfaction, and am capable of working both independently and as part of a collaborative team.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-end sm:items-center gap-3 sm:gap-6 mt-2">
                     <div className="flex flex-col items-center  justify-center border- border-white/70- px-8- sm:px-12- py-2 sm:py-3.5 ">

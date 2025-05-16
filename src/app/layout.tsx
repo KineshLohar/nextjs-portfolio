@@ -146,6 +146,7 @@ export default function RootLayout({
 
 
         <Script
+          id="jsonLd"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
