@@ -78,10 +78,7 @@ export const metadata: Metadata = {
     'Open Graph metadata',
     'Software engineer India',
     'Frontend and backend engineer',
-  ],
-  verification :{
-    google: '1kRghSAo530TJp33jxmbYSLpy4I17Gwc7_9STbLV7UA'
-  }
+  ]
 };
 
 const inter = Inter({
@@ -129,7 +126,7 @@ export default function RootLayout({
         <link rel="me" href="https://www.instagram.com/kinesh_malviya" />
         <link rel="me" href="https://www.snapchat.com/add/kinesh123" />
         <meta charSet="utf-8" />
-        <meta name="google-site-verification" content="1kRghSAo530TJp33jxmbYSLpy4I17Gwc7_9STbLV7UA"></meta>
+        <meta name="google-site-verification" content="a03BjLVPwh2y04RlnKD-GgSxWiLZKYo1DWBpD8dK6AU" />
       </Head>
       <body
         className={cn(
