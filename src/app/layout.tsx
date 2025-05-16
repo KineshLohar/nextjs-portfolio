@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     'Frontend and backend engineer',
   ],
   verification :{
-    google: 'google-site-verification=1kRghSAo530TJp33jxmbYSLpy4I17Gwc7_9STbLV7UA'
+    google: '1kRghSAo530TJp33jxmbYSLpy4I17Gwc7_9STbLV7UA'
   }
 };
 
