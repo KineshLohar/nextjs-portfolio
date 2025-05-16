@@ -78,7 +78,10 @@ export const metadata: Metadata = {
     'Open Graph metadata',
     'Software engineer India',
     'Frontend and backend engineer',
-  ]
+  ],
+  verification: {
+    google: "a03BjLVPwh2y04RlnKD-GgSxWiLZKYo1DWBpD8dK6AU"
+  }
 };
 
 const inter = Inter({
