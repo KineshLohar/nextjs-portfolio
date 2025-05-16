@@ -129,6 +129,7 @@ export default function RootLayout({
         <link rel="me" href="https://www.instagram.com/kinesh_malviya" />
         <link rel="me" href="https://www.snapchat.com/add/kinesh123" />
         <meta charSet="utf-8" />
+        <meta name="google-site-verification" content="1kRghSAo530TJp33jxmbYSLpy4I17Gwc7_9STbLV7UA"></meta>
       </Head>
       <body
         className={cn(
