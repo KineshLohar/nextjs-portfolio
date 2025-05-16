@@ -79,6 +79,9 @@ export const metadata: Metadata = {
     'Software engineer India',
     'Frontend and backend engineer',
   ],
+  verification :{
+    google: 'google-site-verification=1kRghSAo530TJp33jxmbYSLpy4I17Gwc7_9STbLV7UA'
+  }
 };
 
 const inter = Inter({
