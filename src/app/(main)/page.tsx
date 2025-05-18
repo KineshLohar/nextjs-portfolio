@@ -1,3 +1,4 @@
+
 export const dynamic = 'force-dynamic';
 
 import { AboutSection } from "@/components/viewer/about/about-section";

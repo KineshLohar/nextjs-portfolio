@@ -37,12 +37,14 @@ export const HeroSection = () => {
 
             {/* Content */}
             <div className="z-10 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] px-4 flex flex-col text-center items-center justify-center">
+
                 <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold font-eaglelake text-zinc-200">
                     <span className="text-2xl sm:text-3xl md:text-4xl ">I&apos;m <br className="" /></span>KINESH{" "}
                     <span className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-[length:200%_auto] animate-aurora bg-clip-text text-transparent">
                         LOHAR
                     </span>
                 </h1>
+
                 {/* <div className="mt-2 sm:text-xl font-serif text-zinc-300 font-medium tracking-widest">
                     Passionate <ContainerTextFlip textClassName="text-lg font-serif" className=" px-2 py-0" words={['Full Stack Developer', 'Lalit Gandu', 'Sunny Koladiya', 'Tejas Rathod']} />
                 </div> */}
