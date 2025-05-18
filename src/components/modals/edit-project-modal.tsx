@@ -83,7 +83,7 @@ const formSchema = z.object({
             url: z.string(),
             caption: z.string().min(1, { message: "Caption is required" })
         })
-    ])).min(1, { message: "At least one image is required" })
+    ]))
     // thumbnail: z.union([
     //     z.instanceof(File),
     //     z.object({
@@ -245,7 +245,7 @@ export const EditProjectModal = () => {
     const handleImageRemove = (index: number, field: ImagesType | FileProps) => {
         // console.log("DELETE", field);
         const image = fields[index];
-        
+
         if ('_id' in image) {
             setDeletedImages(prev => [...prev, field as ImagesType]);
         }
@@ -383,6 +383,8 @@ export const EditProjectModal = () => {
                                             {field.value?.url && (
                                                 <div>
                                                     <Image
+                                                        width={120}
+                                                        height={120}
                                                         src={field.value.url}
                                                         alt="Current thumbnail"
                                                         className="h-32 object-cover rounded-lg"
@@ -410,6 +412,8 @@ export const EditProjectModal = () => {
                                                 <div className="space-y-2">
                                                     <div className="text-sm text-muted-foreground">{field.value.name}</div>
                                                     <Image
+                                                        width={120}
+                                                        height={120}
                                                         src={URL.createObjectURL(field.value)}
                                                         alt="Current thumbnail"
                                                         className="h-32 object-cover rounded-lg"
@@ -434,6 +438,8 @@ export const EditProjectModal = () => {
                                             {
                                                 previousThumbnail && <div>
                                                     <Image
+                                                        width={120}
+                                                        height={120}
                                                         src={previousThumbnail.url}
                                                         alt="Current thumbnail"
                                                         className="h-32 object-cover rounded-lg"
@@ -488,6 +494,8 @@ export const EditProjectModal = () => {
                                         {'url' in field ? (
                                             <div className="space-y-2">
                                                 <Image
+                                                    width={120}
+                                                    height={120}
                                                     src={field.url}
                                                     alt={`Image ${index + 1}`}
                                                     className="h-32 object-cover rounded-lg"
@@ -560,6 +568,8 @@ export const EditProjectModal = () => {
                                                 <div key={delImg?.public_id || index} className="space-y-2 border p-4 rounded-lg mt-2">
                                                     <div className="flex items-center justify-between">
                                                         <Image
+                                                            width={120}
+                                                            height={120}
                                                             src={delImg.url}
                                                             alt={`Image ${index + 1}`}
                                                             className="h-32 max-w-6/12 object-cover rounded-lg"
