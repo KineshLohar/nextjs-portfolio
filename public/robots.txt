@@ -6,4 +6,4 @@ Allow: /
 Host: https://kineshlohar.vercel.app/
 
 # Sitemaps
-Sitemap: https://kineshlohar.vercel.app//sitemap.xml
+Sitemap: https://kineshlohar.vercel.app/sitemap.xml

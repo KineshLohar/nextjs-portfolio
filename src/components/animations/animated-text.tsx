@@ -12,8 +12,8 @@ interface AnimatedTextProps {
   animate?: string; // Final animation state
   transition?: object; // Transition settings for animation
   delay?: number; // Delay for animation start
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variant?: { [key: string]: any }; // Custom animation variants
-  href?: string;
 }
 
 export const AnimatedText: React.FC<AnimatedTextProps> = ({
@@ -24,8 +24,7 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
   initial = 'hidden',
   animate = 'visible',
   transition = { duration: 0.2, delay: 0 },
-  variant,
-  href,
+  variant
 }) => {
   // Define animation variants
   const getVariants = () => {
