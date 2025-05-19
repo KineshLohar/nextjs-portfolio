@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { ActionTooltip } from "@/components/action-tooltip";
 import { FadeUp } from "@/components/animations/fadeup-gsap";
 import { SlideReveal } from "@/components/animations/slide-reveal-gsap";

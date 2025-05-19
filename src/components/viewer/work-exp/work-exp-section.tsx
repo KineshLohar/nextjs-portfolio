@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Timeline } from "@/components/ui/timeline";
 import { WorkExperience } from "@/models/WorkExpModel";
 import { WorkExperienceTypes } from "@/types/types";

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { FadeUp } from "@/components/animations/fadeup-gsap";
 import Skill from "@/models/SkillModel";
 import { Skill as SkillType } from "@/types/types";
