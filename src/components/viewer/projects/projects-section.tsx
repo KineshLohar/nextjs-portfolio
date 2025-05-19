@@ -1,13 +1,11 @@
 export const dynamic = 'force-dynamic';
 
-import { ActionTooltip } from "@/components/action-tooltip";
 import { FadeUp } from "@/components/animations/fadeup-gsap";
 import { SlideReveal } from "@/components/animations/slide-reveal-gsap";
-import { Github } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import ProjectModel from "@/models/ProjectsModel";
 import { ProjectType } from "@/types/types";
-import { Folder, Link2 } from "lucide-react";
+import { Folder } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
