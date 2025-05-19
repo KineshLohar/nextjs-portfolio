@@ -1,5 +1,6 @@
 import { ActionTooltip } from "@/components/action-tooltip";
-import connectDB from "@/db/connectDB"
+import { FadeUp } from "@/components/animations/fadeup-gsap";
+import { SlideReveal } from "@/components/animations/slide-reveal-gsap";
 import { Github } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import ProjectModel from "@/models/ProjectsModel";
@@ -9,9 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 
-connectDB();
-
-export async function ProjectsSection() {
+export async function ProjectsSection2() {
     const projects: ProjectType[] = await ProjectModel.find().limit(3).populate('techs', '_id skill logo').sort({ createdAt: -1 });
 
     return (
@@ -110,6 +109,86 @@ export async function ProjectsSection() {
                     <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
                     <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><Folder className="w-4 h-4" /> See All Creations</span>
                 </Link>
+            </div>
+        </div>
+    )
+}
+
+export async function ProjectsSection() {
+    const projects: ProjectType[] = await ProjectModel.find().limit(3).populate('techs', '_id skill logo').sort({ createdAt: -1 });
+
+    return (
+        <div className="w-full min-h-screen mb-16">
+            <div className="max-w-7xl mx-auto md:pt-28 px-4 sm:pl-8 md:px-8 lg:px-10 transition-all duration-300">
+                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+                    <h2 className="text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white bg-gradient-to-br from-zinc-50 to-neutral-200 bg-clip-text text-transparent max-w-4xl transition-all duration-300">
+                        Proof of Work, Passion & Precision
+                    </h2>
+                </FadeUp>
+                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+                    <p className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm transition-all duration-300">
+                        Dive into projects that reflect my technical skills and dedication to continuous learning.
+                    </p>
+                </FadeUp>
+            </div>
+            <div className="w-full flex flex-col items-center justify-start mt-12 gap-6 lg:px-9">
+                {
+                    projects?.length === 0
+                        ?
+                        <p className=" text-xl mx-auto my-8">No projects Added Yet by Admin</p>
+                        :
+                        projects?.map((proj, index) => (
+                            <div
+                                key={proj?._id || index}
+                                className={cn(
+                                    `w-full flex flex-col md:flex-row items-stretch md:items-center justify-between p-4 md:px-8 lg:px-10`,
+                                    index % 2 !== 0 && "md:flex-row-reverse"
+                                )}
+                            >
+                                {/* Image Container */}
+                                <SlideReveal
+                                    direction={index % 2 === 0 ? 'left' : 'right'}
+                                    className="relative w-full sm:w-6/12 md:w-6/12 lg:w-5/12 h-full"
+                                >
+                                    <Image
+                                        src={proj?.thumbnail?.url}
+                                        alt={proj?.title}
+                                        width={400}
+                                        height={250}
+                                        className="object-contain w-full h-full"
+                                    />
+                                </SlideReveal>
+
+                                {/* Content Container */}
+                                <SlideReveal
+                                    direction={index % 2 === 0 ? 'right' : 'left'}
+                                    className={cn(
+                                        `w-full mt-4 font-lato sm:mt-8 md:mt-0 sm:w-6/12 md:w-6/12 lg:w-7/12 flex flex-col justify-center items-start`,
+                                        index % 2 === 0 ? 'sm:pl-8 md:pl-8 lg:p-16' : "md:pr-28"
+                                    )}
+                                >
+                                    <h3 className="font-medium text-xl md:text-2xl lg:text-3xl tracking-wide font-breeserif capitalize">
+                                        {proj?.title}
+                                    </h3>
+                                    <p className="text-sm text-zinc-200 mt-2">{proj?.description}</p>
+
+                                    {/* Rest of your content */}
+                                </SlideReveal>
+                            </div>
+                        ))
+                }
+            </div>
+            <div className="w-full flex items-center justify-center mt-6 px-8">
+                <FadeUp delay={0.7} duration={0.5} yOffset={50}
+                    className="capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
+                >
+                    <Link
+                        href="/projects"
+                    >
+                        <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
+                        <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><Folder className="w-4 h-4" /> See All Creations</span>
+                    </Link>
+                </FadeUp>
             </div>
         </div>
     )

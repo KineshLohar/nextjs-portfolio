@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SocialMediaLabel } from "./socials/socials-card";
 import { ActionTooltip } from "../action-tooltip";
 import { Separator } from "../ui/separator";
+import { FadeUp } from "../animations/fadeup-gsap";
 
 export interface SocialType {
     id: number;
@@ -51,31 +52,35 @@ export const Footer = () => {
     return (
         <div className=" w-full flex flex-col justify-center mt-8">
             <div className="flex items-center justify-between px-4 sm:px-10 md:px-16 transition-all duration-300">
-                <div className="relative h-16 w-16 sm:h-20 sm:w-24 cursor-pointer">
-                    <Image
-                        src='/kineshlohar.png'
-                        alt="Kinesh Lohar"
-                        fill
-                        className=" object-contain"
-                    />
-                </div>
+                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+                    <div className="relative h-16 w-16 sm:h-20 sm:w-24 cursor-pointer">
+                        <Image
+                            src='/kineshlohar.png'
+                            alt="Kinesh Lohar"
+                            fill
+                            className=" object-contain"
+                        />
+                    </div>
+                </FadeUp>
                 <div className="flex items-center gap-4 mt-4">
                     {
-                        socials?.map((social: SocialType) => {
+                        socials?.map((social: SocialType, i: number) => {
                             const Icon = social?.icon;
 
                             return (
-                                <ActionTooltip key={social?.id} side='top' label={social?.label}>
-                                    <Link key={social?.id} href={social?.link} target="_blank" className="group">
-                                        <Icon
-                                            className={`bg-zinc-900- rounded-full 
-                                            p-1 w-8 h-8 sm:w-9 sm:h-9 
-                                            group-hover:scale-110 group-hover:mb-2 
-                                            transition-all duration-100
-                                            `}
-                                        />
-                                    </Link>
-                                </ActionTooltip>
+                                <FadeUp key={social?.id} delay={0.7 + (i / 5)} duration={0.5} yOffset={50}>
+                                    <ActionTooltip side='top' label={social?.label}>
+                                        <Link key={social?.id} href={social?.link} target="_blank" className="group">
+                                            <Icon
+                                                className={`bg-zinc-900- rounded-full 
+                                                p-1 w-8 h-8 sm:w-9 sm:h-9 
+                                                group-hover:scale-110 group-hover:mb-2 
+                                                transition-all duration-100
+                                                `}
+                                            />
+                                        </Link>
+                                    </ActionTooltip>
+                                </FadeUp>
                             )
                         })
                     }
