@@ -1,5 +1,6 @@
 'use client';
 
+import { FadeUp } from "@/components/animations/fadeup-gsap";
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -74,13 +75,17 @@ export const ContactForm = () => {
                         control={form.control}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Full Name</FormLabel>
+                                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+                                    <FormLabel>Full Name</FormLabel>
+                                </FadeUp>
                                 <FormControl>
-                                    <Input placeholder="Your Name" {...field}
-                                        disabled={isSubmitting}
-                                        className="italic border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
-                                         focus-visible:ring-0 dark:bg-transparent px-0"
-                                    />
+                                    <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+                                        <Input placeholder="Your Name" {...field}
+                                            disabled={isSubmitting}
+                                            className="italic border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
+                                        focus-visible:ring-0 dark:bg-transparent px-0"
+                                        />
+                                    </FadeUp>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -91,13 +96,19 @@ export const ContactForm = () => {
                         control={form.control}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+
+                                    <FormLabel>Email</FormLabel>
+                                </FadeUp>
+
                                 <FormControl>
-                                    <Input placeholder="johncena@gmail.com" {...field}
-                                        disabled={isSubmitting}
-                                        className=" italic text-white border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
-                                         focus-visible:ring-0  dark:bg-transparent px-0"
-                                    />
+                                    <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+                                        <Input placeholder="johncena@gmail.com" {...field}
+                                            disabled={isSubmitting}
+                                            className=" italic text-white border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
+                                        focus-visible:ring-0  dark:bg-transparent px-0"
+                                        />
+                                    </FadeUp>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -108,27 +119,35 @@ export const ContactForm = () => {
                         control={form.control}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Message</FormLabel>
+                                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+
+                                    <FormLabel>Message</FormLabel>
+                                </FadeUp>
                                 <FormControl>
-                                    <Textarea
-                                        placeholder="Describe your message..."
-                                        disabled={isSubmitting}
-                                        {...field}
-                                        className="italic resize-none text-white border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
-                                         focus-visible:ring-0  dark:bg-transparent px-0"
-                                    />
+                                    <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+
+                                        <Textarea
+                                            placeholder="Describe your message..."
+                                            disabled={isSubmitting}
+                                            {...field}
+                                            className="italic resize-none text-white border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
+                                        focus-visible:ring-0  dark:bg-transparent px-0"
+                                        />
+                                    </FadeUp>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                     <div className="w-full flex items-center justify-end">
-                        <Button type="submit" disabled={isSubmitting}
-                            className="capitalize bg-transparent hover:bg-transparent text-white rounded-none relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
-                        >
-                            <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
-                            <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><SendHorizonal className="w-4 h-4" />{isSubmitting ? 'Just a Moment...' : "Let's Connect!"}</span>
-                        </Button>
+                        <FadeUp delay={0.7} duration={0.5} yOffset={50}>
+                            <Button type="submit" disabled={isSubmitting}
+                                className="capitalize bg-transparent hover:bg-transparent text-white rounded-none relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
+                            >
+                                <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
+                                <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><SendHorizonal className="w-4 h-4" />{isSubmitting ? 'Just a Moment...' : "Let's Connect!"}</span>
+                            </Button>
+                        </FadeUp>
                     </div>
 
                 </form>

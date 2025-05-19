@@ -1,3 +1,4 @@
+
 export const dynamic = 'force-dynamic';
 
 import { AboutSection } from "@/components/viewer/about/about-section";
@@ -7,7 +8,9 @@ import { ProjectsSection } from "@/components/viewer/projects/projects-section";
 import { SkillsSection } from "@/components/viewer/skills/skill-section";
 import { Socials } from "@/components/viewer/socials/socials";
 import { WorkExpSection } from "@/components/viewer/work-exp/work-exp-section";
+import connectDB from "@/db/connectDB";
 
+connectDB();
 
 export default function Home() {
   return (

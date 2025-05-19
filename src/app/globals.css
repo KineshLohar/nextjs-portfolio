@@ -243,3 +243,7 @@
 html {
     @apply scroll-smooth;
 }
+
+.will-change-transform {
+    will-change: transform;
+  }
