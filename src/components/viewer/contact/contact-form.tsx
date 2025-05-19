@@ -21,12 +21,7 @@ const formSchema = z.object({
 
 export const ContactForm = () => {
 
-    const [isMounted, setIsMounted] = useState(false);
     const [successMessage, setSuccessMessage] = useState(false);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, [])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -54,8 +49,6 @@ export const ContactForm = () => {
     }
 
     const isSubmitting = form.formState.isSubmitting
-
-    if (!isMounted) return null;
 
     return (
         <>

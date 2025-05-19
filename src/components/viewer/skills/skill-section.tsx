@@ -58,9 +58,7 @@ export const SkillsSection = async () => {
                 {data?.map((item, index) => (
                     <div
                         key={index}
-                        className={`rounded-xl md:rounded-2xl -border 
-                            -border-zinc-800/50 -bg-zinc-900/10 -backdrop-blur-sm 
-                            -z-0
+                        className={`rounded-xl md:rounded-2xl
                             `}
                     >
                         <div className=" space-y-4">
