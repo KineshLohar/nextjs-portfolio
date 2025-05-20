@@ -82,7 +82,7 @@ export const Footer = () => {
                     }
                 </div>
             </div>
-            <Separator className="fade-up my-8 max-w-11/12 sm:max-w-9/12 mx-auto min-h-0.5" />
+            <Separator className=" my-8 max-w-11/12 sm:max-w-9/12 mx-auto min-h-0.5" />
             <div className="text-center text-sm text-gray-500 mb-8">
                 © {new Date().getFullYear()} Kinesh Lohar. All rights reserved.
             </div>
