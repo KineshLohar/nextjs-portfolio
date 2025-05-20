@@ -1,6 +1,7 @@
+// src/components/animations/fadeup-batcher.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,28 +10,26 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function FadeUpBatcher() {
   const pathname = usePathname();
-  // Keep track of which elements we’ve already initialized
-  const initialized = new Set<HTMLElement>();
+  const initializedRef = useRef<Set<HTMLElement>>(new Set());
 
   useEffect(() => {
-    // Schedule initialization during idle time
-    const handle = (window.requestIdleCallback ?? window.setTimeout)(() => {
+    const initializeAnimations = () => {
       document.querySelectorAll<HTMLElement>(".fade-up").forEach((el) => {
-        if (initialized.has(el)) return;      // skip already-done
-        initialized.add(el);
+        if (initializedRef.current.has(el)) return;
+        initializedRef.current.add(el);
 
-        const delay = parseFloat(el.dataset.fadeDelay || "0");
-        const duration = parseFloat(el.dataset.fadeDuration || "0.5");
-        const yOffset = parseFloat(el.dataset.fadeYOffset || "50");
+        const delay    = parseFloat(el.dataset.fadeDelay    ?? "0");
+        const duration = parseFloat(el.dataset.fadeDuration ?? "0.5");
+        const yOffset  = parseFloat(el.dataset.fadeYOffset  ?? "50");
 
-        // Set up initial CSS
+        // Initial CSS
         gsap.set(el, {
           opacity: 0,
           y: yOffset,
           willChange: "transform, opacity",
         });
 
-        // Create one reusable tween per element:
+        // Build the tween (paused)
         const tween = gsap.fromTo(
           el,
           { opacity: 0, y: yOffset },
@@ -44,34 +43,45 @@ export default function FadeUpBatcher() {
           }
         );
 
-        // Attach a lazy ScrollTrigger:
+        // Create ScrollTrigger
         ScrollTrigger.create({
           trigger: el,
           start: "top 100%",
           end: "bottom 10%",
-          onEnter: () => tween.play(),
-          onLeaveBack: () => tween.reverse(),
-          onEnterBack: () => tween.play(),
+          onEnter:      () => tween.play(),
+          onLeaveBack:  () => tween.reverse(),
+          onEnterBack:  () => tween.play(),
         });
       });
-    }, { timeout: 200 });
+    };
+
+    // Schedule initialization during idle or next tick
+    let handleId: number;
+    if (typeof window.requestIdleCallback === "function") {
+      handleId = window.requestIdleCallback(initializeAnimations, { timeout: 200 });
+    } else {
+      handleId = window.setTimeout(initializeAnimations, 200);
+    }
 
     return () => {
-      // Don’t kill *all* ScrollTriggers! Let existing ones persist.
-      // We only remove callbacks for elements that unmounted:
-      initialized.forEach((el) => {
+      // Cleanup triggers for any elements that were removed
+      initializedRef.current.forEach((el) => {
         if (!document.body.contains(el)) {
           ScrollTrigger.getAll()
             .filter((st) => st.trigger === el)
             .forEach((st) => st.kill());
-          initialized.delete(el);
+          initializedRef.current.delete(el);
         }
       });
-      window.cancelIdleCallback
-        ? window.cancelIdleCallback(handle as number)
-        : clearTimeout(handle as number);
+
+      // Cancel the idle callback or timeout
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(handleId);
+      } else {
+        clearTimeout(handleId);
+      }
     };
-  }, [pathname]);
+  }, [pathname]); // rerun when route changes
 
   return null;
 }
