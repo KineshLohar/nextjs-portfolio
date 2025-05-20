@@ -11,11 +11,23 @@ export const HeroSection = () => {
     return (
         <div className="relative overflow-hidden w-full min-h-screen flex flex-col text-center items-center justify-center">
 
-            <div
+            {/* <div
                 className="absolute inset-0 bg-center bg-cover opacity-70"
                 style={{ backgroundImage: "url('/background.mp4')" }}
                 aria-hidden="true"
-            ></div>
+            /> */}
+
+            <video
+                autoPlay
+                loop
+                muted
+                className="absolute inset-0 w-full h-full object-cover opacity-70"
+                aria-hidden="true"
+            >
+                <source src="/background.mp4" type="video/mp4" />
+                <source src="/background.webm" type="video/webm" />
+                Your browser does not support the video tag.
+            </video>
 
             <div className="z-10 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] px-4 flex flex-col text-center items-center justify-center">
                 <FadeUp delay={0} duration={1} yOffset={50}>

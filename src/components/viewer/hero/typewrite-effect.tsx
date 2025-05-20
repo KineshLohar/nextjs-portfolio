@@ -61,11 +61,11 @@ export const TypewriterEffect = () => {
 
   return (
     <div className="w-full h-full flex justify-center items-center font-lato italic text-zinc-200 mt-2">
-      <h3 className="sm:text-2xl">
+      <h2 className="sm:text-2xl">
         Passionate{" "}
         <span className="inline-block">{currentWord}</span>
         <span className="border-r-4 border-zinc-300 animate-blink"></span>
-      </h3>
+      </h2>
     </div>
   );
 };

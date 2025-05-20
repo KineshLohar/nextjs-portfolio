@@ -21,6 +21,7 @@ export const ProjectCard = ({ project }: { project: ProjectType }) => {
                         src={project?.thumbnail?.url}
                         alt={project?.thumbnail?.id}
                         fill
+                        loading="lazy"
                         className=" object-cover opacity-90 transition-transform duration-700 hover:scale-110"
                     />
                 </div>
