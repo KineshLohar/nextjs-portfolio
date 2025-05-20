@@ -1,13 +1,18 @@
 
 
+import dynamic from "next/dynamic";
 import { AboutSection } from "@/components/viewer/about/about-section";
-import { ContactSection } from "@/components/viewer/contact/contact-section";
 import { HeroSection } from "@/components/viewer/hero/hero-section";
 import { ProjectsSection } from "@/components/viewer/projects/projects-section";
 import { SkillsSection } from "@/components/viewer/skills/skill-section";
 import { Socials } from "@/components/viewer/socials/socials";
 import { WorkExpSection } from "@/components/viewer/work-exp/work-exp-section";
 import connectDB from "@/db/connectDB";
+import { ComponentType } from "react";
+
+const ContactSection = dynamic(() =>
+  import('@/components/viewer/contact/contact-section').then((mod) => mod.ContactSection)
+) as ComponentType;
 
 connectDB();
 

@@ -6,6 +6,10 @@ import { ModalProvider } from "@/components/providers/modal-provider";
 import { Bree_Serif, Eagle_Lake, Inter, Lato } from 'next/font/google'
 import Head from "next/head";
 import Script from "next/script";
+import dynamic from "next/dynamic";
+const FadeUpBatcher = dynamic(
+  () => import("@/components/animations/fadeup-batcher")
+);
 
 export const metadata: Metadata = {
   title: "Kinesh Lohar | Full-Stack Software Developer",
@@ -138,6 +142,7 @@ export default function RootLayout({
         )
         }
       >
+        <FadeUpBatcher />
         <ThemeProvider
           attribute='class'
           defaultTheme="dark"

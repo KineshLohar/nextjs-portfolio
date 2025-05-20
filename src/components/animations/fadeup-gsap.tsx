@@ -18,9 +18,9 @@ interface FadeUpProps {
 
 export const FadeUp = ({
     children,
-    delay = 0,
-    duration = 0.7,
-    yOffset = 20,
+    delay = 0.7,
+    duration = 0.5,
+    yOffset = 50,
     className = ''
 }: FadeUpProps) => {
     const elementRef = useRef<HTMLDivElement>(null);

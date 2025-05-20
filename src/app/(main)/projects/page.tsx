@@ -1,9 +1,8 @@
 export const dynamic = 'force-dynamic';
 
-import { FadeUp } from "@/components/animations/fadeup-gsap";
 import { ProjectCard } from "@/components/viewer/projects/project-card";
-import connectDB from "@/db/connectDB"
-import ProjectModel from "@/models/ProjectsModel"
+import connectDB from "@/db/connectDB";
+import ProjectModel from "@/models/ProjectsModel";
 import { ProjectType } from "@/types/types";
 import { Metadata } from "next";
 
@@ -62,17 +61,13 @@ export default async function Projects() {
   return (
     <div className="w-full min-h-screen py-36">
       <div className="w-full  pb-16 px-4 sm:pl-8 md:px-8 lg:px-10 transition-all duration-300">
-        <FadeUp delay={0.7} duration={0.5} yOffset={50}>
 
-          <h2 className="text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white bg-gradient-to-br from-zinc-50 to-neutral-200 bg-clip-text text-transparent max-w-4xl transition-all duration-300">
-            From Concept to Code: My Project Journey
-          </h2>
-        </FadeUp>
-        <FadeUp delay={0.7} duration={0.5} yOffset={50}>
-          <p className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm transition-all duration-300">
-            A collection of projects that reflect my dedication to both craft and creativity.
-          </p>
-        </FadeUp>
+        <h2 className="fade-up text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white bg-gradient-to-br from-zinc-50 to-neutral-200 bg-clip-text text-transparent max-w-4xl transition-all duration-300">
+          From Concept to Code: My Project Journey
+        </h2>
+        <p className="fade-up text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm transition-all duration-300">
+          A collection of projects that reflect my dedication to both craft and creativity.
+        </p>
       </div>
       <div className="w-full font-lato px-4 md:px-8 gap-8 lg:px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
         {

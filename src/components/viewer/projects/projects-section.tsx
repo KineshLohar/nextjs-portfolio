@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 
-import { FadeUp } from "@/components/animations/fadeup-gsap";
 import { SlideReveal } from "@/components/animations/slide-reveal-gsap";
 import { cn } from "@/lib/utils";
 import ProjectModel from "@/models/ProjectsModel";
@@ -120,16 +119,13 @@ export async function ProjectsSection() {
     return (
         <div className="w-full min-h-screen mb-16">
             <div className="max-w-7xl mx-auto md:pt-28 px-4 sm:pl-8 md:px-8 lg:px-10 ">
-                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
-                    <h2 className="text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white bg-gradient-to-br from-zinc-50 to-neutral-200 bg-clip-text text-transparent max-w-4xl">
-                        Proof of Work, Passion & Precision
-                    </h2>
-                </FadeUp>
-                <FadeUp delay={0.7} duration={0.5} yOffset={50}>
-                    <p className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm ">
-                        Dive into projects that reflect my technical skills and dedication to continuous learning.
-                    </p>
-                </FadeUp>
+
+                <h2 className="fade-up text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white bg-gradient-to-br from-zinc-50 to-neutral-200 bg-clip-text text-transparent max-w-4xl">
+                    Proof of Work, Passion & Precision
+                </h2>
+                <p className="fade-up text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm ">
+                    Dive into projects that reflect my technical skills and dedication to continuous learning.
+                </p>
             </div>
             <div className="w-full flex flex-col items-center justify-start mt-12 gap-6 lg:px-9">
                 {
@@ -145,7 +141,6 @@ export async function ProjectsSection() {
                                     index % 2 !== 0 && "md:flex-row-reverse"
                                 )}
                             >
-                                {/* Image Container */}
                                 <SlideReveal
                                     direction={index % 2 === 0 ? 'left' : 'right'}
                                     className="relative w-full sm:w-6/12 md:w-6/12 lg:w-5/12 h-full"
@@ -178,16 +173,15 @@ export async function ProjectsSection() {
                 }
             </div>
             <div className="w-full flex items-center justify-center mt-6 px-8">
-                <FadeUp delay={0.7} duration={0.5} yOffset={50}
-                    className="capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
+
+                <Link
+                    href="/projects"
+                    className="fade-up capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
                 >
-                    <Link
-                        href="/projects"
-                    >
-                        <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
-                        <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><Folder className="w-4 h-4" /> See All Creations</span>
-                    </Link>
-                </FadeUp>
+                    <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
+                    <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><Folder className="w-4 h-4" /> See All Creations</span>
+                </Link>
+
             </div>
         </div>
     )
