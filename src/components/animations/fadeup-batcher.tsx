@@ -1,65 +1,77 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function FadeUpBatcher() {
+  const pathname = usePathname();
+  // Keep track of which elements we’ve already initialized
+  const initialized = new Set<HTMLElement>();
+
   useEffect(() => {
-    const elements = document.querySelectorAll<HTMLElement>(".fade-up");
+    // Schedule initialization during idle time
+    const handle = (window.requestIdleCallback ?? window.setTimeout)(() => {
+      document.querySelectorAll<HTMLElement>(".fade-up").forEach((el) => {
+        if (initialized.has(el)) return;      // skip already-done
+        initialized.add(el);
 
-    const triggers: ScrollTrigger[] = [];
+        const delay = parseFloat(el.dataset.fadeDelay || "0");
+        const duration = parseFloat(el.dataset.fadeDuration || "0.5");
+        const yOffset = parseFloat(el.dataset.fadeYOffset || "50");
 
-    elements.forEach((el) => {
-      const delay = parseFloat(el.dataset.fadeDelay || "0.4");
-      const duration = parseFloat(el.dataset.fadeDuration || "0.3");
-      const yOffset = parseFloat(el.dataset.fadeYOffset || "40");
+        // Set up initial CSS
+        gsap.set(el, {
+          opacity: 0,
+          y: yOffset,
+          willChange: "transform, opacity",
+        });
 
-      // Set initial state
-      gsap.set(el, {
-        opacity: 0,
-        y: yOffset,
-        willChange: "transform, opacity"
-      });
-
-      const tween = gsap.fromTo(
-        el,
-        { opacity: 0, y: yOffset },
-        {
-          opacity: 1,
-          y: 0,
-          delay,
-          duration,
-          ease: "power2.out",
-          paused: true
-        }
-      );
-
-      const trigger = ScrollTrigger.create({
-        trigger: el,
-        start: "top 100%",
-        end: "bottom 10%",
-        onEnter: () => tween.play(),
-        onLeaveBack: () => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top > window.innerHeight) {
-            tween.progress(0).pause(); // reset if fully out of view
-          } else {
-            tween.reverse(); // smoothly reverse
+        // Create one reusable tween per element:
+        const tween = gsap.fromTo(
+          el,
+          { opacity: 0, y: yOffset },
+          {
+            opacity: 1,
+            y: 0,
+            delay,
+            duration,
+            ease: "power2.out",
+            paused: true,
           }
-        },
-        onEnterBack: () => tween.play()
-      });
+        );
 
-      triggers.push(trigger);
-    });
+        // Attach a lazy ScrollTrigger:
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 100%",
+          end: "bottom 10%",
+          onEnter: () => tween.play(),
+          onLeaveBack: () => tween.reverse(),
+          onEnterBack: () => tween.play(),
+        });
+      });
+    }, { timeout: 200 });
 
     return () => {
-      triggers.forEach((trigger) => trigger.kill());
+      // Don’t kill *all* ScrollTriggers! Let existing ones persist.
+      // We only remove callbacks for elements that unmounted:
+      initialized.forEach((el) => {
+        if (!document.body.contains(el)) {
+          ScrollTrigger.getAll()
+            .filter((st) => st.trigger === el)
+            .forEach((st) => st.kill());
+          initialized.delete(el);
+        }
+      });
+      window.cancelIdleCallback
+        ? window.cancelIdleCallback(handle as number)
+        : clearTimeout(handle as number);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

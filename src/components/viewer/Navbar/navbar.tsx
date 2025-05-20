@@ -40,7 +40,7 @@ const routes = [
 
 export const Navbar = () => {
     return (
-        <div className="absolute top-0 right-0 left-0 z-50 w-full h-20 flex items-center justify-between bg-transparent px-2 sm:px-8 md:px-10 lg:px-16 transition-all duration-300">
+        <div className="absolute top-0 right-0 left-0 z-[999] w-full h-20 flex items-center justify-between bg-transparent px-2 sm:px-8 md:px-10 lg:px-16 transition-all duration-300">
             <Link href='/' className="relative h-16 w-20 cursor-pointer">
                 <Image
                     src='/kineshlohar.png'

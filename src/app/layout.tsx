@@ -1,15 +1,12 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import { ModalProvider } from "@/components/providers/modal-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
-import { ModalProvider } from "@/components/providers/modal-provider";
-import { Bree_Serif, Eagle_Lake, Inter, Lato } from 'next/font/google'
+import type { Metadata } from "next";
+import { Bree_Serif, Eagle_Lake, Inter, Lato } from 'next/font/google';
 import Head from "next/head";
 import Script from "next/script";
-import dynamic from "next/dynamic";
-const FadeUpBatcher = dynamic(
-  () => import("@/components/animations/fadeup-batcher")
-);
+import "./globals.css";
+
 
 export const metadata: Metadata = {
   title: "Kinesh Lohar | Full-Stack Software Developer",
@@ -142,7 +139,6 @@ export default function RootLayout({
         )
         }
       >
-        <FadeUpBatcher />
         <ThemeProvider
           attribute='class'
           defaultTheme="dark"
