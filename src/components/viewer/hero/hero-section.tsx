@@ -13,7 +13,7 @@ export const HeroSection = () => {
 
             <div
                 className="absolute inset-0 bg-center bg-cover opacity-70"
-                style={{ backgroundImage: "url('/background.gif')" }}
+                style={{ backgroundImage: "url('/background.mp4')" }}
                 aria-hidden="true"
             ></div>
 
