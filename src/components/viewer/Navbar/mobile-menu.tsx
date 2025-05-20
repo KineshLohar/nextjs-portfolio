@@ -27,7 +27,7 @@ export const MobileMenu = ({ routes }: { routes: { id: number, path: string, lab
                 <div className="flex flex-col items-start mt-8 text-right w-full ml-2 font-medium space-y-6 font-serif">
                     {
                         routes?.map(route => (
-                            <Link key={route?.id} href={route?.path} className="">
+                            <Link key={route?.id} href={route?.path} className="" onClick={() => setOpenMenu(false)}>
                                 {route.label}
                             </Link>
                         ))

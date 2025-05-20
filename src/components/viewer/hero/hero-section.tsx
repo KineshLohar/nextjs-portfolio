@@ -2,7 +2,10 @@
 import { Paperclip } from "lucide-react";
 import Link from "next/link";
 import { ContactNavButton } from "./contact-nab";
-import { TypewriterEffect } from "./typewrite-effect";
+import dynamic from "next/dynamic";
+import { ComponentType } from "react";
+
+const TypewriterEffect = dynamic(() => import("@/components/viewer/hero/typewrite-effect").then((mod) => mod.TypewriterEffect))as ComponentType
 
 
 export const HeroSection = () => {
