@@ -43,7 +43,7 @@ export const DeleteContactModal = () => {
                     Message: {contactData?.message}
                 </DialogDescription>
                 <DialogFooter>
-                    <Button type="button" disabled={loading} variant='destructive' onClick={onDelete} className="cursor-pointer">
+                    <Button type="button" disabled={loading} variant='destructive' onClick={onDelete} className="">
                         Delete {contactData?.fullName}&apos;s
                     </Button>
                 </DialogFooter>

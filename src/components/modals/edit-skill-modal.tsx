@@ -334,7 +334,7 @@ export const EditSkillModal = () => {
 
                         </div>
                         <DialogFooter className="mt-4">
-                            <Button disabled={isSubmitting} type="submit" className=" cursor-pointer">Submit</Button>
+                            <Button disabled={isSubmitting} type="submit" className=" ">Submit</Button>
                         </DialogFooter>
                     </form>
                 </Form>

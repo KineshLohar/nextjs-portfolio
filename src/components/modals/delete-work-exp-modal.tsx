@@ -40,7 +40,7 @@ export const DeleteWorkExperienceModal = () => {
                     Are you sure? You want to delete the <span className=" font-bold">{workExperienceData?.role}, {workExperienceData?.company}, {workExperienceData?.location}</span>. This action cannot be undone!
                 </DialogDescription>
                 <DialogFooter>
-                    <Button type="button" disabled={loading} variant='destructive' onClick={onDelete} className="cursor-pointer mt-4">
+                    <Button type="button" disabled={loading} variant='destructive' onClick={onDelete} className=" mt-4">
                         Delete {workExperienceData?.role} 
                     </Button>
                 </DialogFooter>

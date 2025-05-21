@@ -13,7 +13,7 @@ export const ContactNavButton = () => {
     return (
         <Button
             onClick={() => scrollToSection('contact')}
-            className="uppercase flex items-center tracking-wider border-none bg-transparent text-zinc-300 hover:text-white hover:bg-transparent cursor-pointer"
+            className="uppercase flex items-center tracking-wider border-none bg-transparent text-zinc-300 hover:text-white hover:bg-transparent "
         >
             Contact <ExternalLink className="ml-1 w-4 h-4" />
         </Button>

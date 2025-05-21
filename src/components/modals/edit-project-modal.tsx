@@ -577,7 +577,7 @@ export const EditProjectModal = () => {
                                                         <Button
                                                             type="button"
                                                             variant='ghost'
-                                                            className="border cursor-pointer border-green-500 text-green-500"
+                                                            className="border  border-green-500 text-green-500"
                                                             size="sm"
                                                             onClick={() => handleRestoreImage(delImg)}
                                                         >Restore</Button>

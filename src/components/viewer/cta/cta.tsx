@@ -37,7 +37,7 @@ export const CTA = () => {
                     let&apos;s connect!
                 </div>
 
-                <Button type="button" className="relative rounded-none group text-xs md:text-base font-bold border border-white bg-transparent  px-5 py-2 sm:px-6 sm:py-3 md:py-5 cursor-pointer z-50 hover:bg-transparent overflow-hidden">
+                <Button type="button" className="relative rounded-none group text-xs md:text-base font-bold border border-white bg-transparent  px-5 py-2 sm:px-6 sm:py-3 md:py-5  z-50 hover:bg-transparent overflow-hidden">
                     <div className="-z-10 absolute h-16 w-80 bg-white -translate-x-96 group-hover:translate-x-0 transition-all duration-500 opacity-90" />
                     <span className="bg-gradient-to-r from-violet-600 to-pink-600 bg-clip-text text-transparent">Start Conversation!</span>
                 </Button>

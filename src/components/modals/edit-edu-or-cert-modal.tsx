@@ -379,7 +379,7 @@ export const EditEducationOrCertificationModal = () => {
                             </div>
                         </div>
                         <DialogFooter className="mt-4">
-                            <Button disabled={isSubmitting} type="submit" className=" cursor-pointer">Update</Button>
+                            <Button disabled={isSubmitting} type="submit" className=" ">Update</Button>
                         </DialogFooter>
                     </form>
                 </Form>

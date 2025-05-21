@@ -13,7 +13,7 @@ export const MobileMenu = ({ routes }: { routes: { id: number, path: string, lab
     return (
         <>
             <Menu
-                className="md:hidden w-7 h-7 cursor-pointer"
+                className="md:hidden w-7 h-7 "
                 data-open="false"  // Initial state is closed
                 onClick={() => setOpenMenu(true)}
             />
@@ -22,7 +22,7 @@ export const MobileMenu = ({ routes }: { routes: { id: number, path: string, lab
              p-4 flex flex-col`,
                 openMenu && 'translate-x-0',
             )}>
-                <X className="w-10 h-10 font-bold cursor-pointer hover:bg-white/10 rounded-full p-1.5" onClick={() => setOpenMenu(false)} />
+                <X className="w-10 h-10 font-bold  hover:bg-white/10 rounded-full p-1.5" onClick={() => setOpenMenu(false)} />
 
                 <div className="flex flex-col items-start mt-8 text-right w-full ml-2 font-medium space-y-6 font-serif">
                     {

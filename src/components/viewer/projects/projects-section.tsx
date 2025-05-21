@@ -103,7 +103,7 @@ import Link from "next/link";
 //             <div className="w-full flex items-center justify-center mt-6 px-8">
 //                 <Link
 //                     href="/projects"
-//                     className="capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
+//                     className="capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider  overflow-hidden"
 //                 >
 //                     <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
 //                     <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><Folder className="w-4 h-4" /> See All Creations</span>
@@ -176,7 +176,7 @@ export async function ProjectsSection() {
 
                 <Link
                     href="/projects"
-                    className="fade-up capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
+                    className="fade-up capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider  overflow-hidden"
                 >
                     <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
                     <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><Folder className="w-4 h-4" /> See All Creations</span>

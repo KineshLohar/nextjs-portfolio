@@ -104,7 +104,7 @@ export const SocialsCard = ({ label }: { label: SocialMediaLabel }) => {
                     aspect-[2/1] rounded-lg sm:rounded-xl 
                     ${backgroundMap[label]}
                     hover:shadow-2xl transition-all duration-500
-                    cursor-pointer overflow-hidden relative
+                     overflow-hidden relative
                     group
                     shadow-lg shadow-white/10 backdrop-blur-md
                     opacity-100

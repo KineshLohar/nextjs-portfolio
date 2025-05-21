@@ -12,7 +12,7 @@ export const OpenModalButton = ({ modelType, label }: { modelType: ModalType, la
 
     return (
         <Button
-            className=" bg-zinc-700 text-white dark:bg-white dark:text-black cursor-pointer hover:bg-zinc-700/90 dark:hover:bg-white/90"
+            className=" bg-zinc-700 text-white dark:bg-white dark:text-black  hover:bg-zinc-700/90 dark:hover:bg-white/90"
             // variant='ghost'
             onClick={onClick}
         >

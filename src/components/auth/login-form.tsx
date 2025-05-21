@@ -100,7 +100,7 @@ export const LoginForm = () => {
                         <Button
                             type='submit'
                             disabled={isSubmitting}
-                            className='cursor-pointer '
+                            className=' '
                         >
                             Login
                         </Button>

@@ -244,6 +244,13 @@ html {
     @apply scroll-smooth;
 }
 
+body {
+    cursor: url('/cursor.png') 8 8, auto;
+}
+
+a {
+    cursor: url('/cursor.png') 8 8, auto;
+}
 .will-change-transform {
     will-change: transform;
   }

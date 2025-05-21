@@ -21,26 +21,26 @@ export const ActionDropdownList = ({ data, dataKey, viewModal, editModal, delete
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button type="button" variant='ghost' className=" cursor-pointer hover:bg-zinc-300/30 dark:hover:bg-zinc-300/30">
+                <Button type="button" variant='ghost' className="  hover:bg-zinc-300/30 dark:hover:bg-zinc-300/30">
                     <Ellipsis />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 {
                     viewModal &&
-                    <DropdownMenuItem onClick={() => onOpen(viewModal, { [dataKey]: data ? JSON.parse(data) : null })} className="cursor-pointer">
+                    <DropdownMenuItem onClick={() => onOpen(viewModal, { [dataKey]: data ? JSON.parse(data) : null })} className="">
                         <Eye /> View
                     </DropdownMenuItem>
                 }
                 {
                     editModal &&
-                    <DropdownMenuItem onClick={() => onOpen(editModal, { [dataKey]: data ? JSON.parse(data) : null })} className="cursor-pointer">
+                    <DropdownMenuItem onClick={() => onOpen(editModal, { [dataKey]: data ? JSON.parse(data) : null })} className="">
                         <FilePenLine /> Edit
                     </DropdownMenuItem>
                 }
                 {
                     deleteModal &&
-                    <DropdownMenuItem onClick={() => onOpen(deleteModal, { [dataKey]: data ? JSON.parse(data) : null })} className="text-rose-400 cursor-pointer">
+                    <DropdownMenuItem onClick={() => onOpen(deleteModal, { [dataKey]: data ? JSON.parse(data) : null })} className="text-rose-400 ">
                         <Trash className="text-rose-400" /> Delete
                     </DropdownMenuItem>
                 }

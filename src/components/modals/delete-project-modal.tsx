@@ -43,7 +43,7 @@ export const DeleteProjectModal = () => {
                     Are you sure? You want to delete the <span className=" font-bold">{projectData?.title}</span>. This action cannot be undone!
                 </DialogDescription>
                 <DialogFooter>
-                    <Button type="button" disabled={loading} variant='destructive' onClick={onDelete} className="cursor-pointer">
+                    <Button type="button" disabled={loading} variant='destructive' onClick={onDelete} className="">
                         Delete {projectData?.title}
                     </Button>
                 </DialogFooter>

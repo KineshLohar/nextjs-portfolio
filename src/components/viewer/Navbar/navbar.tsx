@@ -41,7 +41,7 @@ const routes = [
 export const Navbar = () => {
     return (
         <div className="absolute top-0 right-0 left-0 z-[999] w-full h-20 flex items-center justify-between bg-transparent px-2 sm:px-8 md:px-10 lg:px-16 transition-all duration-300">
-            <Link href='/' className="relative h-16 w-20 cursor-pointer">
+            <Link href='/' className="relative h-16 w-20 ">
                 <Image
                     src='/kineshlohar.png'
                     alt="Kinesh Lohar"
@@ -63,7 +63,7 @@ export const Navbar = () => {
                 <MobileMenu routes={routes} />
                 {/* <ActionTooltip label="Contact Us" side="bottom">
                     <Link href='/contact' className="bg-gradient-to-r from-blue-500 to-pink-500 rounded-full p-[2px]">
-                        <MessageSquare className=" fill-current w-9 h-9 p-1.5 bg-zinc-900  rounded-full cursor-pointer" />
+                        <MessageSquare className=" fill-current w-9 h-9 p-1.5 bg-zinc-900  rounded-full " />
                     </Link>
                 </ActionTooltip> */}
             </div>

@@ -29,7 +29,7 @@ export const AdminNavbar = () => {
 
             <Button
                 // variant='ghost'
-                className="bg-transparent shadow-none cursor-pointer text-black dark:text-white hover:bg-transparent"
+                className="bg-transparent shadow-none  text-black dark:text-white hover:bg-transparent"
                 onClick={handleSignOut}
             >
                 Sign Out

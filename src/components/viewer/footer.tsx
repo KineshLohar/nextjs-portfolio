@@ -51,7 +51,7 @@ export const Footer = () => {
     return (
         <div className=" w-full flex flex-col justify-center mt-8">
             <div className="flex items-center justify-between px-4 sm:px-10 md:px-16 transition-all duration-300">
-                <div className=" fade-up relative h-16 w-16 sm:h-20 sm:w-24 cursor-pointer">
+                <div className=" fade-up relative h-16 w-16 sm:h-20 sm:w-24 ">
                     <Image
                         src='/kineshlohar.png'
                         alt="Kinesh Lohar"

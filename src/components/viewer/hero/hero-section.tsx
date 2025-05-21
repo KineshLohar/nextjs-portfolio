@@ -37,7 +37,7 @@ export const HeroSection = () => {
                 </div>
 
                 <div className="z-10 mt-4 gap-4 text-xs flex items-center">
-                    <div className="fade-up uppercase relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden">
+                    <div className="fade-up uppercase relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider overflow-hidden">
                         <Link href="/resume">
                             <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
                             <span className="z-10 group-hover:text-neutral-950 flex items-center gap-2">
@@ -95,7 +95,7 @@ export const HeroSection = () => {
 //                 </FadeUp>
 //                 <div className="z-10 mt-4 gap-4 text-xs flex items-center">
 //                     <FadeUp delay={1} duration={1} yOffset={50}
-//                         className="uppercase relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer overflow-hidden"
+//                         className="uppercase relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider  overflow-hidden"
 //                     >
 //                         <Link
 //                             href="/resume"
@@ -122,11 +122,11 @@ export const HeroSection = () => {
 //             <div className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-eaglelake text-zinc-200 ">KINESH LOHAR</div>
 //             <div className="mb-auto mt-2 sm:text-lg font-serif text-zinc-300 font-medium tracking-wider">Full Stack Developer</div>
 //             <div className="mb-36 md:mb-32 place-self-end pr-6 sm:pr-12 gap-4 text-xs flex items-center">
-//                 <Link href='/resume' className="relative group text-xs md:text-sm  border hover:text-neutral-950  border-zinc-400 px-6 py-2 font-bold tracking-wider cursor-pointer  overflow-hidden">
+//                 <Link href='/resume' className="relative group text-xs md:text-sm  border hover:text-neutral-950  border-zinc-400 px-6 py-2 font-bold tracking-wider   overflow-hidden">
 //                     <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
 //                     <span className="z-10 group-hover:text-neutral-950">Resume</span>
 //                 </Link>
-//                 <Link href='/contact' className=" flex items-center text-xs tracking-wider border-none bg-transparent text-zinc-300 hover:text-white hover:bg-transparent cursor-pointer">
+//                 <Link href='/contact' className=" flex items-center text-xs tracking-wider border-none bg-transparent text-zinc-300 hover:text-white hover:bg-transparent ">
 //                     Contact <ExternalLink className="ml-1 w-4 h-4" />
 //                 </Link>
 //             </div>
