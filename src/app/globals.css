@@ -245,11 +245,11 @@ html {
 }
 
 body {
-    cursor: url('/cursor.png') 8 8, auto;
+    cursor: url('/cursor.png') 8 8, auto !important;
 }
 
 a {
-    cursor: url('/cursor.png') 8 8, auto;
+    cursor: url('/cursor.png') 8 8, auto !important;
 }
 .will-change-transform {
     will-change: transform;
