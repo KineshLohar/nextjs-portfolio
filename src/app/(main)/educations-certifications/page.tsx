@@ -5,8 +5,51 @@ import connectDB from "@/db/connectDB";
 import EduCert from "@/models/EduCertModel";
 import { EduCertType } from "@/types/types";
 import { ExternalLink } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: "Education & Certifications | Kinesh Lohar",
+    description: "Discover Kinesh Lohar’s academic background and professional certifications in software development, AI/ML, and web technologies.",
+    alternates: {
+      canonical: "https://kineshlohar.vercel.app/educations-certifications",
+    },
+    openGraph: {
+      title: "Education & Certifications | Kinesh Lohar",
+      description:
+        "Explore the educational qualifications and certifications of Kinesh Lohar including software engineering, AI/ML, and full-stack development credentials.",
+      url: "https://kineshlohar.vercel.app/educations-certifications",
+      siteName: "Kinesh Lohar Portfolio",
+      images: [
+        {
+          url: "https://kineshlohar.vercel.app/og-edu.png", // create this OG image
+          width: 1200,
+          height: 630,
+          alt: "Education and Certifications Banner",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@kinesh_lohar",
+      creator: "@kinesh_lohar",
+      title: "Kinesh Lohar’s Education & Certifications",
+      images:["https://kineshlohar.vercel.app/kineshlohar.jpg"],
+      description:
+        "Check out Kinesh Lohar’s educational background and professional certifications in modern full-stack and AI/ML technologies.",
+    },
+    keywords: [
+      "Kinesh Lohar education",
+      "Kinesh Lohar certifications",
+      "Full-stack developer certifications",
+      "AI ML certifications",
+      "Software engineering qualifications",
+      "Professional development MERN stack",
+      "Developer resume credentials",
+      "Tech certifications portfolio",
+    ],
+  };
 
 connectDB();
 

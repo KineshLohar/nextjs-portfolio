@@ -46,7 +46,7 @@ export const metadata: Metadata = {
       "Discover full-stack applications and AI-integrated solutions built by Kinesh Lohar using modern technologies like Next.js, React, and Node.js.",
     site: "@kineshlohar",
     creator: "@kineshlohar",
-    images: ["https://kineshlohar.vercel.app/og-projects.png"],
+    images: ["https://kineshlohar.vercel.app/kineshlohar.jpg"],
   },
 };
 

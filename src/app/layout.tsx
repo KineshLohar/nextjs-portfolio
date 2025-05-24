@@ -54,6 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@kinesh_lohar",
     creator: "@kinesh_lohar",
+    images: ["https://kineshlohar.vercel.app/kineshlohar.jpg.png"],
     title: "Kinesh Lohar | MERN Stack Developer",
     description: "Follow Kinesh Lohar for clean code, scalable web apps, and modern full-stack development using Next.js, Tailwind, and AI/ML."
   },
