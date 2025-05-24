@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { ProjectCard } from "@/components/viewer/projects/project-card";
+import { domain } from "@/constants/constants";
 import connectDB from "@/db/connectDB";
 import ProjectModel from "@/models/ProjectsModel";
 import { ProjectType } from "@/types/types";
@@ -23,16 +24,16 @@ export const metadata: Metadata = {
     "modern web design",
   ],
   alternates: {
-    canonical: "https://kineshlohar.vercel.app/projects",
+    canonical: `${domain}/projects`,
   },
   openGraph: {
     title: "Kinesh Lohar | Project Showcase",
     description:
       "From concept to deployment, browse through Kinesh Lohar's professional portfolio including MERN stack and AI-integrated projects.",
-    url: "https://kineshlohar.vercel.app/projects",
+    url: `${domain}/projects`,
     images: [
       {
-        url: "https://kineshlohar.vercel.app/og-projects.png", // update with real image
+        url: `${domain}/og-projects.png`, // update with real image
         width: 1200,
         height: 630,
         alt: "Projects by Kinesh Lohar",
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
       "Discover full-stack applications and AI-integrated solutions built by Kinesh Lohar using modern technologies like Next.js, React, and Node.js.",
     site: "@kineshlohar",
     creator: "@kineshlohar",
-    images: ["https://kineshlohar.vercel.app/kineshlohar.jpg"],
+    images: [`${domain}/kineshlohar.jpg`],
   },
 };
 

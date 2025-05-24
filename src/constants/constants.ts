@@ -28,3 +28,5 @@ export const educationOrCertification = [
   "Online Certificates",
   "Other Certificates"
 ]
+
+export const domain = 'https://kineshlohar.vercel.app' 

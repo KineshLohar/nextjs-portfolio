@@ -6,26 +6,27 @@ import { Bree_Serif, Eagle_Lake, Inter, Lato } from 'next/font/google';
 import Head from "next/head";
 import Script from "next/script";
 import "./globals.css";
+import { domain } from "@/constants/constants";
 
 
 export const metadata: Metadata = {
   title: "Kinesh Lohar | Full-Stack Software Developer",
   description: "Portfolio of Kinesh Lohar, MERN-stack & AI/ML enthusiast based in Mumbai.",
-  alternates: { canonical: "https://kineshlohar.vercel.app/" },
+  alternates: { canonical: `${domain}/` },
   icons: {
     icon: '/logo.png',
     other: [
       {
         rel: 'canonical',
-        url: 'https://kineshlohar.vercel.app/',
+        url: domain,
       },
       {
         rel: 'next',
-        url: 'https://kineshlohar.vercel.app/page?page=2',
+        url: `${domain}/page?page=2`,
       },
       {
         rel: 'prev',
-        url: 'https://kineshlohar.vercel.app/page?page=1',
+        url: `${domain}/page?page=1`,
       },
       // Social Media Links
       { rel: 'me', url: 'https://x.com/kinesh_lohar' },
@@ -44,17 +45,17 @@ export const metadata: Metadata = {
     Kinesh Lohar specializes in Next.js, React, Node.js, and MongoDB—crafting pixel-perfect UI and scalable backends.
     With hands-on experience in AI/ML integration and modern DevOps pipelines, Kinesh Lohar delivers robust, elegant solutions.
   `.trim().replace(/\s+/g, ' '),
-    url: "https://kineshlohar.vercel.app/",
+    url: `${domain}/`,
     siteName: "Kinesh Lohar Full stack developer personal portfolio dynamic website",
     images: [
-      { url: "https://kineshlohar.vercel.app/og-banner.png", width: 1200, height: 630 }
+      { url: `${domain}/og-banner.png`, width: 1200, height: 630 }
     ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@kinesh_lohar",
     creator: "@kinesh_lohar",
-    images: ["https://kineshlohar.vercel.app/kineshlohar.jpg.png"],
+    images: [`${domain}/kineshlohar.jpg.png`],
     title: "Kinesh Lohar | MERN Stack Developer",
     description: "Follow Kinesh Lohar for clean code, scalable web apps, and modern full-stack development using Next.js, Tailwind, and AI/ML."
   },
@@ -159,7 +160,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               "name": "Kinesh Lohar",
-              "url": "https://kineshlohar.vercel.app",
+              "url": domain,
               "sameAs": [
                 "https://www.linkedin.com/in/kineshlohar",
                 "https://github.com/kineshlohar",
