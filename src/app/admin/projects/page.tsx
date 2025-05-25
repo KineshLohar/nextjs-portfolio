@@ -44,9 +44,9 @@ export default async function Projects() {
                                 {projectsList?.map((proj) => (
                                     <TableRow key={proj?._id}>
                                         <TableCell className="py-4">{proj?.title}</TableCell>
-                                        <TableCell className="py-4">{proj?.demoLink}</TableCell>
+                                        <TableCell className="py-4 max-w-60 truncate ">{proj?.demoLink}</TableCell>
                                         <TableCell className="py-4">{proj?.repoLink}</TableCell>
-                                        <TableCell className="py-4">{proj?.techs?.map(item => item?.skill).join(', ')}</TableCell>
+                                        <TableCell className="py-4 max-w-60 break-words whitespace-normal">{proj?.techs?.map(item => item?.skill).join(', ')}</TableCell>
                                         <TableCell className="py-4">
                                             <ActionDropdownList
                                                 dataKey='projectData'

@@ -41,7 +41,7 @@ export default async function EducationCertifications() {
                             <TableBody className="">
                                 {eduAndCertList?.map((item: EduCertType) => (
                                     <TableRow key={item._id}>
-                                        <TableCell className="py-4">{item.title}</TableCell>
+                                        <TableCell className="py-4 max-w-60 whitespace-normal break-words">{item.title}</TableCell>
                                         <TableCell className="py-4 whitespace-pre-line break-words min-w-40 max-w-xs">{item.description}</TableCell>
                                         <TableCell className="py-4">{item.type}</TableCell>
                                         <TableCell className="py-4">
