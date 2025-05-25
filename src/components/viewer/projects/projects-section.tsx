@@ -114,6 +114,9 @@ import Link from "next/link";
 // }
 
 export async function ProjectsSection() {
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const Skill = (await import("@/models/SkillModel")).default;
     const projects: ProjectType[] = await ProjectModel.find().limit(3).populate('techs', '_id skill logo').sort({ createdAt: -1 });
 
     return (
