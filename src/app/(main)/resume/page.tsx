@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import PDFViewer from "@/components/PDFViewer";
 import { domain } from "@/constants/constants";
 import connectDB from "@/db/connectDB";
