@@ -24,7 +24,7 @@ const socials: SocialType[] = [
     {
         id: 1,
         label: 'Instagram',
-        link: 'https://www.instagram.com/kinesh_malviya',
+        link: 'https://www.instagram.com/kinesh_lohar',
         icon: Instagram
     },
     {

@@ -34,7 +34,7 @@ export const metadata: Metadata = {
       { rel: 'me', url: 'https://github.com/kineshlohar' },
       { rel: 'me', url: 'https://www.freecodecamp.org/fcc59cce604-c645-497c-a473-73b95c9182d1' },
       { rel: 'me', url: 'https://www.hackerrank.com/kineshlohar' },
-      { rel: 'me', url: 'https://www.instagram.com/kinesh_malviya' },
+      { rel: 'me', url: 'https://www.instagram.com/kinesh_lohar' },
       { rel: 'me', url: 'https://www.snapchat.com/add/kinesh123' },
     ],
   },
@@ -129,7 +129,7 @@ export default function RootLayout({
         <link rel="me" href="https://github.com/kineshlohar" />
         <link rel="me" href="https://www.freecodecamp.org/fcc59cce604-c645-497c-a473-73b95c9182d1" />
         <link rel="me" href="https://www.hackerrank.com/kineshlohar" />
-        <link rel="me" href="https://www.instagram.com/kinesh_malviya" />
+        <link rel="me" href="https://www.instagram.com/kinesh_lohar" />
         <link rel="me" href="https://www.snapchat.com/add/kinesh123" />
         <meta charSet="utf-8" />
         <meta name="google-site-verification" content="a03BjLVPwh2y04RlnKD-GgSxWiLZKYo1DWBpD8dK6AU" />
@@ -165,7 +165,7 @@ export default function RootLayout({
                 "https://www.linkedin.com/in/kineshlohar",
                 "https://github.com/kineshlohar",
                 "https://twitter.com/kineshlohar",
-                "https://www.instagram.com/kinesh_malviya",
+                "https://www.instagram.com/kinesh_lohar",
               ],
               "jobTitle": "Full Stack Developer",
               "worksFor": { "@type": "Organization", "name": "I-Pangram Digital Service LLP" },

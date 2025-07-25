@@ -29,14 +29,14 @@ const profilePicMap: Record<SocialMediaLabel, string> = {
 }
 
 const linkMap: Record<SocialMediaLabel, string> = {
-    'Instagram': 'https://www.instagram.com/kinesh_malviya/',
+    'Instagram': 'https://www.instagram.com/kinesh_lohar/',
     'Github': 'https://github.com/KineshLohar',
     'X (formely twitter)': 'https://x.com/kinesh_lohar',
     'Linkedin': 'https://www.linkedin.com/in/kineshlohar/'
 }
 
 const usernameMap: Record<SocialMediaLabel, string> = {
-    'Instagram': '@kinesh_malviya',
+    'Instagram': '@kinesh_lohar',
     'Github': '@KineshLohar',
     'X (formely twitter)': '@kinesh_lohar',
     'Linkedin': '@kineshlohar'
