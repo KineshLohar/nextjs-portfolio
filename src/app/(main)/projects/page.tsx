@@ -57,7 +57,7 @@ export default async function Projects() {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Skill = (await import("@/models/SkillModel")).default;
-  const projects: ProjectType[] = await ProjectModel.find().limit(3).populate('techs', '_id skill logo').sort({ createdAt: -1 });
+  const projects: ProjectType[] = await ProjectModel.find().populate('techs', '_id skill logo').sort({ createdAt: -1 });
 
   return (
     <div className="w-full min-h-screen py-36">
