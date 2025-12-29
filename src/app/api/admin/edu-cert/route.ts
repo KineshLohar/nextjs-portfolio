@@ -4,6 +4,7 @@ import User from "@/models/UserModel";
 import { NextRequest, NextResponse } from "next/server";
 import EduCert from '@/models/EduCertModel'
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
     try {
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
             endDate: formData.get("endDate"),
             link: formData.get('link')
         });
+        revalidatePath('/educations-certifications');
 
         return NextResponse.json(
             { message: "Education or Certification Added!", data: newEntry },

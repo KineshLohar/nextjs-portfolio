@@ -4,7 +4,6 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { revalidatePath } from "next/cache";
 
 
 export const DeleteWorkExperienceModal = () => {
@@ -24,7 +23,6 @@ export const DeleteWorkExperienceModal = () => {
                 router.refresh();
             }, 0);
             onClose()
-            revalidatePath('/educations-certifications');
         } catch (error) {
             console.log("ERROR DELETING SKILL", error);
         } finally {

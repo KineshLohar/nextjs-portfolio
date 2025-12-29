@@ -4,6 +4,7 @@ import Skill from '@/models/SkillModel';
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/db/connectDB";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
 
 export async function GET(req: NextRequest) {
     try {
@@ -82,6 +83,8 @@ export async function POST(req: NextRequest) {
         if (!skill) {
             return new NextResponse("Unable to create Skill", { status: 400 });
         }
+
+        revalidatePath('/');
 
         return NextResponse.json({ message: "Skill Added!", skillData: skill }, { status: 201 });
 

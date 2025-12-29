@@ -15,7 +15,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { revalidatePath } from "next/cache";
 
 const formSchema = z.object({
     role: z.string().min(1, { message: "Role is Required" }),
@@ -73,8 +72,7 @@ export const AddWorkExpModal = () => {
             const response = await axios.post('/api/admin/work-exp', values)
             if (response.status === 201) {
                 onClose();
-                form.reset();
-                revalidatePath('/educations-certifications');
+                form.reset()
                 setTimeout(() => {
                     router.refresh();
                 }, 0);

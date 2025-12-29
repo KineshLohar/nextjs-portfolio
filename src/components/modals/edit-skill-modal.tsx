@@ -12,7 +12,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { revalidatePath } from "next/cache";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -111,7 +110,6 @@ export const EditSkillModal = () => {
                 router.refresh();
                 setPreviousLogo(null)
                 onClose();
-                revalidatePath('/');
             }
         } catch (error) {
             console.log("ERROR SUBMITING SKILL ", error);

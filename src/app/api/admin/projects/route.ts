@@ -4,6 +4,7 @@ import { CloudinaryImageWithCaption, uploadToCloudinary } from "@/lib/cloudinary
 import getDataFromToken from "@/lib/get-data-from-token";
 import ProjectModel from "@/models/ProjectsModel";
 import User from "@/models/UserModel";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -94,7 +95,8 @@ export async function POST(req: NextRequest) {
       },
       images: imagesResults
     });
-
+    revalidatePath('/');
+    revalidatePath('/projects');
     return NextResponse.json(project, { status: 201 });
   } catch (error) {
     console.error("API Error:", error);

@@ -3,6 +3,7 @@ import { deleteFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import getDataFromToken from "@/lib/get-data-from-token";
 import Skill from "@/models/SkillModel";
 import User from "@/models/UserModel";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -43,7 +44,7 @@ export async function DELETE(req: NextRequest,
         }
 
         await Skill.findByIdAndDelete(skillId);
-
+        revalidatePath('/');
         return NextResponse.json({ message: "SKill Deleted!" }, { status: 200 })
 
     } catch (error) {
@@ -108,6 +109,8 @@ export async function PATCH(req: NextRequest, { params }: {
         skill.description = formData.get("description");
 
         await skill.save();
+
+        revalidatePath('/');
 
         return NextResponse.json({ message: "Skill updated successfully", skill });
     } catch (error) {

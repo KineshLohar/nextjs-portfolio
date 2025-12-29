@@ -4,7 +4,6 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { revalidatePath } from "next/cache";
 
 
 export const DeleteSkillModal = () => {
@@ -23,7 +22,6 @@ export const DeleteSkillModal = () => {
             setTimeout(() => {
                 router.refresh();
             }, 0);
-            revalidatePath('/');
             onClose()
         } catch (error) {
             console.log("ERROR DELETING SKILL", error);

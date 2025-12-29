@@ -4,6 +4,7 @@ import getDataFromToken from "@/lib/get-data-from-token";
 import ProjectModel from "@/models/ProjectsModel";
 import User from "@/models/UserModel";
 import { ProjectType } from "@/types/types";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -37,6 +38,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
         // Delete document
         await ProjectModel.findByIdAndDelete(id);
+
+        revalidatePath('/');
+        revalidatePath('/projects');
 
         return NextResponse.json({ success: true });
     } catch (error) {
@@ -169,7 +173,8 @@ export async function PATCH(
         project.techs = JSON.parse(formData.get('techs') as string);
 
         await project.save();
-
+        revalidatePath('/');
+        revalidatePath('/projects');
         return NextResponse.json(project);
     } catch (error) {
         console.error('[PROJECT_UPDATE]', error);

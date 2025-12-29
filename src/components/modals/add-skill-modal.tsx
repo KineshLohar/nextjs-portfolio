@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -92,7 +91,6 @@ export const AddSkillModal = () => {
             })
             if (response.status === 201) {
                 form.reset();
-                revalidatePath('/');
                 onClose();
                 setTimeout(() => {
                     router.refresh();

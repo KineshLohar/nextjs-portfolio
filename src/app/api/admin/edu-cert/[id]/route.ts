@@ -3,6 +3,7 @@ import { deleteFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import getDataFromToken from "@/lib/get-data-from-token";
 import EduCert from "@/models/EduCertModel";
 import User from "@/models/UserModel";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -43,7 +44,7 @@ export async function DELETE(req: NextRequest,
         }
 
         await EduCert.findByIdAndDelete(id);
-
+        revalidatePath('/educations-certifications');
         return NextResponse.json({ message: "Education or Certification Deleted!" }, { status: 200 })
 
     } catch (error) {
@@ -106,6 +107,7 @@ export async function PATCH(req: NextRequest, { params }: {
 
         await eduCert.save();
 
+        revalidatePath('/educations-certifications');
         return NextResponse.json({
             message: "Education or Certification updated successfully",
             data: eduCert

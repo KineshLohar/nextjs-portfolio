@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
-import { revalidatePath } from "next/cache";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -97,7 +96,6 @@ export const AddEducationOrCertificationModal = () => {
             if (response.status === 201) {
                 form.reset();
                 onClose();
-                revalidatePath('/educations-certifications');
                 setTimeout(() => {
                     router.refresh();
                 }, 0);

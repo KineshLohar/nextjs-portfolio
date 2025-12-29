@@ -17,7 +17,6 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 import Image from "next/image";
-import { revalidatePath } from "next/cache";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -120,7 +119,6 @@ export const EditEducationOrCertificationModal = () => {
                     router.refresh();
                 }, 0);
                 setPreviousThumbnail(null);
-                revalidatePath('/educations-certifications');
             }
         } catch (error) {
             console.log("ERROR Editing EDU CERT ", error);
