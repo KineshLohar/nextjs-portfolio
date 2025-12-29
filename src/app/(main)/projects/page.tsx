@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 import { ProjectCard } from "@/components/viewer/projects/project-card";
 import { domain } from "@/constants/constants";

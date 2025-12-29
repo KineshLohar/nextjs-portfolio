@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input";
 import { MultiSelect } from "../ui/multi-select";
 import { Textarea } from "../ui/textarea";
+import { revalidatePath } from "next/cache";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -134,6 +135,8 @@ export const AddProjectModal = () => {
                 onClose();
                 form.reset();
                 router.refresh();
+                revalidatePath('/');
+                revalidatePath('/projects');
             }
         } catch (error) {
             console.log("Submission error:", error);

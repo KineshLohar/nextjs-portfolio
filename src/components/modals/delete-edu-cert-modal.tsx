@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { revalidatePath } from "next/cache";
 
 
 export const DeleteEduOrCertModal = () => {
@@ -21,6 +22,7 @@ export const DeleteEduOrCertModal = () => {
             await axios.delete(`/api/admin/edu-cert/${eduAndCertData?._id}`)
             
             onClose();
+            revalidatePath('/educations-certifications');
             setTimeout(() => {
                 router.refresh();
             }, 0);

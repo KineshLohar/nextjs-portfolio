@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 import { Separator } from "@/components/ui/separator";
 import { domain } from "@/constants/constants";

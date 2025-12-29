@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 import Skill from "@/models/SkillModel";
 import { Skill as SkillType } from "@/types/types";

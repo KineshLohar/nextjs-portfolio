@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { Separator } from "../ui/separator";
 import { MultiSelect } from "../ui/multi-select";
 import Image from "next/image";
+import { revalidatePath } from "next/cache";
 
 interface ImagesType {
     _id: string;
@@ -236,6 +237,8 @@ export const EditProjectModal = () => {
                 onClose();
                 form.reset();
                 router.refresh();
+                revalidatePath('/');
+                revalidatePath('/projects');
             }
         } catch (error) {
             console.log("Submission error:", error);

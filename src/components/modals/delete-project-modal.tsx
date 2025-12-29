@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { revalidatePath } from "next/cache";
 
 
 export const DeleteProjectModal = () => {
@@ -21,6 +22,8 @@ export const DeleteProjectModal = () => {
             await axios.delete(`/api/admin/projects/${projectData?._id}`)
             
             onClose();
+            revalidatePath('/');
+            revalidatePath('/projects');
             setTimeout(() => {
                 router.refresh();
             }, 0);

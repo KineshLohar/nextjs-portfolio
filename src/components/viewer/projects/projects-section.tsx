@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 import { SlideReveal } from "@/components/animations/slide-reveal-gsap";
 import { cn } from "@/lib/utils";
