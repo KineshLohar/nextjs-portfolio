@@ -46,8 +46,14 @@ export const colorMap: Record<SocialMediaLabel, string> = {
     'Linkedin': 'text-indigo-600'
 }
 
+async function CopyrightYear() {
+    "use cache";
 
-export const Footer = () => {
+    return new Date().getFullYear();
+}
+
+export const Footer = async () => {
+    const currentYear = await CopyrightYear();
     return (
         <div className=" w-full flex flex-col justify-center mt-8">
             <div className="flex items-center justify-between px-4 sm:px-10 md:px-16 transition-all duration-300">
@@ -56,6 +62,7 @@ export const Footer = () => {
                         src='/kineshlohar.png'
                         alt="Kinesh Lohar"
                         fill
+                        sizes="(max-width: 639px) 64px, 96px"
                         className=" object-contain"
                     />
                 </div>
@@ -84,7 +91,7 @@ export const Footer = () => {
             </div>
             <Separator className=" my-8 max-w-11/12 sm:max-w-9/12 mx-auto min-h-0.5" />
             <div className="text-center text-sm text-gray-500 mb-8">
-                © {new Date().getFullYear()} Kinesh Lohar. All rights reserved.
+                © {currentYear} Kinesh Lohar. All rights reserved.
             </div>
         </div>
     )

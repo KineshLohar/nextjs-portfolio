@@ -1,13 +1,10 @@
 // export const dynamic = 'force-dynamic';
 
 import { Timeline } from "@/components/ui/timeline";
-import { WorkExperience } from "@/models/WorkExpModel";
-import { WorkExperienceTypes } from "@/types/types";
+import { getWorkExperiences } from "@/lib/server-actions/work.server";
 
 export async function WorkExpSection() {
-
-
-    const workExpData: WorkExperienceTypes[] = await WorkExperience.find().sort({ startDate: -1 });
+    const workExpData = await getWorkExperiences();
 
     return (
         <div className="w-full">

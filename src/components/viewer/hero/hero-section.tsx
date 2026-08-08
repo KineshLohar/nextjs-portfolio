@@ -2,11 +2,7 @@
 import { Paperclip } from "lucide-react";
 import Link from "next/link";
 import { ContactNavButton } from "./contact-nab";
-import dynamic from "next/dynamic";
-import { ComponentType } from "react";
-
-const TypewriterEffect = dynamic(() => import("@/components/viewer/hero/typewrite-effect").then((mod) => mod.TypewriterEffect))as ComponentType
-
+import { TypewriterEffect } from "./typewrite-effect";
 
 export const HeroSection = () => {
     return (
@@ -18,8 +14,8 @@ export const HeroSection = () => {
                 className="absolute inset-0 w-full h-full object-cover opacity-70"
                 aria-hidden="true"
             >
-                <source src="/background.mp4" type="video/mp4" />
-                <source src="/background.webm" type="video/webm" />
+                <source src="/background-compress.mp4" type="video/mp4" />
+                {/* <source src="/background.webm" type="video/webm" /> */}
                 Your browser does not support the video tag.
             </video>
 

@@ -3,6 +3,7 @@ import Link from "next/link"
 import React from "react"
 import { Navbutton } from "./nav-button"
 import { MobileMenu } from "./mobile-menu"
+import { cacheLife } from "next/cache"
 
 const routes = [
     {
@@ -38,7 +39,9 @@ const routes = [
 
 ]
 
-export const Navbar = () => {
+export const Navbar = async () => {
+    "use cache";
+    cacheLife("max");
     return (
         <div className="absolute top-0 right-0 left-0 z-[999] w-full h-20 flex items-center justify-between bg-transparent px-2 sm:px-8 md:px-10 lg:px-16 transition-all duration-300">
             <Link href='/' className="relative h-16 w-20 ">
@@ -46,10 +49,11 @@ export const Navbar = () => {
                     src='/kineshlohar.png'
                     alt="Kinesh Lohar"
                     fill
+                    sizes="80px"
                     className=" object-contain"
                 />
             </Link>
-            <div className="hidden ml-auto md:flex items-center justify-between gap-5 lg:gap-6 xl:gap-8 text-xs lg:text-sm 2xl:text-base uppercase transition-all duration-300">
+            <div className="hidden ml-auto md:flex items-center justify-between gap-5 lg:gap-6 xl:gap-8 text-xs lg:text-sm tracking-wider font-light transition-all duration-300">
                 {
                     routes?.map((route) => (
                         <React.Fragment key={route.id}>

@@ -1,10 +1,7 @@
-// export const dynamic = 'force-dynamic';
 
 import { ProjectCard } from "@/components/viewer/projects/project-card";
 import { domain } from "@/constants/constants";
-import connectDB from "@/db/connectDB";
-import ProjectModel from "@/models/ProjectsModel";
-import { ProjectType } from "@/types/types";
+import { getProjects } from "@/lib/server-actions/project.server";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -51,14 +48,27 @@ export const metadata: Metadata = {
   },
 };
 
-connectDB();
-
 export default async function Projects() {
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const Skill = (await import("@/models/SkillModel")).default;
-  const projects: ProjectType[] = await ProjectModel.find().populate('techs', '_id skill logo').sort({ createdAt: -1 });
+  const response = await getProjects();
 
+  if (!response.success) {
+    return (
+      <section className="w-full min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold text-zinc-200">
+            Unable to load projects
+          </h1>
+
+          <p className="mt-2 text-sm text-zinc-500">
+            {response.error}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  const projects = response.data;
   return (
     <div className="w-full min-h-screen py-36">
       <div className="w-full  pb-16 px-4 sm:pl-8 md:px-8 lg:px-10 transition-all duration-300">

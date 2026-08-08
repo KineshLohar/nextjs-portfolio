@@ -2,9 +2,8 @@
 
 import { Separator } from "@/components/ui/separator";
 import { domain } from "@/constants/constants";
-import connectDB from "@/db/connectDB";
-import EduCert from "@/models/EduCertModel";
-import { EduCertType } from "@/types/types";
+import { getEducationCertifications } from "@/lib/server-actions/education-certification.server";
+import type { EduCertItem } from "@/types/education-certification.types";
 import { ExternalLink } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -14,47 +13,45 @@ export const metadata: Metadata = {
     title: "Education & Certifications | Kinesh Lohar",
     description: "Discover Kinesh Lohar’s academic background and professional certifications in software development, AI/ML, and web technologies.",
     alternates: {
-      canonical: `${domain}/educations-certifications`,
+        canonical: `${domain}/educations-certifications`,
     },
     openGraph: {
-      title: "Education & Certifications | Kinesh Lohar",
-      description:
-        "Explore the educational qualifications and certifications of Kinesh Lohar including software engineering, AI/ML, and full-stack development credentials.",
-      url: `${domain}/educations-certifications`,
-      siteName: "Kinesh Lohar Portfolio",
-      images: [
-        {
-          url: `${domain}/og-edu.png`, // create this OG image
-          width: 1200,
-          height: 630,
-          alt: "Education and Certifications Banner",
-        },
-      ],
+        title: "Education & Certifications | Kinesh Lohar",
+        description:
+            "Explore the educational qualifications and certifications of Kinesh Lohar including software engineering, AI/ML, and full-stack development credentials.",
+        url: `${domain}/educations-certifications`,
+        siteName: "Kinesh Lohar Portfolio",
+        images: [
+            {
+                url: `${domain}/og-edu.png`, // create this OG image
+                width: 1200,
+                height: 630,
+                alt: "Education and Certifications Banner",
+            },
+        ],
     },
     twitter: {
-      card: "summary_large_image",
-      site: "@kinesh_lohar",
-      creator: "@kinesh_lohar",
-      title: "Kinesh Lohar’s Education & Certifications",
-      images:[`${domain}/kineshlohar.jpg`],
-      description:
-        "Check out Kinesh Lohar’s educational background and professional certifications in modern full-stack and AI/ML technologies.",
+        card: "summary_large_image",
+        site: "@kinesh_lohar",
+        creator: "@kinesh_lohar",
+        title: "Kinesh Lohar’s Education & Certifications",
+        images: [`${domain}/kineshlohar.jpg`],
+        description:
+            "Check out Kinesh Lohar’s educational background and professional certifications in modern full-stack and AI/ML technologies.",
     },
     keywords: [
-      "Kinesh Lohar education",
-      "Kinesh Lohar certifications",
-      "Full-stack developer certifications",
-      "AI ML certifications",
-      "Software engineering qualifications",
-      "Professional development MERN stack",
-      "Developer resume credentials",
-      "Tech certifications portfolio",
+        "Kinesh Lohar education",
+        "Kinesh Lohar certifications",
+        "Full-stack developer certifications",
+        "AI ML certifications",
+        "Software engineering qualifications",
+        "Professional development MERN stack",
+        "Developer resume credentials",
+        "Tech certifications portfolio",
     ],
-  };
+};
 
-connectDB();
-
-const CertCard = ({ label, data }: { label: string; data: EduCertType[] | [] }) => {
+const CertCard = ({ label, data }: { label: string; data: EduCertItem[] | [] }) => {
 
     if (!data?.length) return null;
 
@@ -76,6 +73,7 @@ const CertCard = ({ label, data }: { label: string; data: EduCertType[] | [] }) 
                                         src={item?.thumbnail?.url}
                                         fill
                                         alt={item?.title}
+                                        sizes="(max-width: 1023px) 80px, 80px"
                                         className="object-contain"
                                     />
                                 </div>
@@ -106,16 +104,50 @@ const CertCard = ({ label, data }: { label: string; data: EduCertType[] | [] }) 
 
 export default async function EducationsCertifications() {
 
-    const eduList: EduCertType[] = await EduCert.find();
+    const response = await getEducationCertifications();
 
-    const educations = eduList
-        ?.filter(item => item?.type === "Education")
-        .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
-    const achievements = eduList?.filter(item => item?.type === "Achievements");
-    const profCert = eduList?.filter(item => item?.type === "Professional Certificates");
-    const instCert = eduList?.filter(item => item?.type === "Institutional Certificates");
-    const onlineCert = eduList?.filter(item => item?.type === "Online Certificates");
-    const other = eduList?.filter(item => item?.type === "Other Certificates");
+    if (!response.success) {
+        return (
+            <main className="w-full min-h-screen pt-32 pb-16 flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-xl font-semibold text-zinc-200">
+                        Unable to load education and certifications
+                    </h1>
+
+                    <p className="mt-2 text-sm text-zinc-500">
+                        {response.error}
+                    </p>
+                </div>
+            </main>
+        );
+    }
+
+    const {
+        education,
+        achievements,
+        professionalCertificates,
+        institutionalCertificates,
+        onlineCertificates,
+        otherCertificates,
+    } = response.data;
+
+    const hasData =
+        education.length > 0 ||
+        achievements.length > 0 ||
+        professionalCertificates.length > 0 ||
+        institutionalCertificates.length > 0 ||
+        onlineCertificates.length > 0 ||
+        otherCertificates.length > 0;
+
+    if (!hasData) {
+        return (
+            <main className="w-full min-h-screen pt-32 pb-16 flex items-center justify-center">
+                <p className="text-zinc-500">
+                    No education or certifications available.
+                </p>
+            </main>
+        );
+    }
 
     return (
         <div className="w-full min-h-screen pt-32 pb-16">
@@ -133,7 +165,7 @@ export default async function EducationsCertifications() {
             <div className="w-full  px-4 md:px-8 lg:px-28 space-y-10">
                 <CertCard
                     label="Education"
-                    data={educations}
+                    data={education}
                 />
                 <CertCard
                     label="Achievements"
@@ -141,19 +173,19 @@ export default async function EducationsCertifications() {
                 />
                 <CertCard
                     label="Professional Certificates"
-                    data={profCert}
+                    data={professionalCertificates}
                 />
                 <CertCard
                     label="Institutional Certificates"
-                    data={instCert}
+                    data={institutionalCertificates}
                 />
                 <CertCard
                     label="Online Certificates"
-                    data={onlineCert}
+                    data={onlineCertificates}
                 />
                 <CertCard
                     label="Other Certificates"
-                    data={other}
+                    data={otherCertificates}
                 />
             </div>
         </div>

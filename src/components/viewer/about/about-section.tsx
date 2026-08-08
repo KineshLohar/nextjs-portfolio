@@ -38,6 +38,8 @@ export const AboutSection = () => {
                 src="/kineshlohar.jpg"
                 alt="Profile Picture of Kinesh Lohar"
                 fill
+                sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 41.67vw"
+                loading="lazy"
                 className=" object-cover object-right transition-all duration-300"
                 />
             </div>

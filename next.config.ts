@@ -10,9 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  compiler:{
-    removeConsole: true
-  }
+  cacheComponents: true
 };
 
 export default nextConfig;

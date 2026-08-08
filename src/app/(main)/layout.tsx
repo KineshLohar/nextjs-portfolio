@@ -1,19 +1,15 @@
-'use client'
 
+import FadeUpBatcher from "@/components/animations/fadeup-batcher";
 import ScrollToTop from "@/components/scroll-to-top";
 import { Footer } from "@/components/viewer/footer";
 import { Navbar } from "@/components/viewer/Navbar/navbar";
-import dynamic from "next/dynamic";
-const FadeUpBatcher = dynamic(
-    () => import("@/components/animations/fadeup-batcher"),
-    { ssr : false}
-);
-
-
+import { Suspense } from "react";
 export default function MainLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="w-full h-full relative">
-            <FadeUpBatcher />
+            <Suspense>
+                <FadeUpBatcher />
+            </Suspense>
             <ScrollToTop />
             <Navbar />
             {children}

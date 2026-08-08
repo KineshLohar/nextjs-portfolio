@@ -1,7 +1,7 @@
 import { ActionTooltip } from "@/components/action-tooltip"
 import { Button } from "@/components/ui/button"
 import { Github } from "@/lib/icons"
-import { ProjectType } from "@/types/types"
+import type { ProjectType } from "@/types/project.types"
 import { Eye } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -15,12 +15,13 @@ export const ProjectCard = ({ project }: { project: ProjectType }) => {
             <h3 className="fade-up z-20 top-4 left-4 text-xl font-medium font-serif tracking-wide text-zinc-200 capitalize">{project?.title}</h3>
 
 
-            <div className="fade-up relative w-full min-h-48 rounded-lg overflow-hidden ">
+            <div className="fade-up relative w-full min-h-48 rounded-lg overflow-hidden">
                 <Image
                     src={project?.thumbnail?.url}
                     alt={project?.thumbnail?.id}
                     fill
                     loading="lazy"
+                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
                     className=" object-cover opacity-90 transition-transform duration-700 hover:scale-110"
                 />
             </div>
@@ -38,11 +39,15 @@ export const ProjectCard = ({ project }: { project: ProjectType }) => {
                     project?.techs?.map(tech => (
                         <ActionTooltip key={tech?._id} label={tech?.skill} side="top">
                             <div className="relative w-6 h-6">
-                                <Image
-                                    src={tech?.logo?.url}
-                                    alt={tech?.skill}
-                                    fill
-                                />
+                                {tech.logo?.url && (
+                                    <Image
+                                        src={tech.logo.url}
+                                        alt={tech.skill}
+                                        fill
+                                        sizes="24px"
+                                        className="object-contain"
+                                    />
+                                )}
                             </div>
                         </ActionTooltip>
                     )

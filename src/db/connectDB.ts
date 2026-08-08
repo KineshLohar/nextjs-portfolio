@@ -1,31 +1,29 @@
 import mongoose from "mongoose";
 
-const connectDB = async () => {
-    try {
+const MONGO_URI = process.env.MONGO_URI!;
 
-        // if (mongoose.connection.readyState >= 1) {
-        //     // Already connected or connecting
-        //     return;
-        // }
-        mongoose.connect(process.env.MONGO_URI!, {
-            dbName: "nextjs-portfolio",
-        })
-        const connection = mongoose.connection;
+let cached = (global as any).mongoose;
 
-        connection.on('connected', () => {
-            console.log("connected to database successfully")
-        })
-
-        connection.on('error', (error) => {
-            console.log("error connecting database")
-            console.log(error);
-            process.exit()
-        })
-        
-    } catch (error) {
-        console.log("Error connecting to DB")
-        console.log(error)
-    }
+if (!cached) {
+  cached = (global as any).mongoose = {
+    conn: null,
+    promise: null,
+  };
 }
 
-export default connectDB;
+export default async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGO_URI, {
+      dbName: "nextjs-portfolio",
+      bufferCommands: false,
+    });
+  }
+
+  cached.conn = await cached.promise;
+
+  return cached.conn;
+}

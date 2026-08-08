@@ -1,13 +1,114 @@
-// export const dynamic = 'force-dynamic';
-
 import { SlideReveal } from "@/components/animations/slide-reveal-gsap";
+import { getFeaturedProjects } from "@/lib/server-actions/project.server";
 import { cn } from "@/lib/utils";
-import ProjectModel from "@/models/ProjectsModel";
-import { ProjectType } from "@/types/types";
 import { Folder } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export async function ProjectsSection() {
+  const response = await getFeaturedProjects();
+
+  if (!response.success) {
+    return (
+      <section className="w-full min-h-[400px] flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-zinc-200">
+            Unable to load projects
+          </h2>
+
+          <p className="mt-2 text-sm text-zinc-500">
+            {response.error}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  const projects = response.data;
+
+  if (projects.length === 0) {
+    return (
+      <section className="w-full min-h-[400px] flex items-center justify-center">
+        <p className="text-xl text-zinc-400">
+          No projects added yet.
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <div className="w-full min-h-screen mb-12">
+      <div className="max-w-7xl mx-auto md:pt-28 px-4 sm:pl-8 md:px-8 lg:px-10">
+        <h2 className="fade-up text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white bg-gradient-to-br from-zinc-50 to-neutral-200 bg-clip-text text-transparent max-w-4xl">
+          Proof of Work, Passion & Precision
+        </h2>
+
+        <p className="fade-up text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm">
+          Dive into projects that reflect my technical skills and dedication
+          to continuous learning.
+        </p>
+      </div>
+
+      <div className="w-full flex flex-col items-center justify-start mt-12 gap-6 lg:px-9">
+        {projects.map((proj, index) => (
+          <div
+            key={proj._id}
+            className={cn(
+              "w-full flex flex-col md:flex-row items-stretch md:items-center justify-between p-4 md:px-8 lg:px-10",
+              index % 2 !== 0 && "md:flex-row-reverse"
+            )}
+          >
+            <SlideReveal
+              direction={index % 2 === 0 ? "left" : "right"}
+              className="relative w-full sm:w-6/12 md:w-6/12 lg:w-5/12 h-full"
+            >
+              <Image
+                loading="lazy"
+                src={proj.thumbnail.url}
+                alt={proj.title}
+                width={400}
+                height={250}
+                className="object-contain w-full h-full rounded-tr-2xl rounded-bl-2xl"
+              />
+            </SlideReveal>
+
+            <SlideReveal
+              direction={index % 2 === 0 ? "right" : "left"}
+              className={cn(
+                "w-full mt-4 font-lato sm:mt-8 md:mt-0 sm:w-6/12 md:w-6/12 lg:w-7/12 flex flex-col justify-center items-start",
+                index % 2 === 0
+                  ? "sm:pl-8 md:pl-8 lg:p-16"
+                  : "md:pr-28"
+              )}
+            >
+              <h3 className="font-medium text-xl md:text-2xl lg:text-3xl tracking-wide font-breeserif capitalize">
+                {proj.title}
+              </h3>
+
+              <p className="text-sm text-zinc-200 mt-2">
+                {proj.description}
+              </p>
+            </SlideReveal>
+          </div>
+        ))}
+      </div>
+
+      <div className="w-full flex items-center justify-center mt-8 px-8">
+        <Link
+          href="/projects"
+          className="fade-up capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider overflow-hidden"
+        >
+          <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
+
+          <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center">
+            <Folder className="w-4 h-4" />
+            See All Creations
+          </span>
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 // export async function ProjectsSection2() {
 //     const projects: ProjectType[] = await ProjectModel.find().limit(3).populate('techs', '_id skill logo').sort({ createdAt: -1 });
@@ -113,79 +214,3 @@ import Link from "next/link";
 //     )
 // }
 
-export async function ProjectsSection() {
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const Skill = (await import("@/models/SkillModel")).default;
-    const projects: ProjectType[] = await ProjectModel.find().limit(3).populate('techs', '_id skill logo').sort({ createdAt: -1 });
-
-    return (
-        <div className="w-full min-h-screen mb-16">
-            <div className="max-w-7xl mx-auto md:pt-28 px-4 sm:pl-8 md:px-8 lg:px-10 ">
-
-                <h2 className="fade-up text-2xl italic md:text-4xl mb-4 font-breeserif dark:text-white bg-gradient-to-br from-zinc-50 to-neutral-200 bg-clip-text text-transparent max-w-4xl">
-                    Proof of Work, Passion & Precision
-                </h2>
-                <p className="fade-up text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm ">
-                    Dive into projects that reflect my technical skills and dedication to continuous learning.
-                </p>
-            </div>
-            <div className="w-full flex flex-col items-center justify-start mt-12 gap-6 lg:px-9">
-                {
-                    projects?.length === 0
-                        ?
-                        <p className=" text-xl mx-auto my-8">No projects Added Yet by Admin</p>
-                        :
-                        projects?.map((proj, index) => (
-                            <div
-                                key={proj?._id || index}
-                                className={cn(
-                                    `w-full flex flex-col md:flex-row items-stretch md:items-center justify-between p-4 md:px-8 lg:px-10`,
-                                    index % 2 !== 0 && "md:flex-row-reverse"
-                                )}
-                            >
-                                <SlideReveal
-                                    direction={index % 2 === 0 ? 'left' : 'right'}
-                                    className="relative w-full sm:w-6/12 md:w-6/12 lg:w-5/12 h-full"
-                                >
-                                    <Image
-                                        loading="lazy"
-                                        src={proj?.thumbnail?.url}
-                                        alt={proj?.title}
-                                        width={400}
-                                        height={250}
-                                        className="object-contain w-full h-full"
-                                    />
-                                </SlideReveal>
-
-                                {/* Content Container */}
-                                <SlideReveal
-                                    direction={index % 2 === 0 ? 'right' : 'left'}
-                                    className={cn(
-                                        `w-full mt-4 font-lato sm:mt-8 md:mt-0 sm:w-6/12 md:w-6/12 lg:w-7/12 flex flex-col justify-center items-start`,
-                                        index % 2 === 0 ? 'sm:pl-8 md:pl-8 lg:p-16' : "md:pr-28"
-                                    )}
-                                >
-                                    <h3 className="font-medium text-xl md:text-2xl lg:text-3xl tracking-wide font-breeserif capitalize">
-                                        {proj?.title}
-                                    </h3>
-                                    <p className="text-sm text-zinc-200 mt-2">{proj?.description}</p>
-                                </SlideReveal>
-                            </div>
-                        ))
-                }
-            </div>
-            <div className="w-full flex items-center justify-center mt-6 px-8">
-
-                <Link
-                    href="/projects"
-                    className="fade-up capitalize relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider  overflow-hidden"
-                >
-                    <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
-                    <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><Folder className="w-4 h-4" /> See All Creations</span>
-                </Link>
-
-            </div>
-        </div>
-    )
-}

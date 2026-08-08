@@ -120,7 +120,7 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en" suppressHydrationWarning
+    <html lang="en" data-scroll-behaviour="smooth" suppressHydrationWarning
       className={`${inter.className} ${breeserif.variable} ${eaglelake.variable} ${lato.variable}`}
     >
       <Head>
@@ -137,7 +137,7 @@ export default function RootLayout({
       <body
         className={cn(
           `antialiased vsc-initialized `,
-          'bg-slate-50 dark:bg-black min-h-screen scroll-smooth'
+          'bg-slate-50 dark:bg-black min-h-screen'
         )
         }
       >
