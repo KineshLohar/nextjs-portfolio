@@ -1,11 +1,18 @@
 
-import { WorkExperienceTypes } from "@/types/types"
 import { format } from "date-fns"
 import { ActionDropdownList } from "../action-dropdown-list"
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table"
+import type { getWorkExperiences } from "@/lib/server-actions/work.server";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 
+type WorkExperienceList = NonNullable<
+    Awaited<ReturnType<typeof getWorkExperiences>>["data"]
+>;
 
-export default function WorkExpTable({ experienceList }: { experienceList: WorkExperienceTypes[] }) {
+interface WorkExpTableProps {
+    experienceList: WorkExperienceList;
+}
+
+export default function WorkExpTable({ experienceList }: WorkExpTableProps) {
 
     return (
         <div className="w-full h-full">

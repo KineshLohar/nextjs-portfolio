@@ -1,21 +1,25 @@
 import { OpenModalButton } from "@/components/open-modal-button";
 import WorkExpTable from "@/components/work-exp/work-experience-table";
-import connectDB from "@/db/connectDB";
-import { WorkExperience as WorkExpModel } from "@/models/WorkExpModel";
-import { WorkExperienceTypes } from "@/types/types";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
-connectDB()
+import { getWorkExperiences } from "@/lib/server-actions/work.server";
+import { requireAuth } from "@/lib/server-auth";
 
 export default async function WorkExperience() {
 
-    const cookiesStore = await cookies();
-    const token = cookiesStore.get('token');
+    await requireAuth();
 
-    if(!token) return redirect('/login')
-        
-    const workExperiencs: WorkExperienceTypes[] = await WorkExpModel.find();
+    const response = await getWorkExperiences();
+
+    if (!response.success) {
+        return (
+            <div className="flex min-h-[400px] items-center justify-center p-4">
+                <p className="text-sm text-red-500">
+                    {response.error}
+                </p>
+            </div>
+        );
+    }
+
+    const { data } = response;
 
     return (
         <div className="w-full h-full flex flex-col gap-4 bg-gray p-4 bg-white border-b dark:bg-zinc-900/70 text-black dark:text-white">
@@ -24,15 +28,15 @@ export default async function WorkExperience() {
             </div>
             <div>
                 {
-                    workExperiencs?.length < 1 ? (
+                    data && data?.length < 1 ? (
                         <div>
                             Work Experiences Not found!
                         </div>
-                    ) 
-                    :
-                    <WorkExpTable experienceList={workExperiencs} />
+                    )
+                        :
+                        <WorkExpTable experienceList={data} />
                 }
-                
+
             </div>
         </div>
     )

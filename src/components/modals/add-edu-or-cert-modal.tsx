@@ -1,318 +1,540 @@
-import { useModal } from "@/hooks/use-modal-store"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import * as z from 'zod'
+"use client";
+
+import { useModal } from "@/hooks/use-modal-store";
 import { educationOrCertification } from "@/constants/constants";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { createEduCert, eduCertSchema } from "@/lib/server-actions/edu-cert.server";
+
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "../ui/dialog";
+
+import {
+    Field,
+    FieldError,
+    FieldLabel,
+} from "../ui/field";
+
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select";
+
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-const fileSchema = z.custom<File>().superRefine((val, ctx) => {
-    if (typeof window === 'undefined') return true;
-
-    if (!(val instanceof File)) {
-        ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Please upload an image",
-        });
-        return false;
-    }
-
-    if (val.size > MAX_FILE_SIZE) {
-        ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Image size must be less than 5MB",
-        });
-        return false;
-    }
-
-    return true;
-});
-
-const formSchema = z.object({
-    title: z.string().min(1, { message: "Title is required!" }),
-    description: z.string(),
-    type: z.enum([educationOrCertification[0], ...educationOrCertification.slice(1)]),
-    thumbnail: fileSchema.refine(val => val instanceof File, {
-        message: "Image is required",
-    }),
-    startDate: z.date().optional().nullable(),
-    endDate: z.date().optional().nullable(),
-    link: z.string(),
-})
-
-
+type FormValues = z.infer<typeof eduCertSchema>;
 
 export const AddEducationOrCertificationModal = () => {
-
     const { isOpen, onClose, type } = useModal();
-    const router = useRouter()
-    const isModalOpen = isOpen && type === 'addEduOrCert';
+    const router = useRouter();
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const [serverError, setServerError] =
+        useState<string | null>(null);
+
+    const isModalOpen =
+        isOpen && type === "addEduOrCert";
+
+    const form = useForm<FormValues>({
+        resolver: zodResolver(eduCertSchema),
         defaultValues: {
-            title: '',
-            description: '',
+            title: "",
+            description: "",
             type: educationOrCertification[0],
             thumbnail: undefined,
             startDate: new Date(),
             endDate: new Date(),
-            link: ''
-        }
-    })
+            link: "",
+        },
+    });
 
-    const isSubmitting = form.formState.isSubmitting;
+    const isSubmitting =
+        form.formState.isSubmitting;
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-
-        const formData = new FormData();
-
-        formData.append("title", values.title);
-        formData.append("description", values.description);
-        formData.append("type", values.type);
-        formData.append("link", values.link);
-        formData.append("thumbnail", values.thumbnail);
-        formData.append("startDate", values.startDate ? values.startDate.toISOString() : "");
-        formData.append("endDate", values.endDate ? values.endDate.toISOString() : "");
+    const onSubmit = async (values: FormValues) => {
+        setServerError(null);
 
         try {
-            const response = await axios.post('/api/admin/edu-cert', formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                }
-            });
-            if (response.status === 201) {
-                form.reset();
-                onClose();
-                setTimeout(() => {
-                    router.refresh();
-                }, 0);
+            const response = await createEduCert(values);
+
+            if (!response.success) {
+                setServerError(response.error);
+                return;
             }
+
+            form.reset();
+
+            onClose();
+
+            router.refresh();
         } catch (error) {
-            console.log("ERROR adding EDU CERT ", error);
+            console.error(
+                "[AddEducationOrCertificationModal]",
+                error
+            );
+
+            setServerError(
+                "Something went wrong. Please try again."
+            );
         }
-    }
+    };
+
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            setServerError(null);
+            form.reset();
+            onClose();
+        }
+    };
 
     return (
-        <Dialog open={isModalOpen} onOpenChange={onClose}>
-            <DialogContent className="max-h-[90vh] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
+        <Dialog
+            open={isModalOpen}
+            onOpenChange={handleOpenChange}
+        >
+            <DialogContent
+                className="max-h-[90vh] overflow-y-auto"
+                onInteractOutside={(event) =>
+                    event.preventDefault()
+                }
+            >
                 <DialogHeader className="mb-4">
                     <DialogTitle>
-                        Add Education or Certifications
+                        Add Education or Certification
                     </DialogTitle>
                 </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className=" space-y-4">
-                            <FormField
-                                name="title"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Title
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Title ....."
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                name="description"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Description
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="description ....."
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                name="type"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Type
-                                        </FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl className="w-full">
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select Category" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {educationOrCertification.map((cat, i) => (
-                                                    <SelectItem key={i} value={cat}>{cat}</SelectItem>
-                                                ))}
 
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                name="link"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Link
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="www.example.com"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start w-full">
-                                <FormField
-                                    name='startDate'
-                                    control={form.control}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Start Date
-                                            </FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                " pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP")
-                                                            ) : (
-                                                                <span>Pick Start date</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <DatePicker
-                                                        selected={field.value}
-                                                        onChange={field.onChange}
-                                                        dateFormat="yyyy/MM/dd"
-                                                        showMonthDropdown
-                                                        showYearDropdown
-                                                        dropdownMode="select"
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    name='endDate'
-                                    control={form.control}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Location <span className=" opacity-70 text-xs">(optional)</span>
-                                            </FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                " pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "PPP")
-                                                            ) : (
-                                                                <span>Pick End date</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                >
+                    <Controller
+                        name="title"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
+                                <FieldLabel htmlFor="edu-title">
+                                    Title
+                                </FieldLabel>
 
-                                                    <DatePicker
-                                                        selected={field.value}
-                                                        onChange={field.onChange}
-                                                        dateFormat="yyyy/MM/dd"
-                                                        showMonthDropdown
-                                                        showYearDropdown
-                                                        dropdownMode="select"
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                <Input
+                                    {...field}
+                                    id="edu-title"
+                                    placeholder="Title..."
+                                    aria-invalid={
+                                        fieldState.invalid
+                                    }
                                 />
-                            </div>
-                            <FormField
-                                name="thumbnail"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Image</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    field.onChange(file);
-                                                }}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                        {field.value && (
-                                            <div className="mt-2 text-sm text-muted-foreground">
-                                                Selected: {field.value.name}
-                                            </div>
+
+                                {fieldState.invalid && (
+                                    <FieldError
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
+                                    />
+                                )}
+                            </Field>
+                        )}
+                    />
+
+                    <Controller
+                        name="description"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
+                                <FieldLabel htmlFor="edu-description">
+                                    Description
+                                </FieldLabel>
+
+                                <Input
+                                    {...field}
+                                    id="edu-description"
+                                    placeholder="Description..."
+                                    aria-invalid={
+                                        fieldState.invalid
+                                    }
+                                />
+
+                                {fieldState.invalid && (
+                                    <FieldError
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
+                                    />
+                                )}
+                            </Field>
+                        )}
+                    />
+
+                    <Controller
+                        name="type"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
+                                <FieldLabel>
+                                    Type
+                                </FieldLabel>
+
+                                <Select
+                                    value={field.value}
+                                    onValueChange={
+                                        field.onChange
+                                    }
+                                >
+                                    <SelectTrigger
+                                        className="w-full"
+                                        aria-invalid={
+                                            fieldState.invalid
+                                        }
+                                    >
+                                        <SelectValue placeholder="Select Category" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {educationOrCertification.map(
+                                            (category) => (
+                                                <SelectItem
+                                                    key={category}
+                                                    value={category}
+                                                >
+                                                    {category}
+                                                </SelectItem>
+                                            )
                                         )}
-                                    </FormItem>
+                                    </SelectContent>
+                                </Select>
+
+                                {fieldState.invalid && (
+                                    <FieldError
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
+                                    />
                                 )}
-                            />
+                            </Field>
+                        )}
+                    />
+
+                    <Controller
+                        name="link"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
+                                <FieldLabel htmlFor="edu-link">
+                                    Link
+                                </FieldLabel>
+
+                                <Input
+                                    {...field}
+                                    id="edu-link"
+                                    type="url"
+                                    placeholder="https://example.com"
+                                    aria-invalid={
+                                        fieldState.invalid
+                                    }
+                                />
+
+                                {fieldState.invalid && (
+                                    <FieldError
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
+                                    />
+                                )}
+                            </Field>
+                        )}
+                    />
+
+                    <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
+                        <Controller
+                            name="startDate"
+                            control={form.control}
+                            render={({
+                                field,
+                                fieldState,
+                            }) => (
+                                <Field
+                                    data-invalid={
+                                        fieldState.invalid
+                                    }
+                                >
+                                    <FieldLabel>
+                                        Start Date
+                                    </FieldLabel>
+
+                                    <Popover>
+                                        <PopoverTrigger
+                                            asChild
+                                        >
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className={cn(
+                                                    "w-full justify-start pl-3 text-left font-normal",
+                                                    !field.value &&
+                                                        "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(
+                                                        field.value,
+                                                        "PPP"
+                                                    )
+                                                ) : (
+                                                    <span>
+                                                        Pick start
+                                                        date
+                                                    </span>
+                                                )}
+
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+
+                                        <PopoverContent
+                                            className="w-auto p-0"
+                                            align="start"
+                                        >
+                                            <DatePicker
+                                                selected={
+                                                    field.value
+                                                }
+                                                onChange={
+                                                    field.onChange
+                                                }
+                                                dateFormat="yyyy/MM/dd"
+                                                showMonthDropdown
+                                                showYearDropdown
+                                                dropdownMode="select"
+                                                maxDate={
+                                                    field.value
+                                                        ? new Date()
+                                                        : undefined
+                                                }
+                                                inline
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+
+                                    {fieldState.invalid && (
+                                        <FieldError
+                                            errors={[
+                                                fieldState.error,
+                                            ]}
+                                        />
+                                    )}
+                                </Field>
+                            )}
+                        />
+
+                        <Controller
+                            name="endDate"
+                            control={form.control}
+                            render={({
+                                field,
+                                fieldState,
+                            }) => (
+                                <Field
+                                    data-invalid={
+                                        fieldState.invalid
+                                    }
+                                >
+                                    <FieldLabel>
+                                        End Date
+                                    </FieldLabel>
+
+                                    <Popover>
+                                        <PopoverTrigger
+                                            asChild
+                                        >
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className={cn(
+                                                    "w-full justify-start pl-3 text-left font-normal",
+                                                    !field.value &&
+                                                        "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(
+                                                        field.value,
+                                                        "PPP"
+                                                    )
+                                                ) : (
+                                                    <span>
+                                                        Pick end
+                                                        date
+                                                    </span>
+                                                )}
+
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+
+                                        <PopoverContent
+                                            className="w-auto p-0"
+                                            align="start"
+                                        >
+                                            <DatePicker
+                                                selected={
+                                                    field.value
+                                                }
+                                                onChange={
+                                                    field.onChange
+                                                }
+                                                dateFormat="yyyy/MM/dd"
+                                                showMonthDropdown
+                                                showYearDropdown
+                                                dropdownMode="select"
+                                                minDate={
+                                                    form.getValues(
+                                                        "startDate"
+                                                    ) ??
+                                                    undefined
+                                                }
+                                                inline
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+
+                                    {fieldState.invalid && (
+                                        <FieldError
+                                            errors={[
+                                                fieldState.error,
+                                            ]}
+                                        />
+                                    )}
+                                </Field>
+                            )}
+                        />
+                    </div>
+
+                    <Controller
+                        name="thumbnail"
+                        control={form.control}
+                        render={({
+                            field,
+                            fieldState,
+                        }) => (
+                            <Field
+                                data-invalid={
+                                    fieldState.invalid
+                                }
+                            >
+                                <FieldLabel htmlFor="edu-thumbnail">
+                                    Image
+                                </FieldLabel>
+
+                                <Input
+                                    id="edu-thumbnail"
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp"
+                                    aria-invalid={
+                                        fieldState.invalid
+                                    }
+                                    onChange={(event) => {
+                                        const file =
+                                            event.target
+                                                .files?.[0];
+
+                                        field.onChange(
+                                            file
+                                        );
+                                    }}
+                                />
+
+                                {field.value && (
+                                    <p className="text-sm text-muted-foreground">
+                                        Selected:{" "}
+                                        {
+                                            field.value.name
+                                        }
+                                    </p>
+                                )}
+
+                                {fieldState.invalid && (
+                                    <FieldError
+                                        errors={[
+                                            fieldState.error,
+                                        ]}
+                                    />
+                                )}
+                            </Field>
+                        )}
+                    />
+
+                    {serverError && (
+                        <div
+                            role="alert"
+                            className="rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400"
+                        >
+                            {serverError}
                         </div>
-                        <DialogFooter className="mt-4">
-                            <Button disabled={isSubmitting} type="submit" className=" ">Submit</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                    )}
+
+                    <DialogFooter className="mt-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                                setServerError(null);
+                                form.reset();
+                                onClose();
+                            }}
+                            disabled={isSubmitting}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting
+                                ? "Submitting..."
+                                : "Submit"}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
-        </Dialog >
-    )
-}
+        </Dialog>
+    );
+};

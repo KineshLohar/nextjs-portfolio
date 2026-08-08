@@ -11,7 +11,7 @@ import { domain } from "@/constants/constants";
 
 export const metadata: Metadata = {
   title: "Kinesh Lohar | Full-Stack Software Developer",
-  description: "Portfolio of Kinesh Lohar, MERN-stack & AI/ML enthusiast based in Mumbai.",
+  description: "Portfolio of Kinesh Lohar, Full Stack developer & AI enthusiast based in Mumbai.",
   alternates: { canonical: `${domain}/` },
   icons: {
     icon: '/logo.png',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kinesh Lohar | Software Developer",
     description: `
-    I'm Kinesh Lohar, a full-stack software developer passionate about building interactive, performant web apps.
+    I'm Kinesh Lohar, a full-stack software developer passionate about building interactive, performant web apps and AI-powered software solutions.
     Kinesh Lohar specializes in Next.js, React, Node.js, and MongoDB—crafting pixel-perfect UI and scalable backends.
     With hands-on experience in AI/ML integration and modern DevOps pipelines, Kinesh Lohar delivers robust, elegant solutions.
   `.trim().replace(/\s+/g, ' '),
@@ -56,8 +56,8 @@ export const metadata: Metadata = {
     site: "@kinesh_lohar",
     creator: "@kinesh_lohar",
     images: [`${domain}/kineshlohar.jpg.png`],
-    title: "Kinesh Lohar | MERN Stack Developer",
-    description: "Follow Kinesh Lohar for clean code, scalable web apps, and modern full-stack development using Next.js, Tailwind, and AI/ML."
+    title: "Kinesh Lohar | Full Stack Developer",
+    description: "Follow Kinesh Lohar for clean code, scalable web apps, and modern full-stack development and AI-powered software solutions using Next.js, Tailwind, and AI/ML."
   },
   keywords: [
     'Kinesh Lohar',
@@ -81,6 +81,19 @@ export const metadata: Metadata = {
     'Open Graph metadata',
     'Software engineer India',
     'Frontend and backend engineer',
+
+    // AI-focused
+  "AI developer",
+  "AI software developer",
+  "AI application developer",
+  "AI-powered software solutions",
+  "AI-driven applications",
+  "AI integration",
+  "Generative AI developer",
+  "AI web applications",
+  "AI-powered web applications",
+  "LLM applications",
+  "RAG applications",
   ],
   verification: {
     google: "a03BjLVPwh2y04RlnKD-GgSxWiLZKYo1DWBpD8dK6AU"

@@ -1,113 +1,143 @@
-'use client'
+"use client";
 
-import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
-import { useProfile } from '@/hooks/use-profile-hook'
+import * as z from "zod";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useActionState, useEffect } from "react";
 
+import { login } from "@/lib/server-actions/auth.server";
+import { Button } from "../ui/button";
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { Input } from "../ui/input";
 
-const formSchema = z.object({
-    email: z.string().email("Enter valid email").min(1, { message: "Email is required!" }),
-    password: z.string().min(1, {
-        message: "Password is required"
-    })
-})
+const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .email("Enter a valid email"),
+
+  password: z
+    .string()
+    .min(1, "Password is required"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+const initialState = {
+  success: false,
+  error: null,
+};
 
 export const LoginForm = () => {
+  const [state, formAction, isPending] = useActionState(
+    login,
+    initialState
+  );
 
-    const router = useRouter();
-    const { setAuth } = useProfile();
-    const [isMounted, setIsMounted] = useState(false);
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
 
-    useEffect(() => {
-        setIsMounted(true)
-    }, [])
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: "",
-            password: ''
-        }
-    })
-
-    const isSubmitting = form.formState.isSubmitting
-
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        try {
-            const response = await axios.post("/api/login", values)
-            if (response.status === 200) {
-                setAuth(response?.data?.token, response?.data?.user)
-                router.push('/admin/work-experience')
-            }
-
-        } catch (error) {
-            console.log("ERROR LOGIN ", error);
-
-        }
+  useEffect(() => {
+    if (state.success) {
+      form.reset();
     }
+  }, [state.success, form]);
 
-    if (!isMounted) return null
+  return (
+    <form
+      action={formAction}
+      onSubmit={form.handleSubmit(() => {})}
+      className="w-full"
+      noValidate
+    >
+      <FieldGroup className="space-y-6 px-6">
 
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className='space-y-8 px-6 w-full '>
-                    <FormField
-                        name='email'
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>
-                                    Email
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder='Enter your email'
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        name='password'
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>
-                                    Password
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type='password'
-                                        placeholder='********'
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <div className='flex w-full items-center justify-end'>
-                        <Button
-                            type='submit'
-                            disabled={isSubmitting}
-                            className=' '
-                        >
-                            Login
-                        </Button>
-                    </div>
+        {/* Email */}
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="login-email">
+                Email
+              </FieldLabel>
 
-                </div>
-            </form>
-        </Form>
-    )
-}
+              <Input
+                {...field}
+                id="login-email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                autoComplete="email"
+                aria-invalid={fieldState.invalid}
+              />
+
+              {fieldState.invalid && (
+                <FieldError
+                  errors={[fieldState.error]}
+                />
+              )}
+            </Field>
+          )}
+        />
+
+        {/* Password */}
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="login-password">
+                Password
+              </FieldLabel>
+
+              <Input
+                {...field}
+                id="login-password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                autoComplete="current-password"
+                aria-invalid={fieldState.invalid}
+              />
+
+              {fieldState.invalid && (
+                <FieldError
+                  errors={[fieldState.error]}
+                />
+              )}
+            </Field>
+          )}
+        />
+
+        {/* Server Error */}
+        {state.error && (
+          <div
+            role="alert"
+            className="rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400"
+          >
+            {state.error}
+          </div>
+        )}
+
+        {/* Submit */}
+        <div className="flex w-full items-center justify-end">
+          <Button
+            type="submit"
+            disabled={isPending}
+          >
+            {isPending ? "Logging in..." : "Login"}
+          </Button>
+        </div>
+
+      </FieldGroup>
+    </form>
+  );
+};
