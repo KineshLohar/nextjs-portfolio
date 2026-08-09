@@ -27,10 +27,6 @@ export type LoginState = {
   error: string | null;
 };
 
-const initialLoginState: LoginState = {
-  success: false,
-  error: null,
-};
 
 export async function login(
   _previousState: LoginState,

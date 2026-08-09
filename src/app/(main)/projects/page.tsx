@@ -1,7 +1,7 @@
 
 import { ProjectCard } from "@/components/viewer/projects/project-card";
 import { domain } from "@/constants/constants";
-import { getProjects } from "@/lib/server-actions/project.server";
+import { getProjects } from "@/lib/data/project";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

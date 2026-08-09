@@ -1,7 +1,5 @@
 "use server";
 
-import "server-only";
-
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 

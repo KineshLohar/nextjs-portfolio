@@ -1,5 +1,5 @@
-import { SlideReveal } from "@/components/animations/slide-reveal-gsap";
-import { getFeaturedProjects } from "@/lib/server-actions/project.server";
+import { SlideReveal } from "@/components/animations/slide-reveal-gsap"; import { getFeaturedProjects } from "@/lib/data/project";
+;
 import { cn } from "@/lib/utils";
 import { Folder } from "lucide-react";
 import Image from "next/image";

@@ -1,144 +1,184 @@
-import "server-only";
+"use server"
 
-import { cacheLife, cacheTag } from "next/cache";
-import type { Types } from "mongoose";
-
-import connectDB from "@/db/connectDB";
-import ProjectModel from "@/models/ProjectsModel";
+import { updateTag } from "next/cache";
+import ProjectModel, { type ProjectRaw } from "@/models/ProjectsModel";
 import type { ServerResponse } from "@/types/action-response.types";
-import type { ProjectType } from "@/types/project.types";
+import { requireAuth } from "../server-auth";
+import z from "zod";
+import { uploadToCloudinary } from "../cloudinary";
+import { withDb } from "@/db/db-helper";
 
-type ProjectQueryResult = {
-  _id: Types.ObjectId;
-  title: string;
-  description: string;
-  demoLink?: string;
-  repoLink?: string;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-  thumbnail: {
-    id: string;
-    url: string;
-  };
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+] as const;
 
-  images: {
-    public_id: string;
-    url: string;
-    caption: string;
-  }[];
+const imageFileSchema = z
+  .instanceof(File, {
+    message: "Image is required.",
+  })
+  .refine(
+    (file) => file.size > 0,
+    "Image cannot be empty."
+  )
+  .refine(
+    (file) => file.size <= MAX_FILE_SIZE,
+    "Image must be less than 5MB."
+  )
+  .refine(
+    (file) =>
+      ALLOWED_IMAGE_TYPES.includes(
+        file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
+      ),
+    "Only JPG, PNG, and WebP images are allowed."
+  );
 
-  techs: Array<{
-    _id: Types.ObjectId;
-    skill: string;
-    logo: {
-      public_id: string;
-      url: string;
-    } | null;
-  }>;
-};
+export const createProjectSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, "Project title is required."),
 
-function serializeProject(
-  project: ProjectQueryResult
-): ProjectType {
-  return {
-    _id: project._id.toString(),
+  description: z
+    .string()
+    .trim()
+    .min(1, "Project description is required."),
 
-    title: project.title,
+  demoLink: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal("")),
 
-    description: project.description,
+  repoLink: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal("")),
 
-    demoLink: project.demoLink ?? null,
+  techs: z
+    .array(z.string())
+    .default([]),
 
-    repoLink: project.repoLink ?? null,
+  thumbnail: imageFileSchema,
 
-    thumbnail: {
-      id: project.thumbnail.id,
-      url: project.thumbnail.url,
-    },
+  images: z
+    .array(
+      z.object({
+        file: imageFileSchema,
+        caption: z
+          .string()
+          .trim()
+          .min(1, "Image caption is required."),
+      })
+    )
+    .default([]),
+});
 
-    images: project.images.map((image) => ({
-      public_id: image.public_id,
-      url: image.url,
-      caption: image.caption,
-    })),
+export type CreateProjectInput = z.infer<
+  typeof createProjectSchema
+>;
 
-    techs: project.techs.map((tech) => ({
-      _id: tech._id.toString(),
-
-      skill: tech.skill,
-
-      logo: tech.logo
-        ? {
-            public_id: tech.logo.public_id,
-            url: tech.logo.url,
-          }
-        : null,
-    })),
-  };
-}
-
-export async function getFeaturedProjects(): Promise<
-  ServerResponse<ProjectType[]>
-> {
-  "use cache";
-
-  cacheLife("max");
-  cacheTag("projects");
-
+export async function createProject(
+  input: CreateProjectInput
+): Promise<ServerResponse<ProjectRaw>> {
   try {
-    await connectDB();
+    await requireAuth();
 
-    const projects = await ProjectModel.find()
-      .sort({ createdAt: -1 })
-      .limit(3)
-      .populate("techs", "_id skill logo")
-      .lean<ProjectQueryResult[]>();
+    const parsed =
+      createProjectSchema.safeParse(input);
 
-    const data: ProjectType[] = projects.map(serializeProject);
+    if (!parsed.success) {
+      return {
+        success: false,
+        data: null,
+        error:
+          parsed.error.issues[0]?.message ??
+          "Invalid project data.",
+      };
+    }
+
+    const {
+      title,
+      description,
+      demoLink,
+      repoLink,
+      techs,
+      thumbnail,
+      images,
+    } = parsed.data;
+
+    const thumbnailBuffer = Buffer.from(
+      await thumbnail.arrayBuffer()
+    );
+
+    const thumbnailResult =
+      await uploadToCloudinary(
+        thumbnailBuffer,
+        thumbnail.type,
+        {
+          folder: "projects/thumbnails",
+        }
+      );
+
+    const imageResults = await Promise.all(
+      images.map(async ({ file, caption }) => {
+        const buffer = Buffer.from(
+          await file.arrayBuffer()
+        );
+
+        const result =
+          await uploadToCloudinary(
+            buffer,
+            file.type,
+            {
+              folder: "projects/images",
+            }
+          );
+
+        return {
+          public_id: result.public_id,
+          url: result.secure_url,
+          caption,
+        };
+      })
+    );
+
+    const project = await withDb(async () => {
+      return ProjectModel.create({
+        title,
+        description,
+        demoLink: demoLink || undefined,
+        repoLink: repoLink || undefined,
+        techs,
+        thumbnail: {
+          id: thumbnailResult.public_id,
+          url: thumbnailResult.secure_url,
+        },
+        images: imageResults,
+      });
+    });
+
+    updateTag("projects");
 
     return {
       success: true,
-      data,
+      data: project.toObject(),
       error: null,
     };
   } catch (error) {
-    console.error("[getFeaturedProjects]", error);
+    console.error(
+      "[createProject]",
+      error
+    );
 
     return {
       success: false,
       data: null,
-      error: "Failed to load projects.",
-    };
-  }
-}
-
-export async function getProjects(): Promise<
-  ServerResponse<ProjectType[]>
-> {
-  "use cache";
-
-  cacheLife("max");
-  cacheTag("projects");
-
-  try {
-    await connectDB();
-
-    const projects = await ProjectModel.find()
-      .sort({ createdAt: -1 })
-      .populate("techs", "_id skill logo")
-      .lean<ProjectQueryResult[]>();
-
-    return {
-      success: true,
-      data: projects.map(serializeProject),
-      error: null,
-    };
-  } catch (error) {
-    console.error("[getProjects]", error);
-
-    return {
-      success: false,
-      data: null,
-      error: "Failed to load projects.",
+      error: "Failed to create project.",
     };
   }
 }
