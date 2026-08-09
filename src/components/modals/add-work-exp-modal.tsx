@@ -26,10 +26,11 @@ import {
     FieldLegend,
 } from "../ui/field";
 import { Input } from "../ui/input";
-import { createWorkExperience, workExperienceSchema } from "@/lib/server-actions/work.server";
+import { createWorkExperience } from "@/lib/server-actions/work.server";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Checkbox } from "../ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { workExperienceSchema } from "@/lib/validations/work.validation";
 
 type FormValues = z.infer<typeof workExperienceSchema>;
 

@@ -6,62 +6,14 @@ import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 import { withDb } from "@/db/db-helper";
-import { WorkExperience } from "@/models/WorkExpModel";
 import { requireAuth } from "@/lib/server-auth";
 import type { ServerResponse } from "@/types/action-response.types";
+import { workExperienceSchema } from "../validations/work.validation";
+import { WorkExperience } from "@/models/WorkExpModel";
+import type { WorkExperience as WorkExperienceType } from "@/types/work-experience.types";
+import type { Types } from "mongoose";
 
-export const workExperienceSchema = z.object({
-  role: z
-    .string()
-    .trim()
-    .min(1, "Role is required"),
 
-  company: z
-    .string()
-    .trim()
-    .min(1, "Company is required"),
-
-  location: z
-    .string()
-    .trim(),
-
-  techs: z
-    .string()
-    .trim()
-    .min(1, "Technologies are required"),
-
-  descriptions: z
-    .array(
-      z.object({
-        text: z
-          .string()
-          .trim()
-          .min(
-            1,
-            "Description is required"
-          ),
-      })
-    )
-    .min(
-      1,
-      "At least one description is required"
-    ),
-
-  startDate: z.date(),
-
-  currentlyWorking: z.boolean(),
-
-  endDate: z.date(),
-}).superRefine((data, ctx) => {
-  if (!data.currentlyWorking && data.endDate < data.startDate) {
-    ctx.addIssue({
-      code: "custom",
-      path: ["endDate"],
-      message:
-        "End date must be after start date",
-    });
-  }
-});
 
 export type CreateWorkExperienceInput =
   z.infer<typeof workExperienceSchema>;
@@ -96,15 +48,53 @@ export async function getWorkExperiences() {
   }
 }
 
-async function getCachedWorkExperiences(){
+type WorkExperienceQuery = {
+  _id: Types.ObjectId;
+  role: string;
+  company: string;
+  location: string;
+  techs: string;
+  descriptions: {
+      _id: Types.ObjectId;
+      text: string;
+  }[];
+  currentlyWorking: boolean;
+  startDate: Date;
+  endDate?: Date | null;
+};
+
+async function getCachedWorkExperiences(): Promise<WorkExperienceType[]> {
   "use cache";
 
   cacheLife("max");
   cacheTag("work-experience");
 
-  return WorkExperience.find()
+  const experiences = await WorkExperience.find()
     .sort({ startDate: -1 })
-    .lean();
+    .lean<WorkExperienceQuery[]>();
+
+  return experiences.map((experience) => ({
+    _id: experience._id.toString(),
+    role: experience.role,
+    company: experience.company,
+    location: experience.location,
+    techs: experience.techs,
+    descriptions:
+      experience.descriptions?.map(
+        (description) => ({
+          _id: description._id.toString(),
+          text: description.text,
+        })
+      ) ?? [],
+    currentlyWorking:
+      experience.currentlyWorking,
+    startDate:
+      experience.startDate.toISOString(),
+    endDate:
+      experience.endDate
+        ? experience.endDate.toISOString()
+        : null,
+  }));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -113,7 +103,7 @@ async function getCachedWorkExperiences(){
 
 export async function createWorkExperience(
   input: CreateWorkExperienceInput
-){
+) {
   try {
     /* ----------------------------- Auth ----------------------------- */
 

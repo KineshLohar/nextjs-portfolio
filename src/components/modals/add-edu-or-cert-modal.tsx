@@ -2,7 +2,7 @@
 
 import { useModal } from "@/hooks/use-modal-store";
 import { educationOrCertification } from "@/constants/constants";
-import { createEduCert, eduCertSchema } from "@/lib/server-actions/edu-cert.server";
+import { createEduCert } from "@/lib/server-actions/edu-cert.server";
 
 import {
     Dialog,
@@ -42,6 +42,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
+import { eduCertSchema } from "@/lib/validations/education-certification.validation";
 
 
 type FormValues = z.infer<typeof eduCertSchema>;

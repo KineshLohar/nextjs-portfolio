@@ -4,12 +4,16 @@ import { Timeline } from "@/components/ui/timeline";
 import { getWorkExperiences } from "@/lib/server-actions/work.server";
 
 export async function WorkExpSection() {
-    const workExpData = await getWorkExperiences();
+    const response =
+        await getWorkExperiences();
 
+    if (!response.success || !response.data) {
+        return null;
+    }
     return (
         <div className="w-full">
             <Timeline
-                data={JSON.stringify(workExpData)}
+                data={response?.data}
             />
         </div>
     )

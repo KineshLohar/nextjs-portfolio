@@ -1,15 +1,17 @@
-import { ContactRequestType, EduCertType, ProjectType, Skill, WorkExperienceTypes } from "@/types/types";
+import type { ProjectDocument, ProjectRaw } from "@/models/ProjectsModel";
+import type { SkillDocument } from "@/models/SkillModel";
+import type { WorkExperienceDocument } from "@/models/WorkExpModel";
 import { create } from "zustand";
 
 export type ModalType = 'addWorkExp' | 'editWorkExp' | 'deleteWorkExp' | 'addSkill' | 'editSkill' | 'deleteSkill' | "addEduOrCert" | 'editEduOrCert' | 'deleteEduOrCert' | 'addProject' | 'editProject' | 'deleteProject' | 'changeResume' | 'deleteContact'
 
 
 interface ModalData {
-    workExperienceData?: WorkExperienceTypes;
-    skillData?: Skill;
+    workExperienceData?: WorkExperienceDocument;
+    skillData?: SkillDocument;
     eduAndCertData?: EduCertType;
-    projectData?: ProjectType;
-    contactData?: ContactRequestType;
+    projectData?: ProjectDocument;
+    // contactData?: ContactRequestType;
 }
 
 interface UseModalProps {

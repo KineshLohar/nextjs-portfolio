@@ -1,3 +1,5 @@
+"use server";
+
 import type { ServerResponse } from "@/types/action-response.types";
 import z from "zod";
 import { requireAuth } from "../server-auth";

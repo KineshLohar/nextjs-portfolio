@@ -7,8 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
-import { createSkill, createSkillSchema } from "@/lib/server-actions/skill.server";
+import { createSkill } from "@/lib/server-actions/skill.server";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { createSkillSchema } from "@/lib/validations/skill.validation";
 
 
 

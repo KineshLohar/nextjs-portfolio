@@ -45,6 +45,7 @@ const projectSchemaDefinition = {
 
   images: [
     {
+      _id: false,
       public_id: {
         type: String,
         required: true,

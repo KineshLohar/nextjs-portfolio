@@ -1,5 +1,6 @@
 
-import { getSkills } from "@/lib/server-actions/skill.server";
+
+import { getSkills } from "@/lib/data/skills";
 import Image from "next/image";
 
 
