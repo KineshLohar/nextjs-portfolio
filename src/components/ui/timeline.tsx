@@ -1,6 +1,5 @@
 "use client";
-import type { WorkExperienceDocument } from "@/models/WorkExpModel";
-import type { WorkExperience } from "@/types/work-experience.types";
+import type { WorkExperienceType } from "@/types/work-experience.types";
 import {
   motion,
   useScroll,
@@ -8,7 +7,7 @@ import {
 } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
-export const Timeline = ({ data }: { data: WorkExperience[] }) => {
+export const Timeline = ({ data }: { data: WorkExperienceType[] }) => {
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);

@@ -1,10 +1,11 @@
 
-import { Skill } from "@/types/types"
+
+import type { SkillData } from "@/types/skill.types"
 import { ActionDropdownList } from "../action-dropdown-list"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table"
 
 
-export default function SkillsTable({ skillsList }: { skillsList: Skill[] }) {
+export default function SkillsTable({ skillsList }: { skillsList: SkillData[] }) {
 
     return (
         <div className="w-full h-full">

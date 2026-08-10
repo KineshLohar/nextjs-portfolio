@@ -3,7 +3,7 @@
 import connectDB from "@/db/connectDB";
 import Skill from "@/models/SkillModel";
 import type { ServerResponse } from "@/types/action-response.types";
-import type { SkillAggregationItem, SkillSectionType } from "@/types/skill.types";
+import type { SkillAggregationItem, SkillData, SkillSectionType } from "@/types/skill.types";
 import type { Types } from "mongoose";
 import { cacheLife, cacheTag } from "next/cache";
 
@@ -11,11 +11,62 @@ import { cacheLife, cacheTag } from "next/cache";
 type SkillAggregationResult = {
     type: string;
     skills: Array<
-      Omit<SkillAggregationItem, "_id"> & {
-        _id: Types.ObjectId;
-      }
+        Omit<SkillAggregationItem, "_id"> & {
+            _id: Types.ObjectId;
+        }
     >;
-  };
+};
+
+export async function getAdminSkills(): Promise<
+    ServerResponse<SkillData[]>
+> {
+    "use cache";
+
+    cacheLife("max");
+    cacheTag("skills");
+
+    try {
+        await connectDB();
+
+        const skills = await Skill.find()
+            .sort({ skill: 1 })
+            .lean();
+
+        const data: SkillData[] = skills.map((skill) => ({
+            _id: String(skill._id),
+            userId: String(skill.userId),
+            skill: skill.skill,
+            level: skill.level,
+            type: skill.type,
+            experience: skill.experience ?? "",
+            projects: skill.projects ?? "",
+            description: skill.description ?? "",
+            logo: skill.logo
+                ? {
+                    public_id: skill.logo.public_id,
+                    url: skill.logo.url,
+                }
+                : {
+                    public_id: "",
+                    url: "",
+                },
+        }));
+
+        return {
+            success: true,
+            data,
+            error: null,
+        };
+    } catch (error) {
+        console.error("[getAdminSkills]", error);
+
+        return {
+            success: false,
+            data: null,
+            error: "Failed to load skills.",
+        };
+    }
+}
 
 export async function getSkills(): Promise<
     ServerResponse<SkillSectionType[]>

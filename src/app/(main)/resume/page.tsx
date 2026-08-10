@@ -1,7 +1,7 @@
 
 import PDFViewer from "@/components/PDFViewer";
 import { domain } from "@/constants/constants";
-import { getResume } from "@/lib/server-actions/resume.server";
+import { getResume } from "@/lib/data/resume";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

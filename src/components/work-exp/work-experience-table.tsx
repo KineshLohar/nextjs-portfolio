@@ -31,7 +31,11 @@ export default function WorkExpTable({ experienceList }: WorkExpTableProps) {
                             <TableCell className="py-4">{exp.company}</TableCell>
                             <TableCell className="py-4">{format(new Date(exp.startDate), 'dd MMM yyyy')}</TableCell>
                             <TableCell className="py-4">{exp.currentlyWorking ? <span className="bg-green-500 p-2 px-4 rounded-lg">Working</span> : <span>Past</span>}</TableCell>
-                            <TableCell className="py-4">{!exp.currentlyWorking ? format(new Date(exp.endDate), 'dd MMM yyyy') : "N/A"}</TableCell>
+                            <TableCell className="py-4">
+                                {!exp.currentlyWorking && exp.endDate
+                                    ? format(new Date(exp.endDate), "dd MMM yyyy")
+                                    : "N/A"}
+                            </TableCell>
                             <TableCell className="py-4">
                                 <ActionDropdownList
                                     dataKey="workExperienceData"

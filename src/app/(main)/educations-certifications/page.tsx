@@ -2,7 +2,7 @@
 
 import { Separator } from "@/components/ui/separator";
 import { domain } from "@/constants/constants";
-import { getEducationCertifications } from "@/lib/server-actions/education-certification.server";
+import { getEducationCertifications } from "@/lib/data/education-certification";
 import type { EduCertItem } from "@/types/education-certification.types";
 import { ExternalLink } from "lucide-react";
 import { Metadata } from "next";

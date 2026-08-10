@@ -1,10 +1,10 @@
 import { OpenModalButton } from "@/components/open-modal-button";
 import SkillsTable from "@/components/skills/skills-table";
-import { getSkills } from "@/lib/data/skills";
+import { getAdminSkills } from "@/lib/data/skills";
 
 export default async function Skills() {
 
-    const response = await getSkills();
+    const response = await getAdminSkills();
 
     if (!response.success || !response.data) {
         return (
@@ -15,8 +15,6 @@ export default async function Skills() {
     }
 
     const skills = response.data;
-
-    const skillsList = skills.flatMap((section) => section.skills);
 
     return (
         <div className="w-full h-full flex flex-col gap-4 bg-gray p-4 bg-white border-b dark:bg-zinc-900/70 text-black dark:text-white">
@@ -31,7 +29,7 @@ export default async function Skills() {
                         </div>
                     )
                         :
-                        <SkillsTable skillsList={skillsList} />
+                        <SkillsTable skillsList={skills} />
                 }
             </div>
         </div>
