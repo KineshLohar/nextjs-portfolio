@@ -5,8 +5,9 @@ import * as z from 'zod';
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
-import { updateResume, updateResumeSchema } from "@/lib/server-actions/resume.server";
+import { updateResume } from "@/lib/server-actions/resume.server";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { updateResumeSchema } from "@/lib/validations/resume.validation";
 
 type FormValues = z.infer<typeof updateResumeSchema>;
 

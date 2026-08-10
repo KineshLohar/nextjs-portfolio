@@ -62,6 +62,7 @@ export const Footer = async () => {
                         src='/kineshlohar.png'
                         alt="Kinesh Lohar"
                         fill
+                        loading="lazy"
                         sizes="(max-width: 639px) 64px, 96px"
                         className=" object-contain"
                     />

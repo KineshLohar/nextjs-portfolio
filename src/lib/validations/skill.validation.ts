@@ -1,5 +1,5 @@
 import { taskBasedCategories } from "@/constants/constants";
-import z from "zod";
+import { z } from "zod";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -29,7 +29,12 @@ const imageFileSchema = z
         "Only JPG, PNG, and WebP images are allowed."
     );
 
-export const createSkillSchema = z.object({
+const existingLogoSchema = z.object({
+    public_id: z.string().min(1),
+    url: z.string().url(),
+});
+
+const skillFieldsSchema = z.object({
     skill: z
         .string()
         .trim()
@@ -41,10 +46,12 @@ export const createSkillSchema = z.object({
         "Advanced",
     ]),
 
-    type: z.enum(taskBasedCategories as [
-        string,
-        ...string[]
-    ]),
+    type: z.enum(
+        taskBasedCategories as [
+            string,
+            ...string[]
+        ]
+    ),
 
     experience: z
         .string()
@@ -57,9 +64,23 @@ export const createSkillSchema = z.object({
     description: z
         .string()
         .trim(),
-
-    logo: imageFileSchema,
 });
 
-export type CreateSkillInput = z.infer<
-  typeof createSkillSchema>;
+export const createSkillSchema =
+    skillFieldsSchema.extend({
+        logo: imageFileSchema,
+    });
+
+export const updateSkillSchema =
+    skillFieldsSchema.extend({
+        logo: z.union([
+            imageFileSchema,
+            existingLogoSchema,
+        ]),
+    });
+
+export type CreateSkillInput =
+    z.infer<typeof createSkillSchema>;
+
+export type UpdateSkillInput =
+    z.infer<typeof updateSkillSchema>;

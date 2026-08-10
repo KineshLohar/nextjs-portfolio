@@ -1,29 +1,24 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { createContactRequest } from "@/lib/server-actions/contact.server";
+import { contactSchema, type ContactInput } from "@/lib/validations/contact.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { SendHorizonal } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-
-const formSchema = z.object({
-    fullName: z.string().min(1, "Full Name is Required!"),
-    email: z.string().email("Please enter valid email!").min(1, "Email is required!"),
-    message: z.string().min(1, "Message is required!")
-})
+import { Controller, useForm } from "react-hook-form";
 
 export const ContactForm = () => {
 
     const [successMessage, setSuccessMessage] = useState(false);
+    const [serverError, setServerError] =
+        useState<string | null>(null);
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<ContactInput>({
+        resolver: zodResolver(contactSchema),
         defaultValues: {
             fullName: '',
             email: '',
@@ -32,20 +27,27 @@ export const ContactForm = () => {
 
     })
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        try {
-            await axios.post('/api/contact', values);
-            // console.log("RES OF CONTACT", res);
-            form.reset();
-            setSuccessMessage(true);
-            setTimeout(() => {
-                setSuccessMessage(false);
-            }, 10000)
+    const onSubmit = async (
+        values: ContactInput
+    ) => {
+        setServerError(null);
+        setSuccessMessage(false);
 
-        } catch (error) {
-            console.log("ERROR SENDING CONTACT REQUEST", error);
+        const response =
+            await createContactRequest(values);
+
+        if (!response.success) {
+            setServerError(response.error);
+            return;
         }
-    }
+
+        form.reset();
+        setSuccessMessage(true);
+
+        window.setTimeout(() => {
+            setSuccessMessage(false);
+        }, 10000);
+    };
 
     const isSubmitting = form.formState.isSubmitting
 
@@ -58,73 +60,157 @@ export const ContactForm = () => {
                 </div>
 
             }
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex flex-col gap-4 items-stretch p-4 mt-8 md:mt-16 sm:w-8/12 md:w-6/12 transition-all duration-300"
+
+            {serverError && (
+                <div
+                    role="alert"
+                    className="mt-8 rounded-md border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-400 md:mx-auto md:w-6/12"
                 >
-                    <FormField
-                        name="fullName"
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="fade-up">Full Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Your Name" {...field}
-                                        disabled={isSubmitting}
-                                        className="fade-up italic border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
-                                        focus-visible:ring-0 dark:bg-transparent px-0"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        name="email"
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="fade-up">Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="johncena@gmail.com" {...field}
-                                        disabled={isSubmitting}
-                                        className="fade-up italic text-white border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
-                                        focus-visible:ring-0  dark:bg-transparent px-0"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        name="message"
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="fade-up">Message</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        placeholder="Describe your message..."
-                                        disabled={isSubmitting}
-                                        {...field}
-                                        className="fade-up italic resize-none text-white border-t-0 border-x-0 border-b-2 rounded-none bg-transparent 
-                                        focus-visible:ring-0  dark:bg-transparent px-0"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <div className="w-full flex items-center justify-end">
-                        <Button type="submit" disabled={isSubmitting}
-                            className="fade-up capitalize bg-transparent hover:bg-transparent text-white rounded-none relative group text-xs md:text-sm border hover:text-neutral-950 border-zinc-400 px-6 py-2 font-bold tracking-wider  overflow-hidden"
+                    {serverError}
+                </div>
+            )}
+
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="mt-8 flex flex-col items-stretch gap-4 p-4 transition-all duration-300 sm:w-8/12 md:mt-16 md:w-6/12"
+            >
+                <Controller
+                    name="fullName"
+                    control={form.control}
+                    render={({
+                        field,
+                        fieldState,
+                    }) => (
+                        <Field
+                            data-invalid={
+                                fieldState.invalid
+                            }
                         >
-                            <div className="absolute -z-10 inset-0 -translate-x-full group-hover:translate-x-0 group-hover:bg-zinc-300 transition-all duration-300" />
-                            <span className="z-10 group-hover:text-neutral-950 flex gap-2 items-center"><SendHorizonal className="w-4 h-4" />{isSubmitting ? 'Just a Moment...' : "Let's Connect!"}</span>
-                        </Button>
-                    </div>
-                </form>
-            </Form>
+                            <FieldLabel className="fade-up">
+                                Full Name
+                            </FieldLabel>
+
+                            <Input
+                                {...field}
+                                placeholder="Your Name"
+                                disabled={
+                                    isSubmitting
+                                }
+                                aria-invalid={
+                                    fieldState.invalid
+                                }
+                                className="fade-up border-x-0 border-b-2 border-t-0 bg-transparent px-0 italic focus-visible:ring-0 dark:bg-transparent"
+                            />
+
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[
+                                        fieldState.error,
+                                    ]}
+                                />
+                            )}
+                        </Field>
+                    )}
+                />
+
+                <Controller
+                    name="email"
+                    control={form.control}
+                    render={({
+                        field,
+                        fieldState,
+                    }) => (
+                        <Field
+                            data-invalid={
+                                fieldState.invalid
+                            }
+                        >
+                            <FieldLabel className="fade-up">
+                                Email
+                            </FieldLabel>
+
+                            <Input
+                                {...field}
+                                type="email"
+                                placeholder="johncena@gmail.com"
+                                disabled={
+                                    isSubmitting
+                                }
+                                autoComplete="email"
+                                aria-invalid={
+                                    fieldState.invalid
+                                }
+                                className="fade-up border-x-0 border-b-2 border-t-0 bg-transparent px-0 italic text-white focus-visible:ring-0 dark:bg-transparent"
+                            />
+
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[
+                                        fieldState.error,
+                                    ]}
+                                />
+                            )}
+                        </Field>
+                    )}
+                />
+
+                <Controller
+                    name="message"
+                    control={form.control}
+                    render={({
+                        field,
+                        fieldState,
+                    }) => (
+                        <Field
+                            data-invalid={
+                                fieldState.invalid
+                            }
+                        >
+                            <FieldLabel className="fade-up">
+                                Message
+                            </FieldLabel>
+
+                            <Textarea
+                                {...field}
+                                placeholder="Describe your message..."
+                                disabled={
+                                    isSubmitting
+                                }
+                                aria-invalid={
+                                    fieldState.invalid
+                                }
+                                className="fade-up resize-none border-x-0 border-b-2 border-t-0 bg-transparent px-0 italic text-white focus-visible:ring-0 dark:bg-transparent"
+                            />
+
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[
+                                        fieldState.error,
+                                    ]}
+                                />
+                            )}
+                        </Field>
+                    )}
+                />
+
+                <div className="flex w-full items-center justify-end">
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="fade-up relative overflow-hidden rounded-none border border-zinc-400 bg-transparent px-6 py-2 text-xs font-bold tracking-wider text-white hover:bg-transparent hover:text-neutral-950 md:text-sm"
+                    >
+                        <div className="absolute inset-0 -z-10 -translate-x-full bg-zinc-300 transition-all duration-300 group-hover:translate-x-0" />
+
+                        <span className="z-10 flex items-center gap-2">
+                            <SendHorizonal className="h-4 w-4" />
+
+                            {isSubmitting
+                                ? "Just a Moment..."
+                                : "Let's Connect!"}
+                        </span>
+                    </Button>
+                </div>
+            </form>
         </>
     )
 }

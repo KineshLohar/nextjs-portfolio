@@ -13,7 +13,7 @@ export const ContactSection = () => {
                     Feel free to reach out—whether it’s for a collaboration, project, or just to chat tech.
                 </p>
             </div>
-            {/* <ContactForm /> */}
+            <ContactForm />
         </div>
     )
 }

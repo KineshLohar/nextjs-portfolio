@@ -9,9 +9,10 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "../ui/input";
 import { MultiSelect } from "../ui/multi-select";
 import { Textarea } from "../ui/textarea";
-import { createProject, createProjectSchema, type CreateProjectInput } from "@/lib/server-actions/project.server";
+import { createProject } from "@/lib/server-actions/project.server";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { getSkillOptions } from "@/lib/server-actions/skill.server";
+import { createProjectSchema, type CreateProjectInput } from "@/lib/validations/project.validation";
 
 type SkillOption = {
     _id: string;

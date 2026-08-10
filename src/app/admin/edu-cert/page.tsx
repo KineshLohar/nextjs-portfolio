@@ -1,23 +1,28 @@
 import { ActionDropdownList } from "@/components/action-dropdown-list";
 import { OpenModalButton } from "@/components/open-modal-button";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
-import connectDB from "@/db/connectDB";
-import EduCert from "@/models/EduCertModel";
-import { EduCertType } from "@/types/types";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
-connectDB()
+import { getEducationCertifications } from "@/lib/data/education-certification";
 
 export default async function EducationCertifications() {
 
-    const cookiesStore = await cookies();
-    const token = cookiesStore.get('token');
+    const response = await getEducationCertifications();
 
-    if (!token) return redirect('/login');
+    if (!response.success || !response.data) {
+        return (
+            <div className="w-full p-4 text-center">
+                Failed to load education and certifications.
+            </div>
+        );
+    }
 
-    const eduAndCertList: EduCertType[] = await EduCert.find();
-
+    const eduAndCertList = [
+        ...response.data.education,
+        ...response.data.achievements,
+        ...response.data.professionalCertificates,
+        ...response.data.institutionalCertificates,
+        ...response.data.onlineCertificates,
+        ...response.data.otherCertificates,
+    ];
     return (
         <div className="w-full h-full flex flex-col gap-4 bg-gray p-4 bg-white border-b dark:bg-zinc-900/70 text-black dark:text-white">
             <div className="flex w-full items-center justify-end">
@@ -39,7 +44,7 @@ export default async function EducationCertifications() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="">
-                                {eduAndCertList?.map((item: EduCertType) => (
+                                {eduAndCertList?.map((item) => (
                                     <TableRow key={item._id}>
                                         <TableCell className="py-4 max-w-60 whitespace-normal break-words">{item.title}</TableCell>
                                         <TableCell className="py-4 whitespace-pre-line break-words min-w-40 max-w-xs">{item.description}</TableCell>

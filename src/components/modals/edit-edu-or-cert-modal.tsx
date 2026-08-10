@@ -79,7 +79,7 @@ export const EditEducationOrCertificationModal = () => {
                     eduAndCertData.endDate
                 )
                 : null,
-            thumbnail,
+            thumbnail: thumbnail ?? undefined,
             link: eduAndCertData.link ?? "",
         });
 

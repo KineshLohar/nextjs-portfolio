@@ -41,6 +41,7 @@ export async function getSkills(): Promise<
                             projects: "$projects",
                             logo: "$logo",
                             description: "$description",
+                            type: "$type"
                         },
                     },
                 },

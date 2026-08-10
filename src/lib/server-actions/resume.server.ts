@@ -1,26 +1,13 @@
 "use server";
 
+import "server-only";
+
 import type { ServerResponse } from "@/types/action-response.types";
-import z from "zod";
 import { requireAuth } from "../server-auth";
 import connectDB from "@/db/connectDB";
 import ResumeModel from "@/models/ResumeModel";
 import { updateTag } from "next/cache";
-
-
-
-export const updateResumeSchema = z.object({
-  link: z
-    .string()
-    .trim()
-    .min(1, "Resume link is required.")
-    .url("Enter a valid resume URL."),
-});
-
-export type UpdateResumeInput = z.infer<
-  typeof updateResumeSchema
->;
-
+import { updateResumeSchema, type UpdateResumeInput } from "../validations/resume.validation";
 
 export async function updateResume(
   input: UpdateResumeInput

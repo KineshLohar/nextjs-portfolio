@@ -1,5 +1,7 @@
 "use server";
 
+import "server-only";
+
 import { updateTag } from "next/cache";
 import { z } from "zod";
 

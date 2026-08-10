@@ -12,9 +12,10 @@ import { useEffect, useRef, useState } from "react";
 import { Separator } from "../ui/separator";
 import { MultiSelect } from "../ui/multi-select";
 import Image from "next/image";
-import { updateProject, updateProjectSchema, type UpdateProjectInput } from "@/lib/server-actions/project.server";
+import { updateProject } from "@/lib/server-actions/project.server";
 import { getSkillOptions } from "@/lib/server-actions/skill.server";
 import { Field, FieldError, FieldLabel } from "../ui/field";
+import { updateProjectSchema, type UpdateProjectInput } from "@/lib/validations/project.validation";
 
 type SkillOption = {
     _id: string;

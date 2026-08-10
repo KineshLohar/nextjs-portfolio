@@ -1,11 +1,8 @@
 import { OpenModalButton } from "@/components/open-modal-button";
 import WorkExpTable from "@/components/work-exp/work-experience-table";
 import { getWorkExperiences } from "@/lib/server-actions/work.server";
-import { requireAuth } from "@/lib/server-auth";
 
 export default async function WorkExperience() {
-
-    await requireAuth();
 
     const response = await getWorkExperiences();
 

@@ -1,21 +1,22 @@
 import { OpenModalButton } from "@/components/open-modal-button";
 import SkillsTable from "@/components/skills/skills-table";
-import connectDB from "@/db/connectDB";
-import SkillModel from "@/models/SkillModel";
-import { Skill } from "@/types/types";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
-connectDB()
+import { getSkills } from "@/lib/data/skills";
 
 export default async function Skills() {
 
-    const cookiesStore = await cookies();
-    const token = cookiesStore.get('token');
+    const response = await getSkills();
 
-    if (!token) return redirect('/login')
+    if (!response.success || !response.data) {
+        return (
+            <div className="w-full p-4 text-center">
+                Failed to load skills.
+            </div>
+        );
+    }
 
-    const skills: Skill[] = await SkillModel.find();
+    const skills = response.data;
+
+    const skillsList = skills.flatMap((section) => section.skills);
 
     return (
         <div className="w-full h-full flex flex-col gap-4 bg-gray p-4 bg-white border-b dark:bg-zinc-900/70 text-black dark:text-white">
@@ -30,7 +31,7 @@ export default async function Skills() {
                         </div>
                     )
                         :
-                        <SkillsTable skillsList={skills} />
+                        <SkillsTable skillsList={skillsList} />
                 }
             </div>
         </div>

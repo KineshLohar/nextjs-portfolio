@@ -49,6 +49,7 @@ export const Navbar = async () => {
                     src='/kineshlohar.png'
                     alt="Kinesh Lohar"
                     fill
+                    loading="lazy"
                     sizes="80px"
                     className=" object-contain"
                 />
