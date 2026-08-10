@@ -1,11 +1,9 @@
 
 import { LoginForm } from "@/components/auth/login-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cacheLife } from "next/cache";
 
 export default async function Login() {
-    "use cache";
-    cacheLife("max");
+
     return (
         <div className="w-full h-screen flex items-center justify-center bg-slate-50 dark:bg-black">
             <Card className="w-[350px]  dark:bg-zinc-700/30">

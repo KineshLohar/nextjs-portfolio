@@ -52,7 +52,7 @@ export const LoginForm = () => {
     useEffect(() => {
         if (state.success) {
             form.reset();
-            router.push("/admin/work-experience");
+            router.replace("/admin/work-experience");
             router.refresh();
         }
     }, [state.success, form, router]);
