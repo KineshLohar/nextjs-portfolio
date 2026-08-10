@@ -9,6 +9,7 @@ import { z } from "zod";
 import connectDB from "@/db/connectDB";
 import User from "@/models/UserModel";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const loginSchema = z.object({
   email: z
@@ -128,23 +129,8 @@ export async function login(
 }
 
 
-export async function logout(): Promise<LoginState> {
-  try {
-      const cookieStore = await cookies();
-
-      cookieStore.delete("token");
-
-      return {
-          success: true,
-          error: null,
-      };
-  } catch (error) {
-      console.error("[logout]", error);
-
-      return {
-          success: false,
-          error:
-              "Unable to sign out. Please try again.",
-      };
-  }
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
+  redirect("/login");
 }

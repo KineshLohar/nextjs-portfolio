@@ -1,6 +1,5 @@
 import { useModal } from "@/hooks/use-modal-store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Controller, useForm } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
 import * as z from "zod";
