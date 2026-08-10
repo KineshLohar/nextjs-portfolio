@@ -50,12 +50,21 @@ export const LoginForm = () => {
     });
 
     useEffect(() => {
-        if (state.success) {
-            form.reset();
-            router.replace("/admin/work-experience");
-            router.refresh();
+        console.log(
+            "[LOGIN] state:",
+            state.success,
+            state.error
+        );
+
+        if (!state.success) {
+            return;
         }
-    }, [state.success, form, router]);
+
+        console.log("[LOGIN] REDIRECTING TO ADMIN");
+
+        form.reset();
+        window.location.replace("/admin/work-experience");
+    }, [state.success, state.error, form]);
 
     const onSubmit = (values: LoginFormValues) => {
         const formData = new FormData();
